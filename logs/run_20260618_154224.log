@@ -1,0 +1,9 @@
+2026-06-18 15:42:24 - INFO - [dataset.py:119] - Starting Dataset Unit Test...
+2026-06-18 15:42:24 - INFO - [dataset.py:38] - Initializing NpyGestureDataset from directory: D:\ProgramProject_Hub\OpticalDeconv_SNN\datasets\DVSGesture\ibmGestureTest
+2026-06-18 15:42:24 - INFO - [dataset.py:57] - Successfully loaded 264 samples into the dataset index.
+2026-06-18 15:42:24 - INFO - [dataset.py:140] - --- Sample Loading Test Successful ---
+2026-06-18 15:42:24 - INFO - [dataset.py:141] - Sample Index : 0
+2026-06-18 15:42:24 - INFO - [dataset.py:142] - Target Label : 0
+2026-06-18 15:42:24 - INFO - [dataset.py:143] - Data Shape   : torch.Size([152, 2, 128, 128])
+2026-06-18 15:42:24 - INFO - [dataset.py:144] - Data Type    : torch.float32
+2026-06-18 15:42:24 - INFO - [dataset.py:148] - Shape Explanation: [Time_steps, Channels (Polarity), Height, Width]

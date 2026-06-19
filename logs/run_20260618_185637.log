@@ -1,0 +1,50 @@
+2026-06-18 18:56:37 - INFO - [train.py:31] - === Starting SNN Training Pipeline ===
+2026-06-18 18:56:39 - INFO - [train.py:45] - Using device: cuda | Batch Size: 16 | Epochs: 10
+2026-06-18 18:56:39 - INFO - [train.py:50] - Setting up data loaders...
+2026-06-18 18:56:39 - INFO - [dataset.py:38] - Initializing NpyGestureDataset from directory: D:\ProgramProject_Hub\OpticalDeconv_SNN\datasets\DVSGesture\ibmGestureTest
+2026-06-18 18:56:39 - INFO - [dataset.py:57] - Successfully loaded 264 samples into the dataset index.
+2026-06-18 18:56:39 - INFO - [train.py:67] - Dataloader ready. Total batches per epoch: 16
+2026-06-18 18:56:39 - INFO - [train.py:72] - Initializing OpticalDeconvSNN model...
+2026-06-18 18:56:39 - INFO - [model.py:25] - Initializing OpticalDeconvSNN with 11 classes and beta=0.9
+2026-06-18 18:56:40 - INFO - [train.py:84] - Starting training loop...
+2026-06-18 18:57:06 - DEBUG - [train.py:119] - Epoch [1/10], Step [5/16], Loss: 163.8792
+2026-06-18 18:57:19 - DEBUG - [train.py:119] - Epoch [1/10], Step [10/16], Loss: 28.4373
+2026-06-18 18:57:28 - DEBUG - [train.py:119] - Epoch [1/10], Step [15/16], Loss: 59.4228
+2026-06-18 18:57:31 - INFO - [train.py:125] - ==> Epoch [1/10] Summary | Loss: 110.5465 | Accuracy: 21.09%
+2026-06-18 18:57:58 - DEBUG - [train.py:119] - Epoch [2/10], Step [5/16], Loss: 57.5006
+2026-06-18 18:58:10 - DEBUG - [train.py:119] - Epoch [2/10], Step [10/16], Loss: 64.6563
+2026-06-18 18:58:23 - DEBUG - [train.py:119] - Epoch [2/10], Step [15/16], Loss: 47.9814
+2026-06-18 18:58:27 - INFO - [train.py:125] - ==> Epoch [2/10] Summary | Loss: 67.1608 | Accuracy: 30.86%
+2026-06-18 18:58:52 - DEBUG - [train.py:119] - Epoch [3/10], Step [5/16], Loss: 52.7672
+2026-06-18 18:59:04 - DEBUG - [train.py:119] - Epoch [3/10], Step [10/16], Loss: 36.4283
+2026-06-18 18:59:14 - DEBUG - [train.py:119] - Epoch [3/10], Step [15/16], Loss: 52.2811
+2026-06-18 18:59:17 - INFO - [train.py:125] - ==> Epoch [3/10] Summary | Loss: 36.8296 | Accuracy: 42.58%
+2026-06-18 18:59:42 - DEBUG - [train.py:119] - Epoch [4/10], Step [5/16], Loss: 69.4138
+2026-06-18 18:59:55 - DEBUG - [train.py:119] - Epoch [4/10], Step [10/16], Loss: 15.2962
+2026-06-18 19:00:08 - DEBUG - [train.py:119] - Epoch [4/10], Step [15/16], Loss: 19.6035
+2026-06-18 19:00:10 - INFO - [train.py:125] - ==> Epoch [4/10] Summary | Loss: 22.6274 | Accuracy: 48.83%
+2026-06-18 19:00:37 - DEBUG - [train.py:119] - Epoch [5/10], Step [5/16], Loss: 13.5730
+2026-06-18 19:00:49 - DEBUG - [train.py:119] - Epoch [5/10], Step [10/16], Loss: 33.0290
+2026-06-18 19:01:00 - DEBUG - [train.py:119] - Epoch [5/10], Step [15/16], Loss: 10.3553
+2026-06-18 19:01:03 - INFO - [train.py:125] - ==> Epoch [5/10] Summary | Loss: 20.2556 | Accuracy: 55.47%
+2026-06-18 19:01:32 - DEBUG - [train.py:119] - Epoch [6/10], Step [5/16], Loss: 8.8360
+2026-06-18 19:01:46 - DEBUG - [train.py:119] - Epoch [6/10], Step [10/16], Loss: 19.7526
+2026-06-18 19:02:02 - DEBUG - [train.py:119] - Epoch [6/10], Step [15/16], Loss: 6.1833
+2026-06-18 19:02:06 - INFO - [train.py:125] - ==> Epoch [6/10] Summary | Loss: 13.0645 | Accuracy: 61.72%
+2026-06-18 19:02:33 - DEBUG - [train.py:119] - Epoch [7/10], Step [5/16], Loss: 4.4990
+2026-06-18 19:02:47 - DEBUG - [train.py:119] - Epoch [7/10], Step [10/16], Loss: 10.4006
+2026-06-18 19:03:01 - DEBUG - [train.py:119] - Epoch [7/10], Step [15/16], Loss: 12.7757
+2026-06-18 19:03:04 - INFO - [train.py:125] - ==> Epoch [7/10] Summary | Loss: 9.2256 | Accuracy: 61.72%
+2026-06-18 19:03:34 - DEBUG - [train.py:119] - Epoch [8/10], Step [5/16], Loss: 7.5850
+2026-06-18 19:03:45 - DEBUG - [train.py:119] - Epoch [8/10], Step [10/16], Loss: 17.6263
+2026-06-18 19:03:56 - DEBUG - [train.py:119] - Epoch [8/10], Step [15/16], Loss: 18.5922
+2026-06-18 19:04:00 - INFO - [train.py:125] - ==> Epoch [8/10] Summary | Loss: 10.4831 | Accuracy: 60.55%
+2026-06-18 19:04:25 - DEBUG - [train.py:119] - Epoch [9/10], Step [5/16], Loss: 0.2273
+2026-06-18 19:04:38 - DEBUG - [train.py:119] - Epoch [9/10], Step [10/16], Loss: 7.9597
+2026-06-18 19:04:51 - DEBUG - [train.py:119] - Epoch [9/10], Step [15/16], Loss: 8.4196
+2026-06-18 19:04:55 - INFO - [train.py:125] - ==> Epoch [9/10] Summary | Loss: 5.2257 | Accuracy: 69.92%
+2026-06-18 19:05:23 - DEBUG - [train.py:119] - Epoch [10/10], Step [5/16], Loss: 4.1642
+2026-06-18 19:05:35 - DEBUG - [train.py:119] - Epoch [10/10], Step [10/16], Loss: 3.5683
+2026-06-18 19:05:46 - DEBUG - [train.py:119] - Epoch [10/10], Step [15/16], Loss: 3.2501
+2026-06-18 19:05:50 - INFO - [train.py:125] - ==> Epoch [10/10] Summary | Loss: 5.6371 | Accuracy: 72.66%
+2026-06-18 19:05:50 - INFO - [train.py:132] - Training completed. Model saved to D:\ProgramProject_Hub\OpticalDeconv_SNN\optical_deconv_snn.pth

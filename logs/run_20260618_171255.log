@@ -1,0 +1,9 @@
+2026-06-18 17:12:55 - INFO - [train.py:15] - === Starting SNN Training Pipeline ===
+2026-06-18 17:12:56 - INFO - [train.py:28] - Using device: cuda
+2026-06-18 17:12:56 - INFO - [train.py:33] - Setting up data loaders...
+2026-06-18 17:12:56 - INFO - [dataset.py:38] - Initializing NpyGestureDataset from directory: D:\ProgramProject_Hub\OpticalDeconv_SNN\datasets\DVSGesture\ibmGestureTest
+2026-06-18 17:12:56 - INFO - [dataset.py:57] - Successfully loaded 264 samples into the dataset index.
+2026-06-18 17:12:56 - INFO - [train.py:69] - Dataloader ready. Total batches per epoch: 16
+2026-06-18 17:12:56 - INFO - [train.py:74] - Initializing OpticalDeconvSNN model...
+2026-06-18 17:12:56 - INFO - [model.py:25] - Initializing OpticalDeconvSNN with 11 classes and beta=0.9
+2026-06-18 17:12:58 - INFO - [train.py:87] - Starting training loop...
