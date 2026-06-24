@@ -1,135 +1,170 @@
 import os
+import yaml
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
+import tonic
+tonic.datasets.CIFAR10DVS.download = lambda self: None
+tonic.datasets.DVSGesture.download = lambda self: None
+
+# import tonic.io
+# import tonic.datasets.cifar10dvs
+# # 全局劫持，解决 wrong magic number 报错
+# tonic.datasets.cifar10dvs.read_aedat4 = tonic.io.read_aedat4
+# tonic.io.read_aedat4 = tonic.io.read_aedat
+
 import tonic.transforms as transforms
-from snntorch import spikegen
-from snntorch import utils as snn_utils
+from tqdm import tqdm
 
 from utils.Logger import logger
-from utils.config import config
-from src.dataset import NpyGestureDataset
-from src.model import OpticalDeconvSNN
+from models.snn_vgg import SpikingVGG
+from models.snn_cnn import SpikingCNN
 
-def pad_collate_fn(batch):
-    data, targets = zip(*batch)
-    # 找出当前 batch 里最长的时间步
-    max_time = max([d.shape[0] for d in data])
-    padded_data = []
-    for d in data:
-        # 补齐：在时间维度 (第 0 维) 的末尾填充 0
-        pad_len = max_time - d.shape[0]
-        if pad_len > 0:
-            pad_tensor = torch.zeros((pad_len, *d.shape[1:]), dtype=d.dtype)
-            d = torch.cat([d, pad_tensor], dim=0)
-        padded_data.append(d)
 
-    # 堆叠成 [Time_steps, Batch, Channels, Height, Width]
-    return torch.stack(padded_data, dim=1), torch.tensor(targets)
+def load_config(config_path):
+    with open(config_path, 'r', encoding='utf-8') as f:
+        return yaml.safe_load(f)
 
-def train():
+
+def main():
     logger.info("=== Starting SNN Training Pipeline ===")
 
-    # ---------------------------------------------------------
-    # 1. 超参数与环境配置 (Hyperparameters & Setup)
-    # ---------------------------------------------------------
-    batch_size = config['training']['batch_size']
-    epochs = config['training']['epochs']
-    learning_rate = float(config['training']['learning_rate'])
-    time_window_us = config['training']['time_window_us']
-    sensor_size = tuple(config['training']['sensor_size'])  # 将 yaml 的 list 转为 tuple
-    num_classes = config['training']['num_classes']
+    # 1. 加载配置 (默认读取 CIFAR10-DVS 主基准)
+    config_path = "configs/config_cifar10dvs.yaml"
+    # config_path = "configs/config_dvsgesture.yaml"
+    config = load_config(config_path)
 
-    # 自动检测 GPU
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    logger.info(f"Using device: {device} | Batch Size: {batch_size} | Epochs: {epochs}")
+    logger.info(f"Using device: {device}")
 
-    # ---------------------------------------------------------
-    # 2. 数据准备 (Data Preparation)
-    # ---------------------------------------------------------
-    logger.info("Setting up data loaders...")
-    # 配置 Tonic 转换器
-    frame_transform = transforms.ToFrame(sensor_size=sensor_size, time_window=time_window_us)
+    # 2. 准备数据集 (使用 Tonic 和 ToFrame 进行严格的 T 帧切片)
+    sensor_size = tuple(config['dataset']['sensor_size'])
+    time_steps = config['dataset']['time_steps']
+    dataset_name = config['dataset']['name']
+    root_dir = config['dataset']['root_dir']
+    batch_size = 16  # 训练时 Batch size 可以开大一点，比如 16 或 32，加快训练速度
 
-    # 数据集路径 (目前用整个 ibmGestureTest 跑流程)
-    data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "datasets", "DVSGesture", "ibmGestureTest")
+    # 将稀疏事件流转化为固定帧数 (T, C, H, W)
+    transform = transforms.ToFrame(sensor_size=sensor_size, n_time_bins=time_steps)
 
-    train_dataset = NpyGestureDataset(root_dir=data_dir, transform=frame_transform)
+    logger.info(f"Loading dataset: {dataset_name} for training...")
+    # if dataset_name == "cifar10dvs":
+    #     train_dataset = tonic.datasets.CIFAR10DVS(save_to=root_dir, transform=transform)
+    #     test_dataset = train_dataset  # CIFAR10-DVS 官方未分 train/test，可以自己按比例切分，这里从简
+    if dataset_name == "cifar10dvs":
+        train_dataset = tonic.datasets.CIFAR10DVS(save_to=root_dir, transform=transform)
 
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=batch_size,
-        shuffle=True,
-        drop_last=True,
-        num_workers=4,  # 雇佣 4 个 CPU 子进程同时加载和处理数据
-        pin_memory=False, # Windows 下避免 CUDA 映射错误
-        collate_fn=pad_collate_fn)
-    logger.info(f"Dataloader ready. Total batches per epoch: {len(train_loader)}")
+        import glob
+        expected_path = os.path.join(root_dir, "CIFAR10DVS")
+        all_files = glob.glob(os.path.join(expected_path, "*", "*.aedat"))
 
-    # ---------------------------------------------------------
-    # 3. 模型构建与优化器 (Model & Optimizer)
-    # ---------------------------------------------------------
-    logger.info("Initializing OpticalDeconvSNN model...")
-    model = OpticalDeconvSNN(num_classes=num_classes).to(device)
+        if len(all_files) == 10000:
+            # 定义官方的 10 个类别及索引映射
+            classes = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+            class_to_idx = {cls_name: i for i, cls_name in enumerate(classes)}
 
-    # 优化器
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+            _data = []
+            _targets = []
+            for f_path in all_files:
+                cls_name = os.path.basename(os.path.dirname(f_path))  # 提取所属文件夹名
+                if cls_name in class_to_idx:
+                    _data.append(f_path)
+                    _targets.append(class_to_idx[cls_name])
 
-    # SNN 损失函数
-    loss_fn = nn.CrossEntropyLoss()
+            # 暴力改写 Tonic 实例的内部属性，直接把饭喂到嘴里！
+            train_dataset.data = _data
+            train_dataset.targets = _targets
+            if hasattr(train_dataset, 'file_paths'):
+                train_dataset.file_paths = _data
 
-    # ---------------------------------------------------------
-    # 4. 训练循环 (Training Loop)
-    # ---------------------------------------------------------
+            logger.info(f"🔧 注入成功！强行绕过框架限制，加载了 {len(train_dataset.data)} 个样本！")
+        else:
+            logger.error(f"❌ 致命错误：本地文件数不等于 10000，当前为 {len(all_files)}")
+        # ========================================================
+
+        test_dataset = train_dataset
+    elif dataset_name == "dvsgesture":
+        train_dataset = tonic.datasets.DVSGesture(save_to=root_dir, train=True, transform=transform)
+        test_dataset = tonic.datasets.DVSGesture(save_to=root_dir, train=False, transform=transform)
+    else:
+        raise ValueError(f"Unknown dataset: {dataset_name}")
+
+    # 使用 tonic.collation.PadTensors 防止个别样本维度不对齐报错
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, drop_last=True,
+                              collate_fn=tonic.collation.PadTensors(batch_first=False))
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, drop_last=True,
+                             collate_fn=tonic.collation.PadTensors(batch_first=False))
+
+    # 3. 实例化模型
+    num_classes = config['dataset']['num_classes']
+    network_type = config['network']['type']
+    if network_type == "snn_vgg":
+        model = SpikingVGG(num_classes=num_classes).to(device)
+    else:
+        model = SpikingCNN(num_classes=num_classes).to(device)
+
+    # 4. 定义优化器与损失函数
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    criterion = nn.CrossEntropyLoss()
+
+    # 5. 训练循环
+    num_epochs = 20
+    best_acc = 0.0
+    os.makedirs("results", exist_ok=True)
+    save_path = f"results/{network_type}_best.pth"
+
     logger.info("Starting training loop...")
-
-    for epoch in range(epochs):
+    for epoch in range(num_epochs):
         model.train()
-        total_loss = 0.0
+        train_loss = 0
         correct = 0
         total = 0
 
-        for batch_idx, (data, targets) in enumerate(train_loader):
-            # 将数据推至 GPU
-            data = data.to(device)
-            targets = targets.to(device)
+        # 训练阶段
+        for data, targets in tqdm(train_loader, desc=f"Epoch {epoch + 1}/{num_epochs}"):
+            data, targets = data.to(device), targets.to(device)
 
             optimizer.zero_grad()
+            spk_out, mem_out = model(data)
 
-            # 前向传播
-            spk_rec, mem_rec = model(data)
-
-            # 损失计算
-            logits = mem_rec.sum(dim=0)
-            loss = loss_fn(logits, targets)
-
-            # 反向传播与权重更新
+            # SNN 分类通常使用最后一层神经元在所有时间步的膜电位总和或均值计算 Loss
+            logits = mem_out.sum(dim=0)
+            loss = criterion(logits, targets)
             loss.backward()
             optimizer.step()
 
-            # 统计指标
-            total_loss += loss.item()
-
-            # 预测
+            train_loss += loss.item()
             _, predicted = logits.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
 
-            if (batch_idx + 1) % 5 == 0:
-                logger.debug(
-                    f"Epoch [{epoch + 1}/{epochs}], Step [{batch_idx + 1}/{len(train_loader)}], Loss: {loss.item():.4f}")
+        train_acc = 100. * correct / total
 
-        # Epoch 结束汇总
-        epoch_loss = total_loss / len(train_loader)
-        epoch_acc = 100. * correct / total
-        logger.info(f"==> Epoch [{epoch + 1}/{epochs}] Summary | Loss: {epoch_loss:.4f} | Accuracy: {epoch_acc:.2f}%")
+        # 测试阶段 (这里直接用简单逻辑跑一次 Test)
+        model.eval()
+        test_correct = 0
+        test_total = 0
+        with torch.no_grad():
+            for data, targets in test_loader:
+                data, targets = data.to(device), targets.to(device)
+                spk_out, mem_out = model(data)
+                logits = mem_out.sum(dim=0)
+                _, predicted = logits.max(1)
+                test_total += targets.size(0)
+                test_correct += predicted.eq(targets).sum().item()
 
-    # ---------------------------------------------------------
-    # 5. 保存模型 (Save Model)
-    # ---------------------------------------------------------
-    save_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "optical_deconv_snn.pth")
-    torch.save(model.state_dict(), save_path)
-    logger.info(f"Training completed. Model saved to {save_path}")
+        test_acc = 100. * test_correct / test_total
+        logger.info(
+            f"Epoch {epoch + 1}: Train Loss: {train_loss / len(train_loader):.4f} | Train Acc: {train_acc:.2f}% | Test Acc: {test_acc:.2f}%")
+
+        # 保存表现最好的模型
+        if test_acc > best_acc:
+            best_acc = test_acc
+            torch.save(model.state_dict(), save_path)
+            logger.info(f"[*] New best accuracy! Weights saved to {save_path}")
+
+    logger.info(f"=== Training Pipeline Finished. Best Test Accuracy: {best_acc:.2f}% ===")
+
 
 if __name__ == "__main__":
-    train()
+    main()

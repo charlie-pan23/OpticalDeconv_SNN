@@ -1,0 +1,50 @@
+# ==============================================================================
+# HIPSA Hardware & Software Configuration for DVSGesture (Sparse Event Baseline)
+# ==============================================================================
+
+dataset:
+  name: "dvsgesture"
+  root_dir: "./datasets"
+  sensor_size: [128, 128]
+  num_classes: 11             # 官方规范包含 11 类手势动作
+  time_steps: 10              # 保持 T=10 作为横向负载对比基准 (后期做鲁棒性验证时支持 4/8/16 扫参)
+  batch_size: 1               # 硬件架构能耗与延迟分析严格要求 batch_size = 1
+
+network:
+  type: "snn_cnn"             # 适配极致稀疏性展现的浅层 Spiking CNN (带光学解卷积核心)
+  spike_mode: "lif"
+
+hardware:
+  num_tiles: 4                # 保持相同的硬件物理芯片平台
+  array_size: [64, 64]
+  peak_parallelism: 16384
+  effective_utilization: 0.40 # 基础标定值，后续由代码根据真实 Activity 动态评估
+  realized_processing_rate: 6.55
+  effective_cycle_time_ns: 1.0
+
+  # 数据域与电路位宽精度设定 (对齐芯片硬件规格)
+  spike_precision: 1
+  weight_precision: 6
+  membrane_precision: 16
+  adc_resolution: 6
+
+  # 物理工作模式 (保持热稳定，依靠 TS-EGI 接口吞噬手势识别的巨大时间稀疏红利)
+  laser_mode: "CW"
+  mrr_mode: "locked"
+  adc_organization: "threshold-driven shared ADC pool"
+
+power_model:
+  # 静态功耗部分 (与硬件平台绑定，不随数据集稀疏度改变而改变) - 单位: mW
+  cw_laser_source_mw: 300.0
+  global_mrr_stabilization_mw: 350.0
+  leakage_misc_io_mw: 90.0
+
+  # 动态/接口事件驱动功耗部分 (常量基准，具体运行功耗将在 eval_02 中通过实测的真实稀疏因子作衰减缩放) - 单位: mW
+  event_gated_modulator_drivers_mw: 200.0
+  pd_tia_comparator_mw: 240.0
+  shared_adc_pool_mw: 280.0
+  sram_register_files_mw: 210.0
+  noc_bus_controller_clock_mw: 230.0
+
+  # 全系统基准总功耗 - 单位: W
+  total_system_power_w: 1.90

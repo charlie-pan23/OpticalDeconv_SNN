@@ -36,3 +36,4 @@ dependencies:
       - nvidia-ml-py
       - ptflops
       - thop
+      - pyyaml
