@@ -1,5 +1,6 @@
 # ==============================================================================
 # HIPSA Hardware & Software Configuration for CIFAR10-DVS (Main Case Baseline)
+# configs/config_cifar10dvs.yaml
 # ==============================================================================
 
 dataset:
@@ -8,6 +9,7 @@ dataset:
   sensor_size: [128, 128]
   num_classes: 10
   time_steps: 10
+  batch_size_train: 8
   batch_size: 1                   # 硬件架构能耗与延迟分析严格要求 batch_size = 1
 
 network:
