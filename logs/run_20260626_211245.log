@@ -1,0 +1,3 @@
+2026-06-26 21:12:45 - INFO - [train_cifar10dvs.py:296] - === CIFAR10-DVS train ===
+2026-06-26 21:12:47 - INFO - [train_cifar10dvs.py:302] - Device: cuda
+2026-06-26 21:12:47 - INFO - [train_cifar10dvs.py:60] - [Extract] extract/ completed, skip.

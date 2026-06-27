@@ -1,4 +1,4 @@
-# ==============================================================================
+
 # HIPSA Hardware & Software Configuration for CIFAR10-DVS (Main Case Baseline)
 # configs/config_cifar10dvs.yaml
 # ==============================================================================
@@ -9,44 +9,44 @@ dataset:
   sensor_size: [128, 128]
   num_classes: 10
   time_steps: 10
-  batch_size_train: 8
-  batch_size: 1                   # 硬件架构能耗与延迟分析严格要求 batch_size = 1
+  batch_size_train: 16
+  batch_size: 1
 
 network:
-  type: "snn_vgg"                 # 高事件密度压力测试的 Spiking VGG 网络
+  type: "snn_vgg"                 # Spiking VGG network for high event density stress testing
   spike_mode: "lif"
 
 hardware:
-  num_tiles: 4                    # 4个并行 PDPU 核心
-  array_size: [64, 64]            # 每个 PDPU Tile 的光子矩阵乘加规模为 64x64
-  peak_parallelism: 16384         # 总峰值并行度 (4 * 64 * 64 SOP/cycle)
-  effective_utilization: 0.40     # 考虑层间失配、ADC调度、流水线停顿后的真实硬件利用率 (40%)
-  realized_processing_rate: 6.55  # 实际实现的有效处理吞吐率 (6.55 TSOP/s)
-  effective_cycle_time_ns: 1.0    # 系统时钟周期 (1 GHz)
+  num_tiles: 4                    # 4 parallel PDPU cores
+  array_size: [64, 64]            # Photonic MAC scale per PDPU Tile is 64x64
+  peak_parallelism: 16384         # Total peak parallelism (4 * 64 * 64 SOP/cycle)
+  effective_utilization: 0.40     # Real hardware utilization considering layer mismatch, ADC scheduling, and pipeline stalls (40%)
+  realized_processing_rate: 6.55  # Actual effective processing throughput (6.55 TSOP/s)
+  effective_cycle_time_ns: 1.0    # System clock cycle (1 GHz)
 
-  # 数据域与电路位宽精度设定
-  spike_precision: 1              # 二进制脉冲输入 (1-bit)
-  weight_precision: 6             # 有符号量化突触权重 (6-bit)
-  membrane_precision: 16          # 定点数神经元膜电位状态 (16-bit)
-  adc_resolution: 6               # 共享资源池低分辨率高能效 ADC (6-bit)
+  # Data domain and circuit bit-width precision settings
+  spike_precision: 1              # Binary spike input (1-bit)
+  weight_precision: 6             # Signed quantized synaptic weights (6-bit)
+  membrane_precision: 16          # Fixed-point neuron membrane potential state (16-bit)
+  adc_resolution: 6               # Shared resource pool low-resolution high-efficiency ADC (6-bit)
 
-  # 物理工作模式（彻底杜绝时间步级别的光学高频开关，规避热漂移红线）
-  laser_mode: "CW"                # 连续波激光光源长亮模式 (Continuous-Wave, not power-gated)
-  mrr_mode: "locked"              # 全局校准与热稳定锁定状态 (Locked/Calibrated, not timestep-gated)
-  adc_organization: "threshold-driven shared ADC pool" # 创新点：分层模拟归约与阈值驱动共享池
+  # Physical operating mode (Eliminate timestep-level optical high-frequency switching to avoid thermal drift thresholds)
+  laser_mode: "CW"                # Continuous-Wave laser source always-on mode (Continuous-Wave, not power-gated)
+  mrr_mode: "locked"              # Global calibration and thermal stability locked state (Locked/Calibrated, not timestep-gated)
+  adc_organization: "threshold-driven shared ADC pool" # Innovation: Hierarchical analog reduction and threshold-driven shared pool
 
 power_model:
-  # 静态功耗部分 (Static Components - Always On for Thermal Stability) - 单位: mW
+  # Static power components (Static Components - Always On for Thermal Stability) - Unit: mW
   cw_laser_source_mw: 300.0
   global_mrr_stabilization_mw: 350.0
   leakage_misc_io_mw: 90.0
 
-  # 动态/接口事件驱动功耗部分 (Dynamic Components - Gated by Event Sparsity) - 单位: mW
+  # Dynamic/Interface event-driven power components (Dynamic Components - Gated by Event Sparsity) - Unit: mW
   event_gated_modulator_drivers_mw: 200.0
   pd_tia_comparator_mw: 240.0
-  shared_adc_pool_mw: 280.0       # 基于 38% 的平均 ADC 触发占空比(α_ADC)严密推导
+  shared_adc_pool_mw: 280.0       # Rigorously derived based on 38% average ADC trigger duty cycle (α_ADC)
   sram_register_files_mw: 210.0
   noc_bus_controller_clock_mw: 230.0
 
-  # 全系统基准总功耗 - 单位: W
-  total_system_power_w: 1.90      # 1.90 W 组件级分项闭环求和
+  # Total system baseline power consumption - Unit: W
+  total_system_power_w: 1.90      # 1.90 W component-level itemized closed-loop summation

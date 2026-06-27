@@ -1,122 +1,84 @@
 import torch
 import torch.nn as nn
-import snntorch as snn
-from snntorch import surrogate
+from spikingjelly.activation_based import neuron, surrogate
 
 
 class SpikingVGG(nn.Module):
     """
-    HIPSA 架构基准测试网络 II: Spiking VGG-like (深层密集卷积)
-    数据集: CIFAR10-DVS
-    作为高事件密度与高 SOP 计算压力测试基准，验证 4个 64x64 PDPU Tile 的并行吞吐极值。
+    Spiking VGG for CIFAR10-DVS (SpikingJelly implementation)
+    Input: (T, B, 2, 128, 128)  ->  Output: (T, B, 10)
     """
 
-    def __init__(self, num_classes=10, beta=0.9):
-        super(SpikingVGG, self).__init__()
+    def __init__(self, num_classes=10, tau=2.0, v_threshold=1.0, v_reset=0.0):
+        super().__init__()
+        # 使用平滑度更好的 Sigmoid 替代梯度 (alpha=4.0)
+        sg = surrogate.Sigmoid(alpha=4.0)
 
-        spike_grad = surrogate.fast_sigmoid()
-
- 
-        # VGG Block 1 - Input: 128x128 -> Output: 64x64
- 
-        self.conv1 = nn.Conv2d(2, 32, kernel_size=3, padding=1)
-        self.lif1 = snn.Leaky(beta=beta, spike_grad=spike_grad)
+        self.conv1 = nn.Conv2d(2, 32, 3, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.lif1 = neuron.LIFNode(tau=tau, v_threshold=v_threshold, v_reset=v_reset, surrogate_function=sg)
         self.pool1 = nn.MaxPool2d(2)
 
- 
-        # VGG Block 2 - Input: 64x64 -> Output: 32x32
- 
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
-        self.lif2 = snn.Leaky(beta=beta, spike_grad=spike_grad)
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.lif2 = neuron.LIFNode(tau=tau, v_threshold=v_threshold, v_reset=v_reset, surrogate_function=sg)
         self.pool2 = nn.MaxPool2d(2)
 
- 
-        # VGG Block 3: Photonic MVM Mapping Blocks - Input: 32x32 -> Output: 16x16
-        # 硬件映射: 连续的深度卷积层，将产生极大的 MAC 需求。
-        # 它们是映射到 64x64 MRR 阵列并利用 HAPR 模拟流求和的核心压力层。
- 
-        self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
-        self.lif3 = snn.Leaky(beta=beta, spike_grad=spike_grad)
+        self.conv3 = nn.Conv2d(64, 128, 3, padding=1, bias=False)
+        self.bn3 = nn.BatchNorm2d(128)
+        self.lif3 = neuron.LIFNode(tau=tau, v_threshold=v_threshold, v_reset=v_reset, surrogate_function=sg)
 
-        self.conv4 = nn.Conv2d(128, 128, kernel_size=3, padding=1)
-        self.lif4 = snn.Leaky(beta=beta, spike_grad=spike_grad)
+        self.conv4 = nn.Conv2d(128, 128, 3, padding=1, bias=False)
+        self.bn4 = nn.BatchNorm2d(128)
+        self.lif4 = neuron.LIFNode(tau=tau, v_threshold=v_threshold, v_reset=v_reset, surrogate_function=sg)
         self.pool3 = nn.MaxPool2d(2)
 
- 
-        # VGG Block 4 - Input: 16x16 -> Output: 8x8
- 
-        self.conv5 = nn.Conv2d(128, 256, kernel_size=3, padding=1)
-        self.lif5 = snn.Leaky(beta=beta, spike_grad=spike_grad)
+        self.conv5 = nn.Conv2d(128, 256, 3, padding=1, bias=False)
+        self.bn5 = nn.BatchNorm2d(256)
+        self.lif5 = neuron.LIFNode(tau=tau, v_threshold=v_threshold, v_reset=v_reset, surrogate_function=sg)
 
-        self.conv6 = nn.Conv2d(256, 256, kernel_size=3, padding=1)
-        self.lif6 = snn.Leaky(beta=beta, spike_grad=spike_grad)
+        self.conv6 = nn.Conv2d(256, 256, 3, padding=1, bias=False)
+        self.bn6 = nn.BatchNorm2d(256)
+        self.lif6 = neuron.LIFNode(tau=tau, v_threshold=v_threshold, v_reset=v_reset, surrogate_function=sg)
         self.pool4 = nn.MaxPool2d(2)
 
- 
-        # 分类输出层 (Flatten size: 256 * 8 * 8 = 16384)
- 
         self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(16384, 512)
-        self.lif7 = snn.Leaky(beta=beta, spike_grad=spike_grad)
 
-        self.fc2 = nn.Linear(512, num_classes)
-        self.lif8 = snn.Leaky(beta=beta, spike_grad=spike_grad, output=True)
+        # 【新增】Dropout 防过拟合
+        self.dropout = nn.Dropout(0.2)
+
+        # 128x128 经过 4 次池化 (缩小 2^4=16 倍) -> 8x8。 256 * 8 * 8 = 16384
+        self.fc1 = nn.Linear(16384, 512, bias=False)
+        self.lif7 = neuron.LIFNode(tau=tau, v_threshold=v_threshold, v_reset=v_reset, surrogate_function=sg)
+
+        self.fc2 = nn.Linear(512, num_classes, bias=False)
 
     def forward(self, x):
         """
-        x 形状: [Time_steps, Batch_size, Channels, Height, Width]
+        :param x: [T, B, C, H, W]
+        :return: mem_list: [T, B, num_classes] (Logits 输出)
         """
-        # 初始化所有层的膜电位
-        mem1 = self.lif1.init_leaky()
-        mem2 = self.lif2.init_leaky()
-        mem3 = self.lif3.init_leaky()
-        mem4 = self.lif4.init_leaky()
-        mem5 = self.lif5.init_leaky()
-        mem6 = self.lif6.init_leaky()
-        mem7 = self.lif7.init_leaky()
-        mem8 = self.lif8.init_leaky()
+        T = x.shape[0]
+        mem_list = []
 
-        spk8_rec = []
-        mem8_rec = []
+        # 手动时间步循环，保持最细粒度的底层控制
+        for t in range(T):
+            cur = x[t]
 
-        num_steps = x.size(0)
+            cur = self.pool1(self.lif1(self.bn1(self.conv1(cur))))
+            cur = self.pool2(self.lif2(self.bn2(self.conv2(cur))))
 
-        for step in range(num_steps):
-            cur_x = x[step]
+            cur = self.lif3(self.bn3(self.conv3(cur)))
+            cur = self.pool3(self.lif4(self.bn4(self.conv4(cur))))
 
-            # Block 1
-            cur_x = self.conv1(cur_x)
-            spk1, mem1 = self.lif1(cur_x, mem1)
-            cur_x = self.pool1(spk1)
+            cur = self.lif5(self.bn5(self.conv5(cur)))
+            cur = self.pool4(self.lif6(self.bn6(self.conv6(cur))))
 
-            # Block 2
-            cur_x = self.conv2(cur_x)
-            spk2, mem2 = self.lif2(cur_x, mem2)
-            cur_x = self.pool2(spk2)
+            cur = self.flatten(cur)
+            cur = self.dropout(cur)
+            cur = self.lif7(self.fc1(cur))
 
-            # Block 3
-            cur_x = self.conv3(cur_x)
-            spk3, mem3 = self.lif3(cur_x, mem3)
-            cur_x = self.conv4(spk3)
-            spk4, mem4 = self.lif4(cur_x, mem4)
-            cur_x = self.pool3(spk4)
+            out = self.fc2(cur)
+            mem_list.append(out)
 
-            # Block 4
-            cur_x = self.conv5(cur_x)
-            spk5, mem5 = self.lif5(cur_x, mem5)
-            cur_x = self.conv6(spk5)
-            spk6, mem6 = self.lif6(cur_x, mem6)
-            cur_x = self.pool4(spk6)
-
-            # Classifier
-            cur_x = self.flatten(cur_x)
-            cur_x = self.fc1(cur_x)
-            spk7, mem7 = self.lif7(cur_x, mem7)
-
-            cur_x = self.fc2(spk7)
-            spk8, mem8 = self.lif8(cur_x, mem8)
-
-            spk8_rec.append(spk8)
-            mem8_rec.append(mem8)
-
-        return torch.stack(spk8_rec, dim=0), torch.stack(mem8_rec, dim=0)
+        return torch.stack(mem_list, dim=0)
