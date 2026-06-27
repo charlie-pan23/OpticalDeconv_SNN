@@ -3,18 +3,16 @@ import yaml
 import json
 from utils.Logger import logger
 
-
 def load_config(config_path):
     with open(config_path, 'r', encoding='utf-8') as f:
         return yaml.safe_load(f)
 
-
 def main():
     logger.info("=== Phase 2: Architecture Power & Performance Estimation ===")
 
-    # 默认读取主基准配置
+    # 配置路径
     config_path = "configs/config_cifar10dvs.yaml"
-    stats_path = "results/activity_stats.json"
+    stats_path = "results/activity_cifar10dvs.json"
 
     if not os.path.exists(stats_path):
         logger.error(f"Activity stats not found at {stats_path}! Please run eval_01_activity.py first.")
@@ -32,18 +30,14 @@ def main():
     pm = config["power_model"]
 
     # ---------------------------------------------------------
-    # 1. 性能推导 (Performance Derivation) - 对应 Table 4
+    # 1. 性能推导
     # ---------------------------------------------------------
-    # 依据网络结构给定标称的 Dense-equivalent SOPs per image (基于 T=10)
     if network_type == "snn_vgg":
-        dense_equivalent_sops_per_image = 3.13e9  # 论文 Main Case 的标称值
+        dense_equivalent_sops_per_image = 3.13e9  # 标称值，可替换
     else:
-        # DVS Gesture 的浅层 CNN 计算量较小，此处为估算示例值
         dense_equivalent_sops_per_image = 4.5e8
 
     actual_sops_per_image = dense_equivalent_sops_per_image * active_ratio
-
-    # 吞吐与延迟推导
     realized_processing_rate = hw["realized_processing_rate"] * 1e12  # 6.55 TSOP/s
     latency_seconds = actual_sops_per_image / realized_processing_rate
     throughput_fps = 1.0 / latency_seconds
@@ -57,16 +51,12 @@ def main():
     logger.info(f"Throughput             : {throughput_fps:,.0f} image/s")
 
     # ---------------------------------------------------------
-    # 2. 功耗推导 (Power Model Derivation) - 对应 Table 3
+    # 2. 功耗推导
     # ---------------------------------------------------------
-    # 静态功耗：不随稀疏度改变 (TS-EGI 创新的核心体现：光路热稳定)
     static_power_w = (pm["cw_laser_source_mw"] +
                       pm["global_mrr_stabilization_mw"] +
                       pm["leakage_misc_io_mw"]) / 1000.0
 
-    # 动态功耗自适应缩放机制 (Dynamic Power Scaling)
-    # yaml 中记录的是基于 Main Case (约 15% Active Ratio) 算出的标称值
-    # 如果实际跑出来的 active_ratio 更低，动态功耗将等比例下降
     baseline_active_ratio = 0.15
     sparsity_scaling_factor = active_ratio / baseline_active_ratio
 
@@ -76,11 +66,9 @@ def main():
                        pm["sram_register_files_mw"] +
                        pm["noc_bus_controller_clock_mw"]) / 1000.0
 
-    # 施加稀疏缩放因子
     scaled_dynamic_power_w = dynamic_power_w * sparsity_scaling_factor
     total_power_w = static_power_w + scaled_dynamic_power_w
 
-    # 算总能耗与能效比
     energy_per_image_uj = total_power_w * latency_seconds * 1e6
     actual_efficiency = (actual_sops_per_image / (energy_per_image_uj * 1e-6)) / 1e12
     dense_efficiency = (dense_equivalent_sops_per_image / (energy_per_image_uj * 1e-6)) / 1e12
@@ -97,6 +85,34 @@ def main():
     logger.info(f"Dense-equivalent Efficiency : {dense_efficiency:.2f} TSOPS/W")
     logger.info("=========================================================")
 
+    # ==========================================================
+    # 新增：将结果保存为 JSON 文件
+    # ==========================================================
+    results = {
+        "dataset": stats.get("dataset", "cifar10dvs"),
+        "network": network_type,
+        "time_steps": stats.get("time_steps", 10),
+        "active_ratio": active_ratio,
+        "adc_activity": adc_activity,
+        "dense_equivalent_sops_per_image": dense_equivalent_sops_per_image,
+        "actual_sops_per_image": actual_sops_per_image,
+        "realized_processing_rate_tsops": hw["realized_processing_rate"],
+        "latency_us": latency_seconds * 1e6,
+        "throughput_fps": throughput_fps,
+        "static_power_mw": static_power_w * 1000,
+        "dynamic_power_mw": scaled_dynamic_power_w * 1000,
+        "total_power_w": total_power_w,
+        "energy_per_image_uj": energy_per_image_uj,
+        "actual_efficiency_tsops_w": actual_efficiency,
+        "dense_equivalent_efficiency_tsops_w": dense_efficiency,
+    }
+
+    # 确保 results 目录存在
+    os.makedirs("results", exist_ok=True)
+    output_path = "results/power_perf_cifar10dvs.json"
+    with open(output_path, "w") as f:
+        json.dump(results, f, indent=4)
+    logger.info(f"Results saved to {output_path}")
 
 if __name__ == "__main__":
     main()

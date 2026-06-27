@@ -1,0 +1,11 @@
+{
+    "dataset": "cifar10dvs",
+    "network": "snn_vgg",
+    "time_steps": 10,
+    "noise_std_0.0": 75.76,
+    "noise_std_0.05": 18.02,
+    "noise_std_0.1": 9.4,
+    "noise_std_0.15": 10.0,
+    "noise_std_0.2": 9.76,
+    "noise_std_0.3": 10.0
+}

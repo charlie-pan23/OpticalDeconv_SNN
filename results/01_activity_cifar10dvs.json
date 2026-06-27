@@ -1,0 +1,8 @@
+{
+    "dataset": "cifar10dvs",
+    "network": "snn_vgg",
+    "time_steps": 10,
+    "active_ratio": 0.07432356756710955,
+    "adc_activity": 0.38,
+    "num_samples_used": 1000
+}

@@ -1,0 +1,5 @@
+2026-06-27 17:08:36 - INFO - [eval_01_activity.py:59] - === Phase 1: SNN Activity & Sparsity Extraction (SpikingJelly) ===
+2026-06-27 17:08:38 - INFO - [eval_01_activity.py:65] - Using device: cuda
+2026-06-27 17:08:38 - INFO - [eval_01_activity.py:79] - Evaluation config: num_samples=1000, adc_activity=0.38
+2026-06-27 17:08:38 - INFO - [eval_01_activity.py:81] - Loading dataset: cifar10dvs from ./datasets...
+2026-06-27 17:08:39 - ERROR - [eval_01_activity.py:105] - Dataset load failed! Error: HTTP Error 403: Forbidden

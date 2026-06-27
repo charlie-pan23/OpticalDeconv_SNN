@@ -1,0 +1,8 @@
+2026-06-27 19:22:24 - INFO - [eval_00_baseline.py:109] - === Baseline: CPU / GPU Performance Measurement ===
+2026-06-27 19:22:24 - INFO - [eval_00_baseline.py:42] - Loaded 10000 frame samples from ./datasets\CIFAR10DVS\frames_number_10_split_by_number
+2026-06-27 19:22:24 - INFO - [eval_00_baseline.py:60] - Loaded weights from results/snn_vgg_best.pth
+2026-06-27 19:22:44 - INFO - [eval_00_baseline.py:152] - CPU: Latency=197540.9 us, Throughput=5 fps, Energy=12840158.8 uJ
+2026-06-27 19:22:46 - INFO - [eval_00_baseline.py:60] - Loaded weights from results/snn_vgg_best.pth
+2026-06-27 19:22:49 - INFO - [eval_00_baseline.py:99] - GPU idle power: 19.8 W, estimated active: 29.7 W
+2026-06-27 19:22:49 - INFO - [eval_00_baseline.py:190] - GPU: Latency=27598.2 us, Throughput=36 fps, Energy=818838.4 uJ
+2026-06-27 19:22:49 - INFO - [eval_00_baseline.py:200] - Baseline results saved to results/baseline_results.json

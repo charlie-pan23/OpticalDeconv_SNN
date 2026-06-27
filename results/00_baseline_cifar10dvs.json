@@ -1,0 +1,17 @@
+{
+    "cpu_model": "Intel(R) Core(TM) Ultra 9 185H",
+    "gpu_model": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "num_samples": 100,
+    "cpu": {
+        "latency_us": 193762.87799997954,
+        "throughput_fps": 5.160947289398259,
+        "energy_per_image_uj": 12594587.06999867,
+        "estimated_active_power_w": 65.0
+    },
+    "gpu": {
+        "latency_us": 30621.9921875,
+        "throughput_fps": 32.65626853657821,
+        "energy_per_image_uj": 928765.0230468749,
+        "estimated_active_power_w": 30.33
+    }
+}

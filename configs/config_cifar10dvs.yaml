@@ -50,3 +50,8 @@ power_model:
 
   # Total system baseline power consumption - Unit: W
   total_system_power_w: 1.90      # 1.90 W component-level itemized closed-loop summation
+
+  evaluation:
+    num_samples: 1000                     # Number of samples for evaluation (full test set is 1000)
+    adc_trigger_duty_cycle: 0.38          # Consistent with the derivation of power_model.shared_adc_pool_mw
+    compute_effective_utilization: true   # Whether to dynamically calculate utilization based on active_ratio

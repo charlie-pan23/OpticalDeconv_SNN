@@ -1,0 +1,15 @@
+2026-06-27 17:10:56 - INFO - [eval_01_activity.py:60] - === Phase 1: SNN Activity & Sparsity Extraction (Direct Frame Loading) ===
+2026-06-27 17:10:58 - INFO - [eval_01_activity.py:66] - Using device: cuda
+2026-06-27 17:10:58 - INFO - [eval_01_activity.py:80] - Evaluation config: num_samples=1000, adc_activity=0.38
+2026-06-27 17:10:58 - INFO - [eval_01_activity.py:107] - Loaded 10000 frame samples from ./datasets\CIFAR10DVS\frames_number_10_split_by_number
+2026-06-27 17:10:58 - INFO - [eval_01_activity.py:120] - Total available samples: 10000
+2026-06-27 17:10:58 - INFO - [eval_01_activity.py:128] - Using 1000 samples for evaluation (out of 10000).
+2026-06-27 17:10:58 - INFO - [eval_01_activity.py:153] - Loaded trained weights from results/snn_vgg_best.pth
+2026-06-27 17:10:58 - DEBUG - [eval_01_activity.py:40] - Registered activity hook on: lif1
+2026-06-27 17:10:58 - DEBUG - [eval_01_activity.py:40] - Registered activity hook on: lif2
+2026-06-27 17:10:58 - DEBUG - [eval_01_activity.py:40] - Registered activity hook on: lif3
+2026-06-27 17:10:58 - DEBUG - [eval_01_activity.py:40] - Registered activity hook on: lif4
+2026-06-27 17:10:58 - DEBUG - [eval_01_activity.py:40] - Registered activity hook on: lif5
+2026-06-27 17:10:58 - DEBUG - [eval_01_activity.py:40] - Registered activity hook on: lif6
+2026-06-27 17:10:58 - DEBUG - [eval_01_activity.py:40] - Registered activity hook on: lif7
+2026-06-27 17:10:58 - INFO - [eval_01_activity.py:164] - Running inference to extract active ratio...

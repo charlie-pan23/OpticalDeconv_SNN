@@ -1,0 +1,9 @@
+2026-06-27 19:25:18 - INFO - [eval_00_baseline.py:127] - === Baseline: CPU / GPU Performance Measurement ===
+2026-06-27 19:25:20 - INFO - [eval_00_baseline.py:132] - CPU Model: 
+2026-06-27 19:25:20 - INFO - [eval_00_baseline.py:134] - GPU Model: NVIDIA GeForce RTX 4070 Laptop GPU
+2026-06-27 19:25:20 - INFO - [eval_00_baseline.py:44] - Loaded 10000 frame samples from ./datasets\CIFAR10DVS\frames_number_10_split_by_number
+2026-06-27 19:25:20 - INFO - [eval_00_baseline.py:62] - Loaded weights from results/snn_vgg_best.pth
+2026-06-27 19:25:40 - INFO - [eval_00_baseline.py:178] - CPU: Latency=193762.9 us, Throughput=5 fps, Energy=12594587.1 uJ
+2026-06-27 19:25:41 - INFO - [eval_00_baseline.py:62] - Loaded weights from results/snn_vgg_best.pth
+2026-06-27 19:25:44 - INFO - [eval_00_baseline.py:211] - GPU: Latency=30622.0 us, Throughput=33 fps, Energy=928765.0 uJ
+2026-06-27 19:25:44 - INFO - [eval_00_baseline.py:221] - Baseline results saved to results/baseline_results.json

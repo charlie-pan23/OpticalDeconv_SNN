@@ -1,0 +1,66 @@
+2026-06-27 22:14:24 - INFO - [eval_03_robustness.py:158] - === Phase 3: Hardware Robustness & Sensitivity Sweep (Improved) ===
+2026-06-27 22:14:24 - INFO - [eval_03_robustness.py:145] - Loaded 10000 frame samples from ./datasets\CIFAR10DVS\frames_number_10_split_by_number
+2026-06-27 22:14:24 - INFO - [eval_03_robustness.py:200] - Successfully loaded clean weights from results/snn_vgg_best.pth
+2026-06-27 22:14:24 - INFO - [eval_03_robustness.py:218] - --- MRR Transmission Perturbation Sweep ---
+2026-06-27 22:15:12 - INFO - [eval_03_robustness.py:237] - MRR pert_ratio=0.00 -> Acc=75.76%
+2026-06-27 22:15:12 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv1: pert_ratio=0.01, FSR=0.5917
+2026-06-27 22:15:12 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv2: pert_ratio=0.01, FSR=0.2954
+2026-06-27 22:15:12 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv3: pert_ratio=0.01, FSR=0.2749
+2026-06-27 22:15:12 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv4: pert_ratio=0.01, FSR=0.2489
+2026-06-27 22:15:12 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv5: pert_ratio=0.01, FSR=0.2604
+2026-06-27 22:15:12 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv6: pert_ratio=0.01, FSR=0.2498
+2026-06-27 22:16:07 - INFO - [eval_03_robustness.py:237] - MRR pert_ratio=0.01 -> Acc=74.68%
+2026-06-27 22:16:07 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv1: pert_ratio=0.02, FSR=0.5917
+2026-06-27 22:16:07 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv2: pert_ratio=0.02, FSR=0.2954
+2026-06-27 22:16:07 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv3: pert_ratio=0.02, FSR=0.2749
+2026-06-27 22:16:07 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv4: pert_ratio=0.02, FSR=0.2489
+2026-06-27 22:16:07 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv5: pert_ratio=0.02, FSR=0.2604
+2026-06-27 22:16:07 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv6: pert_ratio=0.02, FSR=0.2498
+2026-06-27 22:16:47 - INFO - [eval_03_robustness.py:237] - MRR pert_ratio=0.02 -> Acc=73.10%
+2026-06-27 22:16:47 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv1: pert_ratio=0.05, FSR=0.5917
+2026-06-27 22:16:47 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv2: pert_ratio=0.05, FSR=0.2954
+2026-06-27 22:16:47 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv3: pert_ratio=0.05, FSR=0.2749
+2026-06-27 22:16:47 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv4: pert_ratio=0.05, FSR=0.2489
+2026-06-27 22:16:47 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv5: pert_ratio=0.05, FSR=0.2604
+2026-06-27 22:16:47 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv6: pert_ratio=0.05, FSR=0.2498
+2026-06-27 22:17:38 - INFO - [eval_03_robustness.py:237] - MRR pert_ratio=0.05 -> Acc=48.38%
+2026-06-27 22:17:38 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv1: pert_ratio=0.1, FSR=0.5917
+2026-06-27 22:17:38 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv2: pert_ratio=0.1, FSR=0.2954
+2026-06-27 22:17:38 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv3: pert_ratio=0.1, FSR=0.2749
+2026-06-27 22:17:38 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv4: pert_ratio=0.1, FSR=0.2489
+2026-06-27 22:17:38 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv5: pert_ratio=0.1, FSR=0.2604
+2026-06-27 22:17:38 - DEBUG - [eval_03_robustness.py:45] - MRR noise injected to conv6: pert_ratio=0.1, FSR=0.2498
+2026-06-27 22:18:35 - INFO - [eval_03_robustness.py:237] - MRR pert_ratio=0.10 -> Acc=21.31%
+2026-06-27 22:18:35 - INFO - [eval_03_robustness.py:241] - --- Laser Intensity Fluctuation Sweep ---
+2026-06-27 22:19:21 - INFO - [eval_03_robustness.py:260] - Laser std=0.00 -> Acc=75.68%
+2026-06-27 22:20:10 - INFO - [eval_03_robustness.py:260] - Laser std=0.01 -> Acc=75.91%
+2026-06-27 22:21:02 - INFO - [eval_03_robustness.py:260] - Laser std=0.02 -> Acc=76.09%
+2026-06-27 22:21:52 - INFO - [eval_03_robustness.py:260] - Laser std=0.03 -> Acc=75.72%
+2026-06-27 22:21:52 - INFO - [eval_03_robustness.py:264] - --- WDM Crosstalk Sweep ---
+2026-06-27 22:21:52 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv1 (α=0.001000)
+2026-06-27 22:21:52 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv2 (α=0.001000)
+2026-06-27 22:21:52 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv3 (α=0.001000)
+2026-06-27 22:21:52 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv4 (α=0.001000)
+2026-06-27 22:21:52 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv5 (α=0.001000)
+2026-06-27 22:21:52 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv6 (α=0.001000)
+2026-06-27 22:29:18 - INFO - [eval_03_robustness.py:284] - WDM crosstalk=-30dB -> Acc=75.85%
+2026-06-27 22:29:18 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv1 (α=0.003162)
+2026-06-27 22:29:18 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv2 (α=0.003162)
+2026-06-27 22:29:18 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv3 (α=0.003162)
+2026-06-27 22:29:18 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv4 (α=0.003162)
+2026-06-27 22:29:18 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv5 (α=0.003162)
+2026-06-27 22:29:18 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv6 (α=0.003162)
+2026-06-27 22:36:06 - INFO - [eval_03_robustness.py:284] - WDM crosstalk=-25dB -> Acc=76.11%
+2026-06-27 22:36:06 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv1 (α=0.010000)
+2026-06-27 22:36:06 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv2 (α=0.010000)
+2026-06-27 22:36:06 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv3 (α=0.010000)
+2026-06-27 22:36:06 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv4 (α=0.010000)
+2026-06-27 22:36:06 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv5 (α=0.010000)
+2026-06-27 22:36:06 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv6 (α=0.010000)
+2026-06-27 22:42:32 - INFO - [eval_03_robustness.py:284] - WDM crosstalk=-20dB -> Acc=76.37%
+2026-06-27 22:42:32 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv1 (α=0.031623)
+2026-06-27 22:42:32 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv2 (α=0.031623)
+2026-06-27 22:42:32 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv3 (α=0.031623)
+2026-06-27 22:42:32 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv4 (α=0.031623)
+2026-06-27 22:42:32 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv5 (α=0.031623)
+2026-06-27 22:42:32 - DEBUG - [eval_03_robustness.py:87] - WDM crosstalk hook registered on conv6 (α=0.031623)

@@ -1,0 +1,3 @@
+2026-06-27 19:33:30 - INFO - [eval_03_robustness.py:71] - === Phase 3: Hardware Robustness & Sensitivity Sweep ===
+2026-06-27 19:33:32 - INFO - [eval_03_robustness.py:58] - Loaded 10000 frame samples from ./datasets\CIFAR10DVS\frames_number_10_split_by_number
+2026-06-27 19:33:32 - INFO - [eval_03_robustness.py:119] - Successfully loaded clean weights from results/snn_vgg_best.pth

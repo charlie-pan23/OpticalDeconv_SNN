@@ -1,0 +1,41 @@
+2026-06-27 19:39:02 - INFO - [eval_03_robustness.py:71] - === Phase 3: Hardware Robustness & Sensitivity Sweep ===
+2026-06-27 19:39:04 - INFO - [eval_03_robustness.py:58] - Loaded 10000 frame samples from ./datasets\CIFAR10DVS\frames_number_10_split_by_number
+2026-06-27 19:39:04 - INFO - [eval_03_robustness.py:119] - Successfully loaded clean weights from results/snn_vgg_best.pth
+2026-06-27 19:39:38 - INFO - [eval_03_robustness.py:153] - [*] Photonic Noise Level (σ = 0.00) -> Sustained Accuracy: 75.76%
+2026-06-27 19:39:38 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.05) to conv1
+2026-06-27 19:39:38 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.05) to conv2
+2026-06-27 19:39:38 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.05) to conv3
+2026-06-27 19:39:38 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.05) to conv4
+2026-06-27 19:39:38 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.05) to conv5
+2026-06-27 19:39:38 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.05) to conv6
+2026-06-27 19:40:12 - INFO - [eval_03_robustness.py:153] - [*] Photonic Noise Level (σ = 0.05) -> Sustained Accuracy: 18.02%
+2026-06-27 19:40:12 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.1) to conv1
+2026-06-27 19:40:12 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.1) to conv2
+2026-06-27 19:40:12 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.1) to conv3
+2026-06-27 19:40:12 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.1) to conv4
+2026-06-27 19:40:12 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.1) to conv5
+2026-06-27 19:40:12 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.1) to conv6
+2026-06-27 19:40:45 - INFO - [eval_03_robustness.py:153] - [*] Photonic Noise Level (σ = 0.10) -> Sustained Accuracy: 9.40%
+2026-06-27 19:40:45 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.15) to conv1
+2026-06-27 19:40:45 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.15) to conv2
+2026-06-27 19:40:45 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.15) to conv3
+2026-06-27 19:40:45 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.15) to conv4
+2026-06-27 19:40:45 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.15) to conv5
+2026-06-27 19:40:45 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.15) to conv6
+2026-06-27 19:41:19 - INFO - [eval_03_robustness.py:153] - [*] Photonic Noise Level (σ = 0.15) -> Sustained Accuracy: 10.00%
+2026-06-27 19:41:19 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.2) to conv1
+2026-06-27 19:41:19 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.2) to conv2
+2026-06-27 19:41:19 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.2) to conv3
+2026-06-27 19:41:19 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.2) to conv4
+2026-06-27 19:41:19 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.2) to conv5
+2026-06-27 19:41:19 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.2) to conv6
+2026-06-27 19:41:52 - INFO - [eval_03_robustness.py:153] - [*] Photonic Noise Level (σ = 0.20) -> Sustained Accuracy: 9.76%
+2026-06-27 19:41:52 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.3) to conv1
+2026-06-27 19:41:52 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.3) to conv2
+2026-06-27 19:41:52 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.3) to conv3
+2026-06-27 19:41:52 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.3) to conv4
+2026-06-27 19:41:52 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.3) to conv5
+2026-06-27 19:41:52 - DEBUG - [eval_03_robustness.py:37] - Injected Gaussian noise (σ=0.3) to conv6
+2026-06-27 19:42:26 - INFO - [eval_03_robustness.py:153] - [*] Photonic Noise Level (σ = 0.30) -> Sustained Accuracy: 10.00%
+2026-06-27 19:42:26 - INFO - [eval_03_robustness.py:161] - Robustness results saved to results/robustness_cifar10dvs.json
+2026-06-27 19:42:26 - INFO - [eval_03_robustness.py:162] - === Robustness Sweep Completed ===

@@ -1,0 +1,18 @@
+{
+    "dataset": "cifar10dvs",
+    "network": "snn_vgg",
+    "time_steps": 10,
+    "active_ratio": 0.07432356756710955,
+    "adc_activity": 0.38,
+    "dense_equivalent_sops_per_image": 3130000000.0,
+    "actual_sops_per_image": 232632766.48505288,
+    "realized_processing_rate_tsops": 6.55,
+    "latency_us": 35.516452898481354,
+    "throughput_fps": 28155.964866715585,
+    "static_power_mw": 740.0,
+    "dynamic_power_mw": 574.7689225189805,
+    "total_power_w": 1.3147689225189805,
+    "energy_per_image_uj": 46.69592850903245,
+    "actual_efficiency_tsops_w": 4.981864027825349,
+    "dense_equivalent_efficiency_tsops_w": 67.02939849230239
+}

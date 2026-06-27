@@ -1,0 +1,19 @@
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:13] - === Phase 2: Architecture Power & Performance Estimation ===
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:51] - --- Table 4: HIPSA Main Performance ---
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:52] - Dense-equiv. SOP/image : 3.13e+09
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:53] - Extracted Active Ratio : 7.43%
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:54] - Actual SOP/image       : 2.33e+08
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:55] - Realized Process Rate  : 6.55 TSOP/s
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:56] - Latency/image          : 35.5 μs
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:57] - Throughput             : 28,156 image/s
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:88] - 
+--- Component-Level Power Model ---
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:89] - Static Power  (Laser/MRR/Leakage) : 740.0 mW
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:90] - Dynamic Power (Scaled by Sparsity): 574.8 mW (Scaling factor: 0.50x)
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:92] - Total System Power                : 1.31 W
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:94] - 
+--- Final Efficiency Metrics (Table 4) ---
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:95] - Energy/image                : 46.7 μJ
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:96] - Actual Efficiency           : 4.98 TSOPS/W
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:97] - Dense-equivalent Efficiency : 67.03 TSOPS/W
+2026-06-27 19:10:47 - INFO - [eval_02_power_perf.py:98] - =========================================================
