@@ -26,7 +26,7 @@ def main():
 
     ROOT = os.path.join(config['dataset']['root_dir'], "CIFAR10DVS")  # 通常指向 ./datasets/CIFAR10DVS
     T = config['dataset']['time_steps']
-    BATCH_SIZE = 32  # 满血版批大小，充分喂饱 4070 显卡
+    BATCH_SIZE = 16  # 满血版批大小，充分喂饱 4070 显卡
     EPOCHS = 6  # 训练总轮数 对于CIFAR10-DVS数据集来说已经过拟合。
     # Epoch 06 | LR: 0.000315 | Loss: 0.6266 | Train: 79.25% | Test: 64.01%
 

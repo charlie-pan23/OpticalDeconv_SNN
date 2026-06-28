@@ -1,35 +1,14 @@
 """
 HIPSA eval_03: device-calibrated robustness/sensitivity evaluation on CIFAR10-DVS.
 
-One-click usage in PyCharm:
-    1) Put this file in the project root, next to config_cifar10dvs.yaml, or keep the
-       default working directory as the project root.
-    2) Make sure your trained checkpoint exists at ./results/snn_vgg_best.pth.
-    3) Run this file. Results are saved under ./results/eval_03_robustness/.
+Project-layout version requested by the user:
+    - Model is imported directly from:  models/snn_vgg.py
+    - Config is loaded directly from:   configs/config_cifar10dvs.yaml
+    - Results are saved under:          ./results/eval_03_robustness/
 
-What this script evaluates, aligned with the revised Section 4 plan:
-    - Clean baseline accuracy and ADC-request activity proxy.
-    - Photonic single-factor sweeps:
-        MRR static transmission perturbation: 0, 1, 2, 3, 5 %
-        laser intensity fluctuation:        0, 1, 2, 3 %
-        WDM adjacent-channel crosstalk:     -30, -25, -20, -15 dB
-    - Photonic combined stress cases.
-    - Conversion/front-end sweeps:
-        ADC precision:                      4, 5, 6, 8 bits
-        comparator threshold:               0.01, 0.02, 0.05, 0.10 full scale
-        HAPR group size:                    G = 4, 8, 16
-        optional HAPR/TIA output noise:      0, 0.5, 1, 2, 3 % full scale
-
-Important modeling choices:
-    - MRR perturbation is a static weight-bank perturbation applied once before inference.
-    - Laser fluctuation is injected on active input/activation carriers with pre-forward hooks.
-    - WDM crosstalk, HAPR/TIA disturbance, and ADC quantization are injected at selected
-      Conv/Linear layer outputs, representing photonic accumulation outputs.
-    - ADC request activity is measured using a fixed clean-calibrated full scale per layer,
-      instead of recomputing full scale after every perturbation.
-    - Energy/image is computed with a Section-4-style device-calibrated power model, using
-      measured ADC activity proxy and HAPR lane count. It is an architecture-level estimate,
-      not a fabricated-chip measurement.
+This script is designed for one-click execution in PyCharm from the project root.
+It does not embed the SNN architecture in this file; it uses the external
+SpikingVGG definition and the external YAML configuration.
 """
 
 from __future__ import annotations
@@ -37,17 +16,13 @@ from __future__ import annotations
 import argparse
 import copy
 import csv
-import importlib
-import inspect
 import json
 import math
-import os
 import random
-import sys
 from contextlib import nullcontext
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 import torch
@@ -56,208 +31,158 @@ import yaml
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-try:
-    from spikingjelly.datasets.cifar10_dvs import CIFAR10DVS
-    from spikingjelly.datasets import split_to_train_test_set
-    from spikingjelly.activation_based import functional as sf
-except Exception as exc:  # pragma: no cover - clear runtime error for PyCharm users
-    raise ImportError(
-        "Failed to import SpikingJelly. Install it in the current PyCharm interpreter, "
-        "for example: pip install spikingjelly"
-    ) from exc
+from spikingjelly.activation_based import functional as sf
+from spikingjelly.datasets import split_to_train_test_set
+from spikingjelly.datasets.cifar10_dvs import CIFAR10DVS
+
+# The project guarantees that this file exists.
+# Do not replace this with a local fallback; keep model architecture external.
+from models.snn_vgg import SpikingVGG
 
 
 # =============================================================================
-# Configuration
+# Config
 # =============================================================================
-
-SCRIPT_DIR = Path(__file__).resolve().parent
-CWD = Path.cwd().resolve()
 
 
 @dataclass
 class EvalConfig:
-    # Paths
-    config: str = "config_cifar10dvs.yaml"
-    dataset_root: str = "./datasets/CIFAR10DVS"
-    checkpoint: str = "./results/snn_vgg_best.pth"
-    output_dir: str = "./results/eval_03_robustness"
+    raw_config: Dict[str, Any]
 
-    # Dataset/model
-    batch_size: int = 1
-    num_workers: int = 4
-    time_steps: int = 10
-    split_ratio: float = 0.9
-    num_classes: int = 10
-    binarize_input: bool = True
-    max_batches: Optional[int] = None
+    config_path: str
+    dataset_root: str
+    checkpoint: str
+    output_dir: str
 
-    # Runtime
-    seed: int = 42
-    trials: int = 3
-    amp: bool = False
-    device: str = "auto"
+    batch_size: int
+    num_workers: int
+    time_steps: int
+    num_classes: int
+    split_ratio: float
+    binarize_input: bool
+    max_batches: Optional[int]
 
-    # Model import/instantiation
-    model_module: str = "models.snn_vgg"
-    model_class: str = "SpikingVGG"
-    model_kwargs: Dict[str, Any] = field(default_factory=dict)
+    seed: int
+    trials: int
+    amp: bool
+    device: str
 
-    # Which layers are treated as photonic MVM layers
-    include_linear: bool = True
-    include_final_linear: bool = False
-    target_name_keywords: Optional[List[str]] = None
-    exclude_name_keywords: List[str] = field(default_factory=lambda: ["lif", "bn", "batchnorm", "pool"])
+    include_linear: bool
+    include_fc2: bool
+    calibration_batches: int
+    comparator_threshold_fs: float
+    hapr_group_size: int
+    hapr_tia_noise_base_fs: float
+    default_adc_bits: int
 
-    # Calibration and front-end settings
-    calibration_batches: int = 8
-    comparator_threshold_fs: float = 0.02
-    default_adc_bits: int = 6
-    hapr_group_size: int = 8
-    hapr_tia_noise_base_fs: float = 0.0
+    # External YAML sections, copied so the power model is driven by config.
+    dataset_cfg: Dict[str, Any] = field(default_factory=dict)
+    network_cfg: Dict[str, Any] = field(default_factory=dict)
+    hardware_cfg: Dict[str, Any] = field(default_factory=dict)
+    power_cfg: Dict[str, Any] = field(default_factory=dict)
 
-    # Section-4-style architecture/device constants
-    tiles: int = 4
-    tile_outputs: int = 64
-    input_mod_lanes: int = 256
-    adc_macros: int = 16
+    # Derived from YAML / CLI for architecture-level energy reporting.
     image_latency_ms: float = 0.0717
     reference_adc_activity: float = 0.38
+    reference_input_activity: float = 0.15
     reference_hapr_group_size: int = 8
-
-    pd_mw: float = 1.1
-    tia_mw: float = 3.0
-    comparator_mw: float = 2.2
-    adc_macro_mw: float = 14.8
-    switch_proxy_mw: float = 0.1
-    modulator_mw: float = 2.25
-    input_spike_activity: float = 0.15
-    laser_power_mw: float = 1473.0
-    sram_power_mw_ref: float = 243.25
-    noc_power_mw_ref: float = 77.84
-    lif_power_mw_ref: float = 2.43
+    adc_macros: int = 16
 
     save_plots: bool = True
 
 
-def _resolve_existing_or_default(path_like: Optional[str], default: Optional[str] = None) -> str:
-    """Resolve a path robustly for PyCharm: cwd first, then script directory."""
-    raw = path_like if path_like not in [None, ""] else default
-    if raw is None:
-        return ""
-    p = Path(raw).expanduser()
-    if p.is_absolute():
-        return str(p)
-    cwd_p = (CWD / p).resolve()
-    if cwd_p.exists():
-        return str(cwd_p)
-    script_p = (SCRIPT_DIR / p).resolve()
-    if script_p.exists():
-        return str(script_p)
-    # Prefer cwd for new output files and common project layout.
-    return str(cwd_p)
-
-
-def _dataset_root_from_yaml(dataset_cfg: Dict[str, Any]) -> str:
-    root = (
-        dataset_cfg.get("dataset_root")
-        or dataset_cfg.get("root")
-        or dataset_cfg.get("root_dir")
-        or "./datasets"
-    )
-    p = Path(str(root))
-    if p.name.lower() in {"cifar10dvs", "cifar10-dvs", "cifar10_dvs"}:
-        return str(p)
-    return str(p / "CIFAR10DVS")
-
-
 def load_yaml_config(path: str) -> Dict[str, Any]:
-    resolved = _resolve_existing_or_default(path)
-    if resolved and Path(resolved).exists():
-        with open(resolved, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
-    return {}
+    # The project guarantees that configs/config_cifar10dvs.yaml exists.
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
+
+
+def build_dataset_root(dataset_cfg: Dict[str, Any]) -> str:
+    root_dir = Path(str(dataset_cfg["root_dir"]))
+    dataset_name = str(dataset_cfg.get("name", "cifar10dvs")).lower().replace("-", "")
+    if dataset_name in {"cifar10dvs", "cifar10_dvs"}:
+        # SpikingJelly CIFAR10DVS normally points to the CIFAR10DVS subdirectory.
+        return str(root_dir / "CIFAR10DVS")
+    return str(root_dir / dataset_cfg.get("name", ""))
 
 
 def build_config(args: argparse.Namespace) -> EvalConfig:
-    cfg_dict = load_yaml_config(args.config)
-    dataset_cfg = cfg_dict.get("dataset", {}) or {}
-    network_cfg = cfg_dict.get("network", {}) or {}
-    model_cfg = cfg_dict.get("model", {}) or {}
+    raw = load_yaml_config(args.config)
+    dataset_cfg = raw["dataset"]
+    network_cfg = raw.get("network", {})
+    hardware_cfg = raw["hardware"]
+    power_cfg = raw["power_model"]
+    power_eval_cfg = power_cfg.get("evaluation", {})
 
-    dataset_root_yaml = _dataset_root_from_yaml(dataset_cfg)
+    # Use YAML as source of truth. CLI args only override YAML when explicitly passed.
+    dataset_root = args.dataset_root or build_dataset_root(dataset_cfg)
+    batch_size = args.batch_size if args.batch_size is not None else int(dataset_cfg.get("batch_size_eval", dataset_cfg["batch_size"]))
+    time_steps = args.time_steps if args.time_steps is not None else int(dataset_cfg["time_steps"])
+    num_classes = int(dataset_cfg["num_classes"])
+    default_adc_bits = args.default_adc_bits if args.default_adc_bits is not None else int(hardware_cfg["adc_resolution"])
 
-    model_module = (
-        args.model_module
-        or model_cfg.get("module")
-        or network_cfg.get("module")
-        or "models.snn_vgg"
+    # These can be moved into YAML later as hardware.hapr_group_size, hardware.adc_macros,
+    # hardware.image_latency_ms, and dataset/input_spike_activity. The current config already
+    # provides the main ADC activity through power_model.evaluation.adc_trigger_duty_cycle.
+    reference_adc_activity = float(power_eval_cfg["adc_trigger_duty_cycle"])
+    image_latency_ms = float(
+        args.image_latency_ms
+        if args.image_latency_ms is not None
+        else hardware_cfg.get("image_latency_ms", power_eval_cfg.get("image_latency_ms", 0.0717))
     )
-    model_class = (
-        args.model_class
-        or model_cfg.get("class")
-        or network_cfg.get("class")
-        or "SpikingVGG"
-    )
+    hapr_group_size = int(args.hapr_group_size if args.hapr_group_size is not None else hardware_cfg.get("hapr_group_size", 8))
+    reference_hapr_group_size = int(hardware_cfg.get("reference_hapr_group_size", hapr_group_size))
+    adc_macros = int(hardware_cfg.get("adc_macros", 16))
+    reference_input_activity = float(dataset_cfg.get("input_spike_activity", power_eval_cfg.get("input_spike_activity", 0.15)))
 
-    # Only pass simple network/model keys as candidate constructor kwargs.
-    raw_model_kwargs: Dict[str, Any] = {}
-    for d in [network_cfg, model_cfg]:
-        for k, v in d.items():
-            if k not in {"module", "class", "name", "type"} and isinstance(v, (int, float, str, bool, list, tuple)):
-                raw_model_kwargs[k] = v
-    raw_model_kwargs.update(_parse_model_kwargs(args.model_kwargs))
-
-    cfg = EvalConfig(
-        config=_resolve_existing_or_default(args.config),
-        dataset_root=_resolve_existing_or_default(args.dataset_root, dataset_root_yaml),
-        checkpoint=_resolve_existing_or_default(args.checkpoint),
-        output_dir=_resolve_existing_or_default(args.output_dir),
-        batch_size=args.batch_size if args.batch_size is not None else int(dataset_cfg.get("batch_size_eval", dataset_cfg.get("batch_size", 1))),
-        num_workers=args.num_workers if args.num_workers is not None else int(dataset_cfg.get("num_workers", 4)),
-        time_steps=args.time_steps if args.time_steps is not None else int(dataset_cfg.get("time_steps", dataset_cfg.get("T", 10))),
-        split_ratio=args.split_ratio if args.split_ratio is not None else float(dataset_cfg.get("split_ratio", 0.9)),
-        num_classes=int(dataset_cfg.get("num_classes", network_cfg.get("num_classes", 10))),
-        binarize_input=not args.no_binarize,
+    return EvalConfig(
+        raw_config=raw,
+        config_path=args.config,
+        dataset_root=dataset_root,
+        checkpoint=args.checkpoint,
+        output_dir=args.output_dir,
+        batch_size=batch_size,
+        num_workers=args.num_workers,
+        time_steps=time_steps,
+        num_classes=num_classes,
+        split_ratio=args.split_ratio,
+        binarize_input=(not args.no_binarize),
         max_batches=args.max_batches,
         seed=args.seed,
         trials=args.trials,
         amp=args.amp,
         device=args.device,
-        model_module=model_module,
-        model_class=model_class,
-        model_kwargs=raw_model_kwargs,
-        include_linear=not args.conv_only,
-        include_final_linear=args.include_final_linear,
-        target_name_keywords=_parse_csv_list(args.target_keywords),
-        exclude_name_keywords=_parse_csv_list(args.exclude_keywords) or ["lif", "bn", "batchnorm", "pool"],
+        include_linear=(not args.conv_only),
+        include_fc2=args.include_fc2,
         calibration_batches=args.calibration_batches,
         comparator_threshold_fs=args.comparator_threshold_fs,
-        default_adc_bits=args.default_adc_bits,
-        hapr_group_size=args.hapr_group_size,
+        hapr_group_size=hapr_group_size,
         hapr_tia_noise_base_fs=args.hapr_tia_noise_base_fs,
-        save_plots=not args.no_plots,
+        default_adc_bits=default_adc_bits,
+        dataset_cfg=dataset_cfg,
+        network_cfg=network_cfg,
+        hardware_cfg=hardware_cfg,
+        power_cfg=power_cfg,
+        image_latency_ms=image_latency_ms,
+        reference_adc_activity=reference_adc_activity,
+        reference_input_activity=reference_input_activity,
+        reference_hapr_group_size=reference_hapr_group_size,
+        adc_macros=adc_macros,
+        save_plots=(not args.no_plots),
     )
-    return cfg
 
 
-def _parse_csv_list(value: Optional[str]) -> Optional[List[str]]:
-    if value is None:
-        return None
-    items = [x.strip() for x in value.split(",") if x.strip()]
-    return items or None
+def model_kwargs_from_config(cfg: EvalConfig) -> Dict[str, Any]:
+    kwargs: Dict[str, Any] = {"num_classes": cfg.num_classes}
 
-
-def _parse_model_kwargs(value: Optional[str]) -> Dict[str, Any]:
-    if not value:
-        return {}
-    try:
-        parsed = json.loads(value)
-        if isinstance(parsed, dict):
-            return parsed
-    except json.JSONDecodeError as exc:
-        raise ValueError("--model-kwargs must be a JSON object, e.g. '{\"channels\":128}'") from exc
-    raise ValueError("--model-kwargs must be a JSON object")
+    # Keep constructor parameters external/configurable when the YAML provides them.
+    # The uploaded model accepts num_classes, tau, v_threshold, and v_reset.
+    model_kwargs = cfg.network_cfg.get("model_kwargs", {}) or {}
+    kwargs.update(model_kwargs)
+    for key in ["tau", "v_threshold", "v_reset"]:
+        if key in cfg.network_cfg:
+            kwargs[key] = cfg.network_cfg[key]
+    return kwargs
 
 
 def set_seed(seed: int) -> None:
@@ -277,17 +202,11 @@ def choose_device(device_arg: str) -> torch.device:
 
 
 # =============================================================================
-# Dataset and model
+# Dataset / model
 # =============================================================================
 
 
 def build_loader(cfg: EvalConfig) -> DataLoader:
-    if not Path(cfg.dataset_root).exists():
-        raise FileNotFoundError(
-            f"CIFAR10-DVS dataset root not found: {cfg.dataset_root}\n"
-            "Please edit --dataset-root or dataset.root_dir in config_cifar10dvs.yaml."
-        )
-
     full_dataset = CIFAR10DVS(
         root=cfg.dataset_root,
         data_type="frame",
@@ -295,13 +214,11 @@ def build_loader(cfg: EvalConfig) -> DataLoader:
         split_by="number",
     )
 
+    # CIFAR10-DVS has no official train/test split. Keep this deterministic and
+    # match the training script's split_ratio/seed for final paper numbers.
     set_seed(cfg.seed)
     try:
-        _, test_ds = split_to_train_test_set(
-            cfg.split_ratio,
-            full_dataset,
-            num_classes=cfg.num_classes,
-        )
+        _, test_ds = split_to_train_test_set(cfg.split_ratio, full_dataset, num_classes=cfg.num_classes)
     except TypeError:
         _, test_ds = split_to_train_test_set(cfg.split_ratio, full_dataset, cfg.num_classes)
 
@@ -315,68 +232,12 @@ def build_loader(cfg: EvalConfig) -> DataLoader:
     )
 
 
-def import_model_class(cfg: EvalConfig) -> type:
-    # Make both project root and script directory importable. This fixes the common
-    # PyCharm issue where from models.snn_vgg works in terminal but not in the IDE.
-    for p in [str(CWD), str(SCRIPT_DIR), str(SCRIPT_DIR.parent)]:
-        if p and p not in sys.path:
-            sys.path.insert(0, p)
-
-    tried: List[str] = []
-    candidate_modules = [cfg.model_module]
-    if cfg.model_module != "snn_vgg":
-        candidate_modules.append("snn_vgg")
-    if cfg.model_module != "models.snn_vgg":
-        candidate_modules.append("models.snn_vgg")
-
-    for module_name in candidate_modules:
-        try:
-            module = importlib.import_module(module_name)
-            cls = getattr(module, cfg.model_class)
-            return cls
-        except Exception as exc:
-            tried.append(f"{module_name}.{cfg.model_class}: {exc}")
-
-    raise ImportError(
-        "Cannot import the SNN model class. Tried:\n  " + "\n  ".join(tried) +
-        "\nUse --model-module and --model-class if your file/class name differs."
-    )
-
-
 def instantiate_model(cfg: EvalConfig, device: torch.device) -> nn.Module:
-    cls = import_model_class(cfg)
-    kwargs = dict(cfg.model_kwargs)
-
-    # Common constructor aliases. They are filtered by inspect.signature below.
-    kwargs.setdefault("num_classes", cfg.num_classes)
-    kwargs.setdefault("T", cfg.time_steps)
-    kwargs.setdefault("time_steps", cfg.time_steps)
-
-    sig = inspect.signature(cls)
-    accepts_var_kw = any(p.kind == p.VAR_KEYWORD for p in sig.parameters.values())
-    if not accepts_var_kw:
-        valid = set(sig.parameters.keys())
-        kwargs = {k: v for k, v in kwargs.items() if k in valid}
-
-    try:
-        model = cls(**kwargs)
-    except TypeError as exc:
-        # Minimal fallback for older SpikingVGG definitions.
-        try:
-            model = cls(num_classes=cfg.num_classes)
-        except TypeError:
-            try:
-                model = cls()
-            except TypeError as exc2:
-                raise TypeError(
-                    f"Failed to instantiate {cfg.model_class}. Constructor kwargs tried: {kwargs}. "
-                    "Pass explicit JSON via --model-kwargs if needed."
-                ) from exc2
-
+    model = SpikingVGG(**model_kwargs_from_config(cfg))
     return model.to(device)
 
 
-def _torch_load(path: str, device: torch.device) -> Any:
+def torch_load(path: str, device: torch.device) -> Any:
     try:
         return torch.load(path, map_location=device, weights_only=False)
     except TypeError:
@@ -384,73 +245,45 @@ def _torch_load(path: str, device: torch.device) -> Any:
 
 
 def load_checkpoint(model: nn.Module, checkpoint_path: str, device: torch.device) -> Dict[str, torch.Tensor]:
-    if not Path(checkpoint_path).exists():
-        raise FileNotFoundError(
-            f"Checkpoint not found: {checkpoint_path}\n"
-            "Please set --checkpoint to your trained model checkpoint."
-        )
-
-    ckpt = _torch_load(checkpoint_path, device)
+    ckpt = torch_load(checkpoint_path, device)
     if isinstance(ckpt, dict):
         for key in ["state_dict", "model_state_dict", "net", "network", "model"]:
             if key in ckpt and isinstance(ckpt[key], dict):
                 ckpt = ckpt[key]
                 break
-
     if not isinstance(ckpt, dict):
         raise TypeError(f"Unsupported checkpoint format: {type(ckpt)}")
 
     cleaned: Dict[str, torch.Tensor] = {}
-    for k, v in ckpt.items():
-        if not torch.is_tensor(v):
+    for key, value in ckpt.items():
+        if not torch.is_tensor(value):
             continue
-        nk = k[7:] if k.startswith("module.") else k
-        cleaned[nk] = v
+        new_key = key[7:] if key.startswith("module.") else key
+        cleaned[new_key] = value
 
     missing, unexpected = model.load_state_dict(cleaned, strict=False)
     if missing:
-        print(f"[WARN] Missing checkpoint keys: {len(missing)} keys. First few: {missing[:8]}")
+        print(f"[WARN] Missing checkpoint keys: {len(missing)}. First few: {missing[:8]}")
     if unexpected:
-        print(f"[WARN] Unexpected checkpoint keys: {len(unexpected)} keys. First few: {unexpected[:8]}")
+        print(f"[WARN] Unexpected checkpoint keys: {len(unexpected)}. First few: {unexpected[:8]}")
 
-    # Store a clean state that can be restored before every trial.
     return {k: v.detach().clone() for k, v in model.state_dict().items()}
 
 
 def target_modules(cfg: EvalConfig, model: nn.Module) -> List[Tuple[str, nn.Module]]:
-    convs: List[Tuple[str, nn.Module]] = []
-    linears: List[Tuple[str, nn.Module]] = []
-    target_keywords = [s.lower() for s in cfg.target_name_keywords] if cfg.target_name_keywords else None
-    exclude_keywords = [s.lower() for s in cfg.exclude_name_keywords]
-
+    modules: List[Tuple[str, nn.Module]] = []
     for name, module in model.named_modules():
-        lname = name.lower()
-        if target_keywords and not any(k in lname for k in target_keywords):
-            continue
-        if any(k in lname for k in exclude_keywords):
-            continue
         if isinstance(module, nn.Conv2d):
-            convs.append((name, module))
+            modules.append((name, module))
         elif cfg.include_linear and isinstance(module, nn.Linear):
-            linears.append((name, module))
-
-    selected_linears = list(linears)
-    if selected_linears and not cfg.include_final_linear:
-        # The final classifier/readout is often digital. Excluding the last Linear by
-        # default avoids overstating photonic output sensitivity.
-        selected_linears = selected_linears[:-1]
-
-    targets = convs + selected_linears
-    if not targets:
-        raise RuntimeError(
-            "No target Conv2d/Linear modules were found. Use --target-keywords or "
-            "--include-final-linear if your model naming differs."
-        )
-    return targets
+            if name == "fc2" and not cfg.include_fc2:
+                continue
+            modules.append((name, module))
+    return modules
 
 
 # =============================================================================
-# Batch/model-output utilities
+# Batch / output utilities
 # =============================================================================
 
 
@@ -458,11 +291,9 @@ def prepare_batch(data: torch.Tensor, cfg: EvalConfig, device: torch.device) -> 
     if not torch.is_tensor(data):
         data = torch.as_tensor(data)
     if data.dim() != 5:
-        raise ValueError(
-            f"Expected CIFAR10-DVS frames with shape [B,T,C,H,W] or [T,B,C,H,W], got {tuple(data.shape)}"
-        )
+        raise ValueError(f"Expected CIFAR10-DVS frames [B,T,C,H,W] or [T,B,C,H,W], got {tuple(data.shape)}")
 
-    # SpikingJelly usually returns [B,T,C,H,W]. Most SNN models in this project use [T,B,C,H,W].
+    # The external SpikingVGG forward uses [T, B, C, H, W].
     if data.shape[1] == cfg.time_steps:
         data = data.transpose(0, 1).contiguous()
     elif data.shape[0] == cfg.time_steps:
@@ -476,50 +307,30 @@ def prepare_batch(data: torch.Tensor, cfg: EvalConfig, device: torch.device) -> 
     return data
 
 
-def aggregate_logits(output: Any, batch_size: int, cfg: EvalConfig) -> torch.Tensor:
+def aggregate_logits(output: Any, cfg: EvalConfig, batch_size: int) -> torch.Tensor:
     if isinstance(output, (tuple, list)):
-        # Prefer the last tensor because some models return (spikes, logits) or similar.
         tensors = [x for x in output if torch.is_tensor(x)]
-        if not tensors:
-            raise TypeError("Model output tuple/list contains no tensor")
         output = tensors[-1]
-
-    if not torch.is_tensor(output):
-        raise TypeError(f"Unsupported model output type: {type(output)}")
-
     if output.dim() == 2:
         return output
-
     if output.dim() == 3:
-        # [T,B,C]
         if output.shape[0] == cfg.time_steps and output.shape[1] == batch_size:
             return output.mean(dim=0)
-        # [B,T,C]
         if output.shape[0] == batch_size and output.shape[1] == cfg.time_steps:
             return output.mean(dim=1)
-        # Fallback: average the first dimension.
         return output.mean(dim=0)
-
-    if output.dim() > 3:
-        # Last dimension should be classes after flattening all temporal/spatial axes.
-        if output.shape[0] == cfg.time_steps and output.shape[1] == batch_size:
-            return output.flatten(start_dim=2).mean(dim=0)
-        if output.shape[0] == batch_size:
-            return output.flatten(start_dim=1)
-
-    raise ValueError(f"Cannot aggregate model output with shape={tuple(output.shape)}")
+    raise ValueError(f"Unsupported model output shape: {tuple(output.shape)}")
 
 
 def reset_snn_state(model: nn.Module) -> None:
     try:
         sf.reset_net(model)
     except Exception:
-        # Some non-SpikingJelly models may not expose resettable states.
         pass
 
 
 # =============================================================================
-# Calibration, activity collection, perturbation injection
+# Calibration / activity / perturbation
 # =============================================================================
 
 
@@ -529,25 +340,20 @@ def symmetric_quantize_fixed_fs(x: torch.Tensor, bits: int, full_scale: float, e
     qmax = (2 ** (bits - 1)) - 1
     if qmax <= 0:
         return x
-    fs_tensor = torch.as_tensor(float(full_scale), dtype=x.dtype, device=x.device)
-    y = torch.clamp(x / fs_tensor, -1.0, 1.0)
-    yq = torch.round(y * qmax) / qmax
-    return yq * fs_tensor
+    fs = torch.as_tensor(float(full_scale), dtype=x.dtype, device=x.device)
+    y = torch.clamp(x / fs, -1.0, 1.0)
+    return torch.round(y * qmax) / qmax * fs
 
 
 class FullScaleCalibrator:
-    """Collect fixed clean full scale per target layer for ADC/threshold simulation."""
-
-    def __init__(self, modules: Sequence[Tuple[str, nn.Module]], percentile: Optional[float] = None):
+    def __init__(self, modules: Sequence[Tuple[str, nn.Module]]):
         self.modules = list(modules)
-        self.percentile = percentile
+        self.max_abs = {name: 0.0 for name, _ in self.modules}
         self.handles: List[Any] = []
-        self.max_abs: Dict[str, float] = {name: 0.0 for name, _ in self.modules}
-        self.samples: Dict[str, List[torch.Tensor]] = {name: [] for name, _ in self.modules}
 
     def __enter__(self) -> "FullScaleCalibrator":
         for name, module in self.modules:
-            self.handles.append(module.register_forward_hook(self._make_hook(name)))
+            self.handles.append(module.register_forward_hook(self._hook_for(name)))
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:
@@ -555,65 +361,31 @@ class FullScaleCalibrator:
             h.remove()
         self.handles.clear()
 
-    def _make_hook(self, name: str):
+    def _hook_for(self, name: str):
         def hook(module: nn.Module, inputs: Tuple[torch.Tensor, ...], output: torch.Tensor):
-            if not torch.is_tensor(output) or output.numel() == 0:
-                return None
-            with torch.no_grad():
-                y = output.detach().abs()
-                self.max_abs[name] = max(self.max_abs[name], float(y.amax().item()))
-                if self.percentile is not None:
-                    # Store a small subsample to avoid huge memory use.
-                    flat = y.flatten()
-                    if flat.numel() > 4096:
-                        idx = torch.linspace(0, flat.numel() - 1, 4096, device=flat.device).long()
-                        flat = flat[idx]
-                    self.samples[name].append(flat.cpu())
+            if torch.is_tensor(output) and output.numel() > 0:
+                self.max_abs[name] = max(self.max_abs[name], float(output.detach().abs().amax().item()))
             return None
         return hook
 
     def full_scales(self) -> Dict[str, float]:
-        if self.percentile is None:
-            return {k: max(v, 1e-12) for k, v in self.max_abs.items()}
-        out: Dict[str, float] = {}
-        for name in self.max_abs:
-            if self.samples[name]:
-                values = torch.cat(self.samples[name])
-                q = torch.quantile(values, float(self.percentile) / 100.0).item()
-                out[name] = max(float(q), 1e-12)
-            else:
-                out[name] = max(self.max_abs[name], 1e-12)
-        return out
+        return {name: max(v, 1e-12) for name, v in self.max_abs.items()}
 
 
 class ActivityCollector:
-    """
-    ADC-request proxy:
-        request = |photonic_output| > comparator_threshold_fs * clean_layer_full_scale
-
-    The key improvement over the previous version is that full scale is fixed from clean
-    calibration. Otherwise, the threshold would move together with each perturbation and
-    hide real comparator/ADC sensitivity.
-    """
-
-    def __init__(
-        self,
-        modules: Sequence[Tuple[str, nn.Module]],
-        full_scales: Dict[str, float],
-        threshold_fs: float = 0.02,
-    ):
+    def __init__(self, modules: Sequence[Tuple[str, nn.Module]], full_scales: Dict[str, float], threshold_fs: float):
         self.modules = list(modules)
         self.full_scales = full_scales
         self.threshold_fs = threshold_fs
         self.handles: List[Any] = []
         self.active_count = 0
         self.total_count = 0
-        self.layer_active: Dict[str, int] = {name: 0 for name, _ in self.modules}
-        self.layer_total: Dict[str, int] = {name: 0 for name, _ in self.modules}
+        self.layer_active = {name: 0 for name, _ in self.modules}
+        self.layer_total = {name: 0 for name, _ in self.modules}
 
     def __enter__(self) -> "ActivityCollector":
         for name, module in self.modules:
-            self.handles.append(module.register_forward_hook(self._make_hook(name)))
+            self.handles.append(module.register_forward_hook(self._hook_for(name)))
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:
@@ -621,16 +393,13 @@ class ActivityCollector:
             h.remove()
         self.handles.clear()
 
-    def _make_hook(self, name: str):
+    def _hook_for(self, name: str):
         def hook(module: nn.Module, inputs: Tuple[torch.Tensor, ...], output: torch.Tensor):
             if not torch.is_tensor(output) or output.numel() == 0:
                 return None
             with torch.no_grad():
-                fs = float(self.full_scales.get(name, 0.0))
-                if fs <= 0:
-                    fs = float(output.detach().abs().amax().item())
-                thresh = self.threshold_fs * max(fs, 1e-12)
-                active = int((output.detach().abs() > thresh).sum().item())
+                threshold = self.threshold_fs * self.full_scales[name]
+                active = int((output.detach().abs() > threshold).sum().item())
                 total = int(output.numel())
                 self.active_count += active
                 self.total_count += total
@@ -640,17 +409,16 @@ class ActivityCollector:
         return hook
 
     def summary(self) -> Dict[str, Any]:
-        ratio = self.active_count / max(self.total_count, 1)
-        layer_ratio = {
+        by_layer = {
             k: self.layer_active[k] / max(self.layer_total[k], 1)
             for k in self.layer_total
             if self.layer_total[k] > 0
         }
         return {
-            "adc_activity_proxy": float(ratio),
+            "adc_activity_proxy": float(self.active_count / max(self.total_count, 1)),
             "adc_active_count": float(self.active_count),
             "adc_total_count": float(self.total_count),
-            "adc_activity_by_layer": layer_ratio,
+            "adc_activity_by_layer": by_layer,
         }
 
 
@@ -687,9 +455,9 @@ class PerturbationContext:
 
         for name, module in self.modules:
             if self.laser_pct > 0:
-                self.handles.append(module.register_forward_pre_hook(self._make_laser_pre_hook(name)))
+                self.handles.append(module.register_forward_pre_hook(self._laser_pre_hook))
             if self.wdm_db is not None or self.tia_noise_fs > 0 or self.adc_bits is not None:
-                self.handles.append(module.register_forward_hook(self._make_output_hook(name)))
+                self.handles.append(module.register_forward_hook(self._output_hook_for(name)))
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:
@@ -700,73 +468,50 @@ class PerturbationContext:
     def _apply_static_mrr_weight_error(self, pct: float) -> None:
         ratio = pct / 100.0
         with torch.no_grad():
-            for name, module in self.modules:
+            for _, module in self.modules:
                 weight = getattr(module, "weight", None)
-                if weight is None:
-                    continue
-                eps = torch.empty_like(weight).uniform_(-ratio, ratio)
-                weight.mul_(1.0 + eps)
+                if weight is not None:
+                    eps = torch.empty_like(weight).uniform_(-ratio, ratio)
+                    weight.mul_(1.0 + eps)
 
-    def _make_laser_pre_hook(self, name: str):
-        def hook(module: nn.Module, inputs: Tuple[torch.Tensor, ...]):
-            if not inputs or not torch.is_tensor(inputs[0]):
-                return inputs
-            x = inputs[0]
-            ratio = self.laser_pct / 100.0
-            if ratio <= 0 or x.numel() == 0:
-                return inputs
+    def _laser_pre_hook(self, module: nn.Module, inputs: Tuple[torch.Tensor, ...]):
+        if not inputs or not torch.is_tensor(inputs[0]):
+            return inputs
+        x = inputs[0]
+        ratio = self.laser_pct / 100.0
+        if ratio <= 0:
+            return inputs
+        if x.dim() == 4:
+            shape = (x.shape[0], x.shape[1], 1, 1)
+        elif x.dim() == 2:
+            shape = (x.shape[0], 1)
+        else:
+            shape = tuple([x.shape[0]] + [1] * (x.dim() - 1))
+        scale = torch.clamp(1.0 + torch.randn(shape, device=x.device, dtype=x.dtype) * ratio, min=0.0)
+        return (x * scale, *inputs[1:])
 
-            # Broadcast multiplicative fluctuation over spatial dimensions. Zero input remains zero.
-            if x.dim() == 5:      # [T,B,C,H,W] or similar
-                shape = (x.shape[0], x.shape[1], x.shape[2], 1, 1)
-            elif x.dim() == 4:    # [B,C,H,W]
-                shape = (x.shape[0], x.shape[1], 1, 1)
-            elif x.dim() == 3:    # [T/B, B/T, C] or [B,N,features]
-                shape = (x.shape[0], x.shape[1], 1)
-            elif x.dim() == 2:    # [B,features]
-                shape = (x.shape[0], 1)
-            else:
-                shape = tuple([x.shape[0]] + [1] * (x.dim() - 1))
-
-            scale = 1.0 + torch.randn(shape, device=x.device, dtype=x.dtype) * ratio
-            scale = torch.clamp(scale, min=0.0)
-            return (x * scale, *inputs[1:])
-        return hook
-
-    def _make_output_hook(self, name: str):
+    def _output_hook_for(self, name: str):
         def hook(module: nn.Module, inputs: Tuple[torch.Tensor, ...], output: torch.Tensor):
             if not torch.is_tensor(output):
                 return output
             y = output
-
             if self.wdm_db is not None:
-                # dB is interpreted as optical-power / photocurrent leakage ratio.
                 leak = 10.0 ** (float(self.wdm_db) / 10.0)
                 y = adjacent_channel_crosstalk(y, leak)
-
             if self.tia_noise_fs > 0:
-                fs = float(self.full_scales.get(name, 0.0))
-                if fs > 0:
-                    std = (self.tia_noise_fs / 100.0) * fs
-                    y = y + torch.randn_like(y) * std
-
+                std = (self.tia_noise_fs / 100.0) * self.full_scales[name]
+                y = y + torch.randn_like(y) * std
             if self.adc_bits is not None:
-                fs = float(self.full_scales.get(name, 0.0))
-                y = symmetric_quantize_fixed_fs(y, int(self.adc_bits), fs)
-
+                y = symmetric_quantize_fixed_fs(y, int(self.adc_bits), self.full_scales[name])
             return y
         return hook
 
 
 def adjacent_channel_crosstalk(y: torch.Tensor, leak: float) -> torch.Tensor:
-    if leak <= 0:
+    if leak <= 0 or y.dim() < 2:
         return y
-
-    if y.dim() == 5 and y.shape[2] >= 2:
-        ch_dim = 2
-    elif y.dim() >= 2 and y.shape[1] >= 2:
-        ch_dim = 1
-    else:
+    ch_dim = 1
+    if y.shape[ch_dim] < 2:
         return y
 
     n_ch = y.shape[ch_dim]
@@ -779,89 +524,91 @@ def adjacent_channel_crosstalk(y: torch.Tensor, leak: float) -> torch.Tensor:
     view_shape[ch_dim] = n_ch
 
     mixed = y * torch.clamp(1.0 - leak * degree.view(*view_shape), min=0.0)
-
     left = torch.zeros_like(y)
     right = torch.zeros_like(y)
 
-    src_prev = [slice(None)] * y.dim()
-    dst_next = [slice(None)] * y.dim()
-    src_prev[ch_dim] = slice(0, n_ch - 1)
-    dst_next[ch_dim] = slice(1, n_ch)
-    left[tuple(dst_next)] = y[tuple(src_prev)]
+    src = [slice(None)] * y.dim()
+    dst = [slice(None)] * y.dim()
+    src[ch_dim] = slice(0, n_ch - 1)
+    dst[ch_dim] = slice(1, n_ch)
+    left[tuple(dst)] = y[tuple(src)]
 
-    src_next = [slice(None)] * y.dim()
-    dst_prev = [slice(None)] * y.dim()
-    src_next[ch_dim] = slice(1, n_ch)
-    dst_prev[ch_dim] = slice(0, n_ch - 1)
-    right[tuple(dst_prev)] = y[tuple(src_next)]
-
+    src = [slice(None)] * y.dim()
+    dst = [slice(None)] * y.dim()
+    src[ch_dim] = slice(1, n_ch)
+    dst[ch_dim] = slice(0, n_ch - 1)
+    right[tuple(dst)] = y[tuple(src)]
     return mixed + leak * (left + right)
 
 
 # =============================================================================
-# Device-calibrated power model
+# External-config-driven power / energy model
 # =============================================================================
 
 
 def hapr_lanes(cfg: EvalConfig, group_size: int) -> int:
-    if cfg.tile_outputs % group_size != 0:
-        raise ValueError(f"tile_outputs={cfg.tile_outputs} must be divisible by HAPR group size G={group_size}")
-    return cfg.tiles * (cfg.tile_outputs // group_size)
+    tiles = int(cfg.hardware_cfg["num_tiles"])
+    tile_outputs = int(cfg.hardware_cfg["array_size"][1])
+    return tiles * (tile_outputs // int(group_size))
 
 
 def estimate_power_energy(
     cfg: EvalConfig,
     adc_activity_proxy: float,
+    input_spike_activity: float,
     group_size: int,
 ) -> Dict[str, float]:
+    """
+    Use configs/config_cifar10dvs.yaml as the source of truth for power numbers.
+
+    The current YAML gives a component-level baseline power model. We scale the
+    event-gated components with measured activity rather than embedding a separate
+    hard-coded power table in this script.
+    """
+    p = cfg.power_cfg
+    ref_alpha = max(float(cfg.reference_adc_activity), 1e-12)
     alpha = float(np.clip(adc_activity_proxy, 0.0, 1.0))
-    n_pd = cfg.tiles * cfg.tile_outputs
-    n_hapr = hapr_lanes(cfg, group_size)
-    n_ref = hapr_lanes(cfg, cfg.reference_hapr_group_size)
 
-    demand_per_cycle = n_hapr * alpha
-    adc_macro_util = min(1.0, demand_per_cycle / max(cfg.adc_macros, 1))
+    lanes = hapr_lanes(cfg, group_size)
+    ref_lanes = hapr_lanes(cfg, cfg.reference_hapr_group_size)
+    lane_scale = lanes / max(ref_lanes, 1)
+    update_scale = (lanes * alpha) / max(ref_lanes * ref_alpha, 1e-12)
+    mod_scale = float(input_spike_activity) / max(float(cfg.reference_input_activity), 1e-12)
 
-    pd_power = n_pd * cfg.pd_mw
-    tia_power = n_hapr * cfg.tia_mw
-    comp_power = n_hapr * cfg.comparator_mw
-    adc_power = cfg.adc_macros * cfg.adc_macro_mw * adc_macro_util
-    selection_power = n_hapr * cfg.switch_proxy_mw
-    mod_power = cfg.input_mod_lanes * cfg.modulator_mw * cfg.input_spike_activity
-    laser_power = cfg.laser_power_mw
+    static_mw = float(p["cw_laser_source_mw"] + p["global_mrr_stabilization_mw"] + p["leakage_misc_io_mw"])
+    modulator_mw = float(p["event_gated_modulator_drivers_mw"]) * mod_scale
+    pd_tia_cmp_mw = float(p["pd_tia_comparator_mw"]) * lane_scale
+    adc_pool_mw = float(p["shared_adc_pool_mw"]) * min(update_scale, 1.0 / ref_alpha)
+    sram_mw = float(p["sram_register_files_mw"]) * update_scale
+    noc_mw = float(p["noc_bus_controller_clock_mw"]) * update_scale
 
-    # SRAM/NoC/LIF scale with number of ADC-requested membrane updates relative to the Section-4 main point.
-    ref_demand = max(n_ref * cfg.reference_adc_activity, 1e-12)
-    update_scale = demand_per_cycle / ref_demand
-    sram_power = cfg.sram_power_mw_ref * update_scale
-    noc_power = cfg.noc_power_mw_ref * update_scale
-    lif_power = cfg.lif_power_mw_ref * update_scale
+    # The uploaded YAML does not expose a separate digital LIF primitive power.
+    # If a future YAML adds it, this line will use it automatically.
+    lif_mw = float(p.get("digital_lif_update_mw", 0.0)) * update_scale
 
-    total_mw = (
-        pd_power + tia_power + comp_power + adc_power + selection_power + mod_power + laser_power
-        + sram_power + noc_power + lif_power
-    )
+    total_mw = static_mw + modulator_mw + pd_tia_cmp_mw + adc_pool_mw + sram_mw + noc_mw + lif_mw
     power_w = total_mw / 1000.0
     energy_uJ = power_w * cfg.image_latency_ms * 1000.0
 
     return {
         "hapr_group_size": float(group_size),
-        "hapr_lanes": float(n_hapr),
-        "adc_demand_per_cycle": float(demand_per_cycle),
-        "adc_macro_utilization": float(adc_macro_util),
-        "pd_power_mw": float(pd_power),
-        "tia_power_mw": float(tia_power),
-        "comparator_power_mw": float(comp_power),
-        "adc_power_mw": float(adc_power),
-        "selection_power_mw": float(selection_power),
-        "modulator_power_mw": float(mod_power),
-        "laser_power_mw": float(laser_power),
-        "sram_power_mw": float(sram_power),
-        "noc_power_mw": float(noc_power),
-        "lif_power_mw": float(lif_power),
+        "hapr_lanes": float(lanes),
+        "adc_demand_per_cycle": float(lanes * alpha),
+        "adc_macro_utilization": float(min(1.0, (lanes * alpha) / max(cfg.adc_macros, 1))),
+        "lane_scale": float(lane_scale),
+        "update_scale": float(update_scale),
+        "modulator_activity_scale": float(mod_scale),
+        "static_power_mw": float(static_mw),
+        "modulator_power_mw": float(modulator_mw),
+        "pd_tia_comparator_power_mw": float(pd_tia_cmp_mw),
+        "adc_pool_power_mw": float(adc_pool_mw),
+        "sram_power_mw": float(sram_mw),
+        "noc_power_mw": float(noc_mw),
+        "lif_power_mw": float(lif_mw),
         "total_power_mw": float(total_mw),
         "power_w": float(power_w),
         "energy_uJ_per_image": float(energy_uJ),
+        "config_baseline_total_system_power_w": float(p["total_system_power_w"]),
     }
 
 
@@ -879,20 +626,15 @@ def calibrate_full_scales(
     modules: Sequence[Tuple[str, nn.Module]],
 ) -> Dict[str, float]:
     model.eval()
-    print(f"\n[calibration] Collecting clean full scale from {cfg.calibration_batches} batch(es)")
     with FullScaleCalibrator(modules) as cal:
-        for batch_idx, (data, targets) in enumerate(tqdm(loader, desc="Calibrating", leave=False)):
+        for batch_idx, (data, _) in enumerate(tqdm(loader, desc="Calibrating", leave=False)):
             if batch_idx >= cfg.calibration_batches:
                 break
             reset_snn_state(model)
             data = prepare_batch(data, cfg, device)
             _ = model(data)
     reset_snn_state(model)
-    fs = cal.full_scales()
-    print("[calibration] Full-scale summary:")
-    for name, value in fs.items():
-        print(f"  {name}: {value:.6g}")
-    return fs
+    return cal.full_scales()
 
 
 @torch.no_grad()
@@ -918,28 +660,23 @@ def run_evaluation(
     for batch_idx, (data, targets) in enumerate(tqdm(loader, desc="Evaluating", leave=False)):
         if cfg.max_batches is not None and batch_idx >= cfg.max_batches:
             break
-
         reset_snn_state(model)
         data = prepare_batch(data, cfg, device)
-        targets = targets.to(device, non_blocking=True)
-        if targets.dim() > 1:
-            targets = targets.view(-1)
+        targets = targets.to(device, non_blocking=True).view(-1)
 
         input_active += int((data > 0).sum().item())
         input_total += int(data.numel())
 
         with amp_ctx:
-            out = model(data)
-            logits = aggregate_logits(out, batch_size=targets.numel(), cfg=cfg)
+            logits = aggregate_logits(model(data), cfg, batch_size=targets.numel())
 
         pred = logits.argmax(dim=1)
         total += int(targets.numel())
         correct += int((pred == targets).sum().item())
 
     reset_snn_state(model)
-    acc = 100.0 * correct / max(total, 1)
     metrics: Dict[str, Any] = {
-        "accuracy": float(acc),
+        "accuracy": float(100.0 * correct / max(total, 1)),
         "num_samples": float(total),
         "input_spike_activity": float(input_active / max(input_total, 1)),
         "input_active_count": float(input_active),
@@ -966,20 +703,23 @@ def evaluate_condition(
 ) -> Dict[str, Any]:
     threshold_fs = cfg.comparator_threshold_fs if threshold_fs is None else threshold_fs
     hapr_group_size = cfg.hapr_group_size if hapr_group_size is None else hapr_group_size
-
     trial_metrics: List[Dict[str, Any]] = []
-    trials = max(int(trials), 1)
 
-    for t in range(trials):
+    for t in range(max(int(trials), 1)):
         model.load_state_dict(clean_state, strict=True)
         reset_snn_state(model)
         seed = cfg.seed + 1009 * (t + 1)
         with PerturbationContext(modules, full_scales, seed=seed, **perturb_kwargs):
             with ActivityCollector(modules, full_scales, threshold_fs=threshold_fs) as collector:
                 metrics = run_evaluation(model, loader, cfg, device, collector=collector)
-
-        power = estimate_power_energy(cfg, metrics.get("adc_activity_proxy", 0.0), hapr_group_size)
-        metrics.update(power)
+        metrics.update(
+            estimate_power_energy(
+                cfg,
+                adc_activity_proxy=metrics.get("adc_activity_proxy", 0.0),
+                input_spike_activity=metrics.get("input_spike_activity", cfg.reference_input_activity),
+                group_size=hapr_group_size,
+            )
+        )
         trial_metrics.append(metrics)
 
     def arr(key: str) -> np.ndarray:
@@ -990,7 +730,7 @@ def evaluate_condition(
         "perturbation": perturb_kwargs,
         "threshold_fs": float(threshold_fs),
         "hapr_group_size": int(hapr_group_size),
-        "num_trials": int(trials),
+        "num_trials": int(len(trial_metrics)),
         "trials": trial_metrics,
         "accuracy_mean": float(np.nanmean(arr("accuracy"))),
         "accuracy_std": float(np.nanstd(arr("accuracy"))),
@@ -1008,7 +748,7 @@ def evaluate_condition(
 
 
 # =============================================================================
-# Output helpers
+# Output
 # =============================================================================
 
 
@@ -1016,7 +756,7 @@ def json_safe(obj: Any) -> Any:
     if isinstance(obj, dict):
         return {str(k): json_safe(v) for k, v in obj.items()}
     if isinstance(obj, (list, tuple)):
-        return [json_safe(v) for v in obj]
+        return [json_safe(x) for x in obj]
     if isinstance(obj, np.generic):
         return obj.item()
     if torch.is_tensor(obj):
@@ -1026,24 +766,11 @@ def json_safe(obj: Any) -> Any:
 
 def write_csv(path: Path, rows: List[Dict[str, Any]]) -> None:
     fieldnames = [
-        "group",
-        "condition",
-        "accuracy_mean",
-        "accuracy_std",
-        "adc_activity_proxy_mean",
-        "adc_activity_proxy_std",
-        "input_spike_activity_mean",
-        "threshold_fs",
-        "hapr_group_size",
-        "hapr_lanes",
-        "adc_demand_per_cycle_mean",
-        "adc_macro_utilization_mean",
-        "power_w_mean",
-        "power_w_std",
-        "energy_uJ_per_image_mean",
-        "energy_uJ_per_image_std",
-        "num_trials",
-        "perturbation",
+        "group", "condition", "accuracy_mean", "accuracy_std",
+        "adc_activity_proxy_mean", "adc_activity_proxy_std", "input_spike_activity_mean",
+        "threshold_fs", "hapr_group_size", "hapr_lanes", "adc_demand_per_cycle_mean",
+        "adc_macro_utilization_mean", "power_w_mean", "power_w_std",
+        "energy_uJ_per_image_mean", "energy_uJ_per_image_std", "num_trials", "perturbation",
     ]
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -1075,26 +802,25 @@ def write_plots(output_dir: Path, rows: List[Dict[str, Any]]) -> None:
     try:
         import matplotlib.pyplot as plt
     except Exception:
-        print("[WARN] matplotlib is unavailable. Skipping plots.")
+        print("[WARN] matplotlib is unavailable. Skip plots.")
         return
 
-    def select(group: str) -> List[Dict[str, Any]]:
-        return [r for r in rows if r.get("group") == group]
-
-    def x_from_condition(row: Dict[str, Any]) -> str:
-        return str(row.get("name", ""))
-
-    for group in sorted(set(str(r.get("group", "")) for r in rows)):
-        group_rows = select(group)
+    groups = sorted(set(str(r.get("group", "")) for r in rows))
+    for group in groups:
+        group_rows = [r for r in rows if r.get("group") == group]
         if not group_rows:
             continue
         x = list(range(len(group_rows)))
-        labels = [x_from_condition(r) for r in group_rows]
-        y = [r.get("accuracy_mean", np.nan) for r in group_rows]
-        yerr = [r.get("accuracy_std", 0.0) for r in group_rows]
+        labels = [str(r.get("name", "")) for r in group_rows]
 
         plt.figure(figsize=(max(7, len(labels) * 0.8), 4.2))
-        plt.errorbar(x, y, yerr=yerr, marker="o", capsize=3)
+        plt.errorbar(
+            x,
+            [r.get("accuracy_mean", np.nan) for r in group_rows],
+            yerr=[r.get("accuracy_std", 0.0) for r in group_rows],
+            marker="o",
+            capsize=3,
+        )
         plt.xticks(x, labels, rotation=35, ha="right")
         plt.ylabel("Accuracy (%)")
         plt.title(group)
@@ -1102,9 +828,8 @@ def write_plots(output_dir: Path, rows: List[Dict[str, Any]]) -> None:
         plt.savefig(output_dir / f"{group}_accuracy.png", dpi=200)
         plt.close()
 
-        y2 = [r.get("energy_uJ_per_image_mean", np.nan) for r in group_rows]
         plt.figure(figsize=(max(7, len(labels) * 0.8), 4.2))
-        plt.plot(x, y2, marker="o")
+        plt.plot(x, [r.get("energy_uJ_per_image_mean", np.nan) for r in group_rows], marker="o")
         plt.xticks(x, labels, rotation=35, ha="right")
         plt.ylabel("Energy per image (uJ)")
         plt.title(f"{group} energy")
@@ -1114,29 +839,21 @@ def write_plots(output_dir: Path, rows: List[Dict[str, Any]]) -> None:
 
 
 def write_readme(path: Path, cfg: EvalConfig) -> None:
-    text = f"""# HIPSA eval_03 robustness results
-
-This directory was generated by `eval_03_robustness_fixed.py`.
-
-Main files:
-- `eval_03_robustness_results.json`: full per-trial and per-condition results.
-- `eval_03_robustness_summary.csv`: compact table for paper figures.
-- `*_accuracy.png` and `*_energy.png`: quick-look plots, if matplotlib is installed.
-
-Interpretation notes:
-- Accuracy is measured from the PyTorch/SpikingJelly SNN model.
-- `adc_activity_proxy` is the fraction of selected photonic-layer outputs above the comparator threshold.
-- Full scale is calibrated from the clean model using {cfg.calibration_batches} batch(es).
-- Energy/image is computed from the device-calibrated Section-4-style model using the measured ADC activity proxy.
-- HAPR group-size sweep changes HAPR/TIA/comparator lane count and ADC demand in the power model; it does not change CNN channel semantics.
-- This is an architecture-level hardware-aware inference simulation, not fabricated-chip measurement.
-"""
-    path.write_text(text, encoding="utf-8")
-
-
-# =============================================================================
-# Main sweep
-# =============================================================================
+    path.write_text(
+        "# HIPSA eval_03 robustness results\n\n"
+        "Generated by eval_03_robustness_external_config.py.\n\n"
+        "Main outputs:\n"
+        "- eval_03_robustness_results.json: full per-trial results.\n"
+        "- eval_03_robustness_summary.csv: compact table for paper figures.\n"
+        "- *_accuracy.png and *_energy.png: quick-look plots if matplotlib is installed.\n\n"
+        "Notes:\n"
+        "- Model architecture is imported from models/snn_vgg.py.\n"
+        "- Workload, hardware, precision, and power entries are loaded from configs/config_cifar10dvs.yaml.\n"
+        "- Comparator/request activity uses clean calibrated full scales.\n"
+        "- HAPR G sweep changes HAPR/request/power accounting, not CNN channel semantics.\n"
+        f"- Config path: {cfg.config_path}\n",
+        encoding="utf-8",
+    )
 
 
 def run_and_record(
@@ -1156,219 +873,170 @@ def run_and_record(
     threshold_fs: Optional[float] = None,
     hapr_group_size: Optional[int] = None,
 ) -> Dict[str, Any]:
-    res = evaluate_condition(
-        condition_name,
-        model,
-        clean_state,
-        loader,
-        cfg,
-        device,
-        modules,
-        full_scales,
-        perturb_kwargs=perturb_kwargs,
-        trials=trials,
-        threshold_fs=threshold_fs,
-        hapr_group_size=hapr_group_size,
+    result = evaluate_condition(
+        condition_name, model, clean_state, loader, cfg, device, modules, full_scales,
+        perturb_kwargs=perturb_kwargs, trials=trials,
+        threshold_fs=threshold_fs, hapr_group_size=hapr_group_size,
     )
-    res["group"] = group_name
-    all_results.setdefault("groups", {}).setdefault(group_name, []).append(res)
-    flat_rows.append(res)
+    result["group"] = group_name
+    all_results.setdefault("groups", {}).setdefault(group_name, []).append(result)
+    flat_rows.append(result)
     print(
-        f"  acc={res['accuracy_mean']:.2f}±{res['accuracy_std']:.2f}% | "
-        f"ADC_act={res['adc_activity_proxy_mean']:.4f} | "
-        f"P={res['power_w_mean']:.3f} W | E={res['energy_uJ_per_image_mean']:.1f} uJ"
+        f"  acc={result['accuracy_mean']:.2f}±{result['accuracy_std']:.2f}% | "
+        f"ADC_act={result['adc_activity_proxy_mean']:.4f} | "
+        f"P={result['power_w_mean']:.3f} W | "
+        f"E={result['energy_uJ_per_image_mean']:.1f} uJ"
     )
-    return res
+    return result
+
+
+# =============================================================================
+# Main
+# =============================================================================
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="HIPSA eval_03 device-calibrated robustness evaluation")
-    parser.add_argument("--config", type=str, default="config_cifar10dvs.yaml")
+    parser = argparse.ArgumentParser(description="HIPSA eval_03 robustness evaluation")
+    parser.add_argument("--config", type=str, default="configs/config_cifar10dvs.yaml")
     parser.add_argument("--dataset-root", type=str, default=None)
-    parser.add_argument("--checkpoint", type=str, default="./results/snn_vgg_best.pth")
-    parser.add_argument("--output-dir", type=str, default="./results/eval_03_robustness")
+    parser.add_argument("--checkpoint", type=str, default="results/snn_vgg_best.pth")
+    parser.add_argument("--output-dir", type=str, default="results/eval_03_robustness")
     parser.add_argument("--batch-size", type=int, default=None)
-    parser.add_argument("--num-workers", type=int, default=None)
+    parser.add_argument("--num-workers", type=int, default=4)
     parser.add_argument("--time-steps", type=int, default=None)
-    parser.add_argument("--split-ratio", type=float, default=None)
+    parser.add_argument("--split-ratio", type=float, default=0.9)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--trials", type=int, default=3)
-    parser.add_argument("--max-batches", type=int, default=None, help="Debug only: evaluate at most this many batches.")
-    parser.add_argument("--amp", action="store_true", help="Enable AMP on CUDA. Disabled by default for stable robustness numbers.")
-    parser.add_argument("--no-binarize", action="store_true", help="Use this if training used raw event counts instead of binary frames.")
+    parser.add_argument("--max-batches", type=int, default=None)
+    parser.add_argument("--amp", action="store_true")
+    parser.add_argument("--no-binarize", action="store_true")
     parser.add_argument("--device", type=str, default="auto")
-
-    parser.add_argument("--model-module", type=str, default=None, help="e.g. models.snn_vgg or snn_vgg")
-    parser.add_argument("--model-class", type=str, default=None, help="e.g. SpikingVGG")
-    parser.add_argument("--model-kwargs", type=str, default=None, help="JSON dict passed to model constructor.")
-    parser.add_argument("--conv-only", action="store_true", help="Perturb only Conv2d layers.")
-    parser.add_argument("--include-final-linear", action="store_true", help="Also perturb the final Linear classifier/readout.")
-    parser.add_argument("--target-keywords", type=str, default=None, help="Comma-separated layer-name keywords to include.")
-    parser.add_argument("--exclude-keywords", type=str, default="lif,bn,batchnorm,pool", help="Comma-separated layer-name keywords to exclude.")
-
+    parser.add_argument("--conv-only", action="store_true")
+    parser.add_argument("--include-fc2", action="store_true")
     parser.add_argument("--calibration-batches", type=int, default=8)
     parser.add_argument("--comparator-threshold-fs", type=float, default=0.02)
-    parser.add_argument("--default-adc-bits", type=int, default=6)
-    parser.add_argument("--hapr-group-size", type=int, default=8)
-    parser.add_argument("--hapr-tia-noise-base-fs", type=float, default=0.0,
-                        help="Optional TIA noise scaling used in the HAPR G sweep. 0 keeps accuracy unchanged by G.")
+    parser.add_argument("--default-adc-bits", type=int, default=None)
+    parser.add_argument("--hapr-group-size", type=int, default=None)
+    parser.add_argument("--hapr-tia-noise-base-fs", type=float, default=0.0)
+    parser.add_argument("--image-latency-ms", type=float, default=None)
     parser.add_argument("--no-plots", action="store_true")
-
     args = parser.parse_args()
+
     cfg = build_config(args)
     set_seed(cfg.seed)
     device = choose_device(cfg.device)
 
-    print("=== HIPSA eval_03: device-calibrated robustness ===")
-    print(f"Working directory: {CWD}")
-    print(f"Script directory:  {SCRIPT_DIR}")
-    print(f"Device:            {device}")
-    print(f"Config:            {json.dumps(json_safe(asdict(cfg)), ensure_ascii=False, indent=2)}")
-
     output_dir = Path(cfg.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    print("=== HIPSA eval_03 robustness ===")
+    print(f"Config file:  {cfg.config_path}")
+    print(f"Dataset root: {cfg.dataset_root}")
+    print(f"Checkpoint:   {cfg.checkpoint}")
+    print(f"Output dir:   {cfg.output_dir}")
+    print(f"Device:       {device}")
+    print(f"T / batch:    {cfg.time_steps} / {cfg.batch_size}")
 
     loader = build_loader(cfg)
     model = instantiate_model(cfg, device)
     clean_state = load_checkpoint(model, cfg.checkpoint, device)
     modules = target_modules(cfg, model)
 
-    print("\nTarget photonic/MVM modules:")
+    print("Target photonic/MVM modules:")
     for name, module in modules:
         print(f"  {name}: {module.__class__.__name__}")
 
-    # Calibrate full scale from the clean checkpoint.
     model.load_state_dict(clean_state, strict=True)
     full_scales = calibrate_full_scales(model, loader, cfg, device, modules)
 
     all_results: Dict[str, Any] = {
         "config": json_safe(asdict(cfg)),
+        "raw_yaml_config": json_safe(cfg.raw_config),
+        "model_import": "from models.snn_vgg import SpikingVGG",
         "target_modules": [name for name, _ in modules],
         "full_scales": full_scales,
-        "notes": {
-            "dataset_split": "CIFAR10-DVS has no official train/test split. Use the same split/indices as training for final paper numbers.",
-            "full_scale": "ADC quantization and comparator thresholds use clean calibrated layer full scales.",
-            "power_model": "Energy/image is computed from Section-4-style device-calibrated power model using measured ADC activity proxy.",
-            "scope": "Architecture-level hardware-aware inference simulation, not fabricated-chip measurement.",
-        },
         "groups": {},
     }
     flat_rows: List[Dict[str, Any]] = []
 
     print("\n[0] Clean baseline")
     baseline = run_and_record(
-        all_results,
-        flat_rows,
-        "baseline",
-        "clean",
-        model,
-        clean_state,
-        loader,
-        cfg,
-        device,
-        modules,
-        full_scales,
-        perturb_kwargs={},
-        trials=1,
-        threshold_fs=cfg.comparator_threshold_fs,
-        hapr_group_size=cfg.hapr_group_size,
+        all_results, flat_rows, "baseline", "clean", model, clean_state, loader, cfg, device,
+        modules, full_scales, perturb_kwargs={}, trials=1,
+        threshold_fs=cfg.comparator_threshold_fs, hapr_group_size=cfg.hapr_group_size,
     )
     all_results["baseline"] = baseline
     if baseline["accuracy_mean"] < 70:
-        print(
-            "[WARN] Clean accuracy is low. First check checkpoint/model/T/preprocessing/split. "
-            "Try --no-binarize if the model was trained on raw event counts."
-        )
+        print("[WARN] Clean accuracy is low. Check split/T/preprocessing/checkpoint. Try --no-binarize if training used raw counts.")
 
-    # A. Photonic single-factor sweeps.
     group = "photonic_single_factor"
     for pct in [0.0, 1.0, 2.0, 3.0, 5.0]:
         print(f"\n[A] MRR static transmission perturbation {pct:.1f}%")
         run_and_record(
-            all_results, flat_rows, group, f"MRR_{pct:.1f}pct",
-            model, clean_state, loader, cfg, device, modules, full_scales,
-            perturb_kwargs={"mrr_pct": pct},
-            trials=cfg.trials if pct > 0 else 1,
+            all_results, flat_rows, group, f"MRR_{pct:.1f}pct", model, clean_state, loader,
+            cfg, device, modules, full_scales, {"mrr_pct": pct}, cfg.trials if pct > 0 else 1,
         )
 
     for pct in [0.0, 1.0, 2.0, 3.0]:
         print(f"\n[A] Laser intensity fluctuation {pct:.1f}%")
         run_and_record(
-            all_results, flat_rows, group, f"Laser_{pct:.1f}pct",
-            model, clean_state, loader, cfg, device, modules, full_scales,
-            perturb_kwargs={"laser_pct": pct},
-            trials=cfg.trials if pct > 0 else 1,
+            all_results, flat_rows, group, f"Laser_{pct:.1f}pct", model, clean_state, loader,
+            cfg, device, modules, full_scales, {"laser_pct": pct}, cfg.trials if pct > 0 else 1,
         )
 
     for db in [-30, -25, -20, -15]:
         print(f"\n[A] WDM adjacent-channel crosstalk {db} dB")
         run_and_record(
-            all_results, flat_rows, group, f"WDM_{db}dB",
-            model, clean_state, loader, cfg, device, modules, full_scales,
-            perturb_kwargs={"wdm_db": float(db)},
-            trials=1,
+            all_results, flat_rows, group, f"WDM_{db}dB", model, clean_state, loader,
+            cfg, device, modules, full_scales, {"wdm_db": float(db)}, 1,
         )
 
-    # B. Combined photonic stress cases.
     group = "photonic_combined_stress"
-    combined = [
+    for cname, kwargs in [
         ("nominal", {"mrr_pct": 0.0, "laser_pct": 0.0, "wdm_db": -30.0}),
         ("mild", {"mrr_pct": 1.0, "laser_pct": 1.0, "wdm_db": -30.0}),
         ("moderate", {"mrr_pct": 3.0, "laser_pct": 2.0, "wdm_db": -25.0}),
         ("severe", {"mrr_pct": 5.0, "laser_pct": 3.0, "wdm_db": -20.0}),
         ("very_severe", {"mrr_pct": 5.0, "laser_pct": 3.0, "wdm_db": -15.0}),
-    ]
-    for cname, kwargs in combined:
-        print(f"\n[B] Combined photonic stress: {cname} {kwargs}")
+    ]:
+        print(f"\n[B] Combined photonic stress: {cname}")
         run_and_record(
-            all_results, flat_rows, group, cname,
-            model, clean_state, loader, cfg, device, modules, full_scales,
-            perturb_kwargs=kwargs,
-            trials=cfg.trials if cname != "nominal" else 1,
+            all_results, flat_rows, group, cname, model, clean_state, loader, cfg, device,
+            modules, full_scales, kwargs, cfg.trials if cname != "nominal" else 1,
         )
 
-    # C. Conversion/request front-end sweeps.
     group = "conversion_path"
     for bits in [4, 5, 6, 8]:
         print(f"\n[C] ADC quantization {bits}-bit")
         run_and_record(
-            all_results, flat_rows, group, f"ADC_{bits}bit",
-            model, clean_state, loader, cfg, device, modules, full_scales,
-            perturb_kwargs={"adc_bits": bits},
-            trials=1,
+            all_results, flat_rows, group, f"ADC_{bits}bit", model, clean_state, loader,
+            cfg, device, modules, full_scales, {"adc_bits": bits}, 1,
         )
 
     for thr in [0.01, 0.02, 0.05, 0.10]:
         print(f"\n[C] Comparator threshold {thr:.2f} full scale")
         run_and_record(
-            all_results, flat_rows, group, f"THR_{thr:.2f}FS",
-            model, clean_state, loader, cfg, device, modules, full_scales,
-            perturb_kwargs={},
-            trials=1,
-            threshold_fs=thr,
+            all_results, flat_rows, group, f"THR_{thr:.2f}FS", model, clean_state, loader,
+            cfg, device, modules, full_scales, {}, 1, threshold_fs=thr,
         )
 
     for g in [4, 8, 16]:
         tia_noise = cfg.hapr_tia_noise_base_fs * math.sqrt(g / max(cfg.reference_hapr_group_size, 1))
         print(f"\n[C] HAPR group size G={g}, optional TIA noise={tia_noise:.3f}% FS")
         run_and_record(
-            all_results, flat_rows, group, f"HAPR_G{g}",
-            model, clean_state, loader, cfg, device, modules, full_scales,
-            perturb_kwargs={"tia_noise_fs": tia_noise} if tia_noise > 0 else {},
-            trials=cfg.trials if tia_noise > 0 else 1,
-            threshold_fs=cfg.comparator_threshold_fs,
+            all_results, flat_rows, group, f"HAPR_G{g}", model, clean_state, loader,
+            cfg, device, modules, full_scales,
+            {"tia_noise_fs": tia_noise} if tia_noise > 0 else {},
+            cfg.trials if tia_noise > 0 else 1,
             hapr_group_size=g,
         )
 
-    # Extra TIA/HAPR disturbance sweep. This is useful for the figure supplement and for reviewers.
     group = "tia_disturbance"
     for fs in [0.0, 0.5, 1.0, 2.0, 3.0]:
         print(f"\n[D] HAPR/TIA output disturbance {fs:.1f}% full scale")
         run_and_record(
-            all_results, flat_rows, group, f"TIA_{fs:.1f}pctFS",
-            model, clean_state, loader, cfg, device, modules, full_scales,
-            perturb_kwargs={"tia_noise_fs": fs},
-            trials=cfg.trials if fs > 0 else 1,
+            all_results, flat_rows, group, f"TIA_{fs:.1f}pctFS", model, clean_state, loader,
+            cfg, device, modules, full_scales, {"tia_noise_fs": fs}, cfg.trials if fs > 0 else 1,
         )
 
     json_path = output_dir / "eval_03_robustness_results.json"
