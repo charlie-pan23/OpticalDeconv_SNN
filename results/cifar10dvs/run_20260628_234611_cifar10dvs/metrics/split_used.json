@@ -1,0 +1,8 @@
+{
+  "split_file": "datasets/CIFAR10DVS/splits/cifar10dvs_T10_seed42_split.pth",
+  "split_summary": {
+    "train": 8000,
+    "val": 1000,
+    "test": 1000
+  }
+}
