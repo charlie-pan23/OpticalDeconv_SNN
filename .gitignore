@@ -4,3 +4,5 @@
 .vscode/
 
 test.py
+
+# unset LD_LIBRARY_PATH
