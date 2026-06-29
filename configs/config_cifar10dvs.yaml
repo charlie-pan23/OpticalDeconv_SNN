@@ -108,13 +108,13 @@ model:
     surrogate: "sigmoid"
     surrogate_alpha: 4.0
   regularization:
-    dropout: 0.2
+    dropout: 0.3
     use_batchnorm: true
 
 training:
   epochs: 120
-  batch_size_train: 96
-  batch_size_eval: 192
+  batch_size_train: 64
+  batch_size_eval: 128
   num_workers: 16
   pin_memory: true
   persistent_workers: true
@@ -130,7 +130,7 @@ training:
   optimizer:
     name: "adamw"
     lr: 0.001
-    weight_decay: 0.0005
+    weight_decay: 0.0001
     betas: [0.9, 0.999]
   scheduler:
     name: "cosine_warmup"
@@ -149,8 +149,10 @@ training:
     save_last: true
     save_interval_epochs: 10
   early_stopping:
-    enabled: false
-    patience: 30
+    enabled: true
+    min_epochs: 60
+    patience: 15
+    min_delta: 0.2
 
 augmentation:
   enabled: true
