@@ -15,6 +15,8 @@ import sys
 from pathlib import Path
 from typing import Any, Dict
 
+from tqdm import tqdm
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -120,6 +122,12 @@ def main() -> None:
     }}, run_dir / "metrics" / "split_used.json")
 
     model = build_model(config).to(device)
+    tqdm.write("=== DVS Gesture training ===")
+    tqdm.write(f"Run dir: {run_dir}")
+    tqdm.write(f"Device: {device}")
+    tqdm.write(f"Model: {describe_model(model)}")
+    tqdm.write(f"Train/Val/Test samples: {len(train_ds)} / {len(val_ds)} / {len(test_ds)}")
+
     logger.info("=== DVS Gesture training ===")
     logger.info(f"Run dir: {run_dir}")
     logger.info(f"Device: {device}")
@@ -132,6 +140,7 @@ def main() -> None:
     scaler = get_grad_scaler(bool(tr.get("amp", False)))
 
     if args.resume:
+        tqdm.write(f"Loading checkpoint: {args.resume}")
         logger.info(f"Loading checkpoint: {args.resume}")
         load_model_weights(model, args.resume, device)
 
@@ -139,6 +148,7 @@ def main() -> None:
         ckpt = args.resume or str(run_dir / "checkpoints" / "best_val.pth")
         load_model_weights(model, ckpt, device)
         test_metrics = evaluate(model, test_loader, criterion, config, device, desc="Test")
+        tqdm.write(f"Eval-only test metrics: {test_metrics}")
         logger.info(f"Eval-only test metrics: {test_metrics}")
         save_json(test_metrics, run_dir / "metrics" / "eval_only_test.json")
         return
@@ -165,6 +175,11 @@ def main() -> None:
             "val_acc": val_metrics["acc"],
         }
         append_csv_row(train_log, row)
+        tqdm.write(
+            f"Epoch {epoch:03d}/{epochs} | LR {lr:.6g} | "
+            f"Train {train_metrics['acc']:.2f}% loss {train_metrics['loss']:.4f} | "
+            f"Val {val_metrics['acc']:.2f}% loss {val_metrics['loss']:.4f}"
+        )
         logger.info(
             f"Epoch {epoch:03d}/{epochs} | LR {lr:.6g} | "
             f"Train {train_metrics['acc']:.2f}% loss {train_metrics['loss']:.4f} | "
@@ -179,6 +194,7 @@ def main() -> None:
             best_val = float(val_metrics["acc"])
             best_epoch = epoch
             save_checkpoint(run_dir / "checkpoints" / "best_val.pth", model, optimizer, scheduler, epoch, {"train": train_metrics, "val": val_metrics}, config)
+            tqdm.write(f"New best val checkpoint: epoch {epoch}, val_acc={best_val:.2f}%")
             logger.info(f"New best val checkpoint: epoch {epoch}, val_acc={best_val:.2f}%")
 
     best_path = run_dir / "checkpoints" / "best_val.pth"
@@ -186,6 +202,8 @@ def main() -> None:
     test_metrics = evaluate(model, test_loader, criterion, config, device, desc="Final Test")
     final = {"best_epoch": best_epoch, "best_val_acc": best_val, "test": test_metrics, "run_dir": str(run_dir)}
     save_json(final, run_dir / "metrics" / "final_test.json")
+    tqdm.write(f"Final test with best-val checkpoint: {test_metrics}")
+    tqdm.write("=== DVS Gesture training complete ===")
     logger.info(f"Final test with best-val checkpoint: {test_metrics}")
     logger.info("=== DVS Gesture training complete ===")
 
