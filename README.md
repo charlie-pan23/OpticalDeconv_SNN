@@ -67,6 +67,8 @@ python eval/eval_02_power_perf.py \
   --hardware configs/hardware_hipsa.yaml \
   --device-params configs/device_params.yaml
 ```
+
+conservative baseline, adc_threshold_fs = 0.02
 ```
 CIFAR10-DVS 
 
