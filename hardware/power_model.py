@@ -1,4 +1,13 @@
-"""Device-calibrated power model for HIPSA eval02/eval03."""
+"""Device-calibrated power model for HIPSA eval02/eval03.
+
+The v2 model separates activity domains instead of scaling every component by a
+single global activity ratio:
+
+- modulator activity      <- MVM input activity / active SOP ratio
+- ADC pool activity       <- comparator/HAPR ADC request activity
+- SRAM + digital LIF      <- ADC request / membrane update proxy
+- NoC spike traffic       <- input spike activity and LIF output spike activity
+"""
 
 from __future__ import annotations
 
@@ -22,6 +31,14 @@ def _get_device_param(device_cfg: Mapping[str, Any], path: tuple[str, ...], defa
         return float(default)
 
 
+def _bounded(value: Any, default: float = 0.0) -> float:
+    try:
+        v = float(value)
+    except Exception:
+        v = float(default)
+    return min(max(v, 0.0), 1.0)
+
+
 def estimate_power(
     activity: Mapping[str, Any],
     sop_summary: Mapping[str, Any],
@@ -32,11 +49,20 @@ def estimate_power(
     device_cfg: Mapping[str, Any],
     mrr_stabilization_mw: float | None = None,
 ) -> Dict[str, Any]:
-    """Estimate HIPSA component power from device params and activity factors."""
-    input_act = float(activity.get("input_spike_activity", 0.0))
-    active_ratio = float(sop_summary.get("active_sop_ratio", activity.get("active_sop_ratio", 0.0)))
-    adc_act = float(adc_requests.get("adc_activity_proxy", activity.get("adc_activity_proxy", 0.0)))
-    adc_util = float(adc_pool.get("adc_macro_utilization", 0.0))
+    """Estimate HIPSA component power from device params and separated activity factors."""
+    input_act = _bounded(activity.get("input_spike_activity", 0.0))
+    active_sop_ratio = _bounded(sop_summary.get("active_sop_ratio", activity.get("active_sop_ratio", 0.0)))
+    mvm_input_act = _bounded(sop_summary.get("mvm_input_activity_mean", activity.get("mvm_input_activity_mean", active_sop_ratio)))
+    lif_spike_act = _bounded(sop_summary.get("lif_spike_activity", activity.get("lif_spike_activity", 0.0)))
+    adc_req_act = _bounded(adc_requests.get("adc_group_request_activity", adc_requests.get("adc_activity_proxy", activity.get("adc_request_activity", activity.get("adc_activity_proxy", 0.0)))))
+    adc_util = _bounded(adc_pool.get("adc_macro_utilization", 0.0))
+
+    # For membrane SRAM and digital LIF update, the best available architecture
+    # proxy is ADC/comparator request activity, because updates occur when analog
+    # partial sums are converted and accumulated. Output spike rate is reported
+    # separately as NoC/spike-traffic activity.
+    membrane_update_act = max(adc_req_act, lif_spike_act)
+    noc_activity = max(input_act, lif_spike_act)
 
     laser_mw = _get_device_param(device_cfg, ("optical_source", "cw_laser", "power_mw_main_case"), 1473.0)
     leakage_mw = _get_device_param(device_cfg, ("memory_digital", "leakage_misc_io", "reference_power_mw"), 90.0)
@@ -47,11 +73,11 @@ def estimate_power(
     adc_macros = int(adc_pool.get("adc_macros", _nested(hardware_cfg, "hapr_adc_backend", "adc_macros", default=16)))
 
     mod_per_lane = _get_device_param(device_cfg, ("modulation", "binary_modulator_driver", "power_per_active_lane_mw"), 2.25)
-    # Logical array has 64 input lanes/tile in the main architecture; use total lane proxy.
     tile_outputs = int(_nested(hardware_cfg, "hapr_adc_backend", "tile_outputs", default=64))
     num_tiles = int(_nested(hardware_cfg, "photonic_tiles", "num_tiles", default=4))
-    modulator_mw = mod_per_lane * tile_outputs * num_tiles * input_act
+    modulator_mw = mod_per_lane * tile_outputs * num_tiles * mvm_input_act
 
+    # Front-end receiver lanes are mostly provisioned/bias costs in this proxy.
     pd_mw = _get_device_param(device_cfg, ("photodetection_frontend", "photodiode", "power_per_output_mw"), 1.1) * lanes
     tia_mw = _get_device_param(device_cfg, ("photodetection_frontend", "tia", "power_per_hapr_lane_mw"), 3.0) * lanes
     comp_mw = _get_device_param(device_cfg, ("photodetection_frontend", "comparator", "power_per_hapr_lane_mw"), 2.2) * lanes
@@ -64,9 +90,9 @@ def estimate_power(
     sram_ref = _get_device_param(device_cfg, ("memory_digital", "sram_register_files", "reference_power_mw"), 243.25)
     noc_ref = _get_device_param(device_cfg, ("memory_digital", "noc_bus_controller_clock", "reference_power_mw"), 77.84)
     lif_ref = _get_device_param(device_cfg, ("memory_digital", "digital_lif_update", "reference_power_mw"), 2.43)
-    sram_mw = sram_ref * max(active_ratio, adc_act)
-    noc_mw = noc_ref * max(input_act, adc_act)
-    digital_lif_mw = lif_ref * active_ratio
+    sram_mw = sram_ref * membrane_update_act
+    noc_mw = noc_ref * noc_activity
+    digital_lif_mw = lif_ref * membrane_update_act
 
     component_power_mw = {
         "cw_laser": laser_mw,
@@ -96,9 +122,13 @@ def estimate_power(
         "active_GOPS_per_W": (active_sop / latency_s / 1e9 / total_w) if latency_s > 0 and total_w > 0 else 0.0,
         "activity_factors": {
             "input_spike_activity": input_act,
-            "active_sop_ratio": active_ratio,
-            "adc_activity_proxy": adc_act,
+            "mvm_input_activity_mean": mvm_input_act,
+            "active_sop_ratio": active_sop_ratio,
+            "lif_spike_activity": lif_spike_act,
+            "adc_request_activity": adc_req_act,
             "adc_macro_utilization": adc_util,
+            "membrane_update_activity_proxy": membrane_update_act,
+            "noc_activity_proxy": noc_activity,
         },
     }
 

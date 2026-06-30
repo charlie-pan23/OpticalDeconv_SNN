@@ -1,10 +1,16 @@
-"""Eval02: HIPSA architecture-level power/performance estimation."""
+"""Eval02: HIPSA architecture-level power/performance estimation.
+
+This script consumes eval01 v2 activity traces. It separates MVM input
+activity, LIF spike activity, and ADC request activity when driving hardware
+models.
+"""
 
 from __future__ import annotations
 
 import argparse
 import sys
 from pathlib import Path
+from typing import Optional
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -27,16 +33,15 @@ except Exception:  # pragma: no cover
     logger = logging.getLogger("HIPSA")
 
 
-def find_activity_file(output_dir: Path, explicit: str | None) -> Path:
+def find_activity_file(dataset: str, output_dir: Path, explicit: Optional[str]) -> Path:
     if explicit:
         p = Path(explicit)
         if not p.exists():
             raise FileNotFoundError(p)
         return p
     candidates = [
-        Path("results") / "cifar10dvs" / "eval" / "eval01_activity_trace" / "eval01_activity_trace.json",
-        Path("results") / "dvsgesture" / "eval" / "eval01_activity_trace" / "eval01_activity_trace.json",
         output_dir.parent / "eval01_activity_trace" / "eval01_activity_trace.json",
+        Path("results") / dataset / "eval" / "eval01_activity_trace" / "eval01_activity_trace.json",
     ]
     for p in candidates:
         if p.exists():
@@ -56,9 +61,22 @@ def main() -> None:
     parser.add_argument("--output-dir", default=None)
     args = parser.parse_args()
 
-    ctx = load_eval_context(args.config, checkpoint=args.checkpoint, run_dir=args.run_dir, hardware_config=args.hardware, device_params=args.device_params, output_dir=args.output_dir, eval_name="eval02_power_perf", device="cpu")
-    activity_path = find_activity_file(ctx.output_dir, args.activity)
+    ctx = load_eval_context(
+        args.config,
+        checkpoint=args.checkpoint,
+        run_dir=args.run_dir,
+        hardware_config=args.hardware,
+        device_params=args.device_params,
+        output_dir=args.output_dir,
+        eval_name="eval02_power_perf",
+        device="cpu",
+    )
+    activity_path = find_activity_file(ctx.dataset, ctx.output_dir, args.activity)
     activity = load_json(activity_path)
+
+    schema = activity.get("activity_schema_version", "unknown") if isinstance(activity, dict) else "unknown"
+    if schema != "v2_lif_adc":
+        logger.warning("Activity schema is %s. eval02 will try backward-compatible parsing, but v2_lif_adc is recommended.", schema)
 
     hcfg = dict(ctx.hardware_cfg)
     if args.hapr_group_size is not None:
@@ -78,6 +96,7 @@ def main() -> None:
         "dataset": ctx.dataset,
         "config": str(args.config),
         "activity_file": str(activity_path),
+        "activity_schema_version": schema,
         "sop_summary": sop_summary,
         "adc_requests": adc_requests,
         "adc_pool": adc_pool,
@@ -93,6 +112,9 @@ def main() -> None:
 
     logger.info("=== Eval02 HIPSA power/perf ===")
     logger.info("Activity file: %s", activity_path)
+    logger.info("Active SOP ratio: %.4f", sop_summary.get("active_sop_ratio", 0.0))
+    logger.info("LIF spike activity: %.4f", sop_summary.get("lif_spike_activity", 0.0))
+    logger.info("ADC group request activity: %.4f", adc_requests.get("adc_group_request_activity", 0.0))
     logger.info("Latency: %.3f us/image", timing["latency_us_per_image"])
     logger.info("Throughput: %.2f img/s", timing["throughput_images_per_s"])
     logger.info("Power: %.4f W", power["total_power_w"])

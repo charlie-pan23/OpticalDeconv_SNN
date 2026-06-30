@@ -1,0 +1,32 @@
+{
+  "dataset": "cifar10dvs",
+  "config": "./configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+  "checkpoint": "results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+  "split": "test",
+  "metrics": {
+    "loss": 0.7489867916107178,
+    "acc": 76.3,
+    "correct": 763,
+    "total": 1000
+  },
+  "artifacts": {
+    "dataset": "cifar10dvs",
+    "config_path": "/root/autodl-tmp/OpticalDeconv_SNN/configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+    "project_root": "/root/autodl-tmp/OpticalDeconv_SNN",
+    "checkpoint": "/root/autodl-tmp/OpticalDeconv_SNN/results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+    "run_dir": "/root/autodl-tmp/OpticalDeconv_SNN/results/cifar10dvs/cifar10dvs/run_20260629_194703_cifar10dvs",
+    "train_run": "/root/autodl-tmp/OpticalDeconv_SNN/results/cifar10dvs/cifar10dvs/run_20260629_194703_cifar10dvs",
+    "test_run": "/root/autodl-tmp/OpticalDeconv_SNN/results/cifar10dvs/run_20260629_223733_cifar10dvs",
+    "final_test_json": null,
+    "dataset_root": "/root/autodl-tmp/OpticalDeconv_SNN/datasets/CIFAR10DVS",
+    "frame_dir": "/root/autodl-tmp/OpticalDeconv_SNN/datasets/CIFAR10DVS/frames_number_10_split_by_number",
+    "split_file": "/root/autodl-tmp/OpticalDeconv_SNN/datasets/CIFAR10DVS/splits/cifar10dvs_T10_seed42_split.pth",
+    "time_steps": 10,
+    "num_classes": 10,
+    "model_class": "SpikingVGGGAP",
+    "input_encoding": "clipped_count",
+    "clipped_count_max": 3.0,
+    "expected_test_acc": 76.4,
+    "expected_test_loss": 0.9317
+  }
+}

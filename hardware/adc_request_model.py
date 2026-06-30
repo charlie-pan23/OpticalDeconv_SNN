@@ -11,18 +11,31 @@ def _shape(info: Mapping[str, Any]) -> list[int]:
     return [int(v) for v in s] if isinstance(s, (list, tuple)) else []
 
 
-def estimate_layer_adc_requests(info: Mapping[str, Any], hapr_group_size: int = 8) -> Dict[str, Any]:
-    """Estimate requests from layer output shape and comparator activity proxy.
+def element_to_group_probability(element_activity: float, group_size: int) -> float:
+    """Approximate probability that a HAPR group requests ADC service.
 
-    For Conv outputs [B,C,H,W], groups are ceil(C/G) per spatial location.  For
-    Linear outputs [B,F], groups are ceil(F/G).  The hook call count already
-    contains timestep repetitions, so group opportunities are multiplied by the
-    number of calls.
+    If per-output comparator request probability is p, the probability that at
+    least one element in a group of G requests service is 1 - (1 - p)^G. This is
+    a simple architecture-level proxy; it avoids using raw Conv/Linear nonzero
+    output rate as an ADC request rate.
+    """
+    p = min(max(float(element_activity), 0.0), 1.0)
+    G = max(int(group_size), 1)
+    return 1.0 - (1.0 - p) ** G
+
+
+def estimate_layer_adc_requests(info: Mapping[str, Any], hapr_group_size: int = 8) -> Dict[str, Any]:
+    """Estimate HAPR/ADC group requests from layer output shape and comparator activity.
+
+    Preferred input field is `adc_request_activity`, produced by eval01 v2. For
+    older traces, falls back to `adc_activity_proxy`, then `output_activity`.
     """
     G = max(int(hapr_group_size), 1)
     shape = _shape(info)
     calls = int(info.get("calls", 0) or 0)
-    adc_activity = float(info.get("adc_activity_proxy", info.get("output_activity", 0.0)))
+    element_adc_activity = float(info.get("adc_request_activity", info.get("adc_activity_proxy", info.get("output_activity", 0.0))))
+    group_adc_activity = float(info.get("adc_request_group_activity", element_to_group_probability(element_adc_activity, G)))
+
     if len(shape) == 4:
         b, c, h, w = shape
         opportunities = calls * b * h * w * math.ceil(c / G)
@@ -30,13 +43,15 @@ def estimate_layer_adc_requests(info: Mapping[str, Any], hapr_group_size: int = 
         b, f = shape
         opportunities = calls * b * math.ceil(f / G)
     else:
-        total = int(info.get("output_total", 0) or 0)
+        total = int(info.get("adc_request_total", info.get("output_total", 0)) or 0)
         opportunities = math.ceil(total / G)
-    requests = opportunities * adc_activity
+    requests = opportunities * group_adc_activity
     return {
         "hapr_group_size": G,
         "adc_group_opportunities": float(opportunities),
-        "adc_activity_proxy": adc_activity,
+        "adc_element_request_activity": element_adc_activity,
+        "adc_group_request_activity": group_adc_activity,
+        "adc_activity_proxy": group_adc_activity,
         "adc_requests_total": float(requests),
     }
 
@@ -48,6 +63,8 @@ def estimate_adc_requests(activity: Mapping[str, Any], hapr_group_size: int = 8)
     total = 0.0
     opportunities = 0.0
     for name, info in layers.items():
+        if not isinstance(info, Mapping):
+            continue
         row = estimate_layer_adc_requests(info, hapr_group_size)
         by_layer[name] = row
         total += float(row["adc_requests_total"])
@@ -58,6 +75,7 @@ def estimate_adc_requests(activity: Mapping[str, Any], hapr_group_size: int = 8)
         "adc_requests_total": total,
         "adc_requests_per_image": total / max(n, 1),
         "adc_group_opportunities_total": opportunities,
+        "adc_group_request_activity": total / opportunities if opportunities else 0.0,
         "adc_activity_proxy": total / opportunities if opportunities else 0.0,
         "layers": by_layer,
     }

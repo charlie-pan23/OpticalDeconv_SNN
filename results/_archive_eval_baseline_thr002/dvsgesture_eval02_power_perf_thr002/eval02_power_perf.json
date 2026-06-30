@@ -1,0 +1,220 @@
+{
+  "dataset": "dvsgesture",
+  "config": "./results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+  "activity_file": "results/dvsgesture/eval/eval01_activity_trace/eval01_activity_trace.json",
+  "activity_schema_version": "v2_lif_adc",
+  "sop_summary": {
+    "num_samples": 288,
+    "dense_sop_total": 788382351360.0,
+    "active_sop_total": 68058796480.0,
+    "dense_sop_per_image": 2737438720.0,
+    "active_sop_per_image": 236315265.55555555,
+    "active_sop_ratio": 0.08632714362846287,
+    "mvm_input_activity_mean": 0.10474893746950889,
+    "lif_spike_activity": 0.042121704849956955,
+    "adc_request_activity": 0.6529718925049122,
+    "layers": [
+      {
+        "layer": "conv1",
+        "dense_sop_total": 27179089920.0,
+        "active_sop_total": 6464950848.0,
+        "dense_sop_per_image": 94371840.0,
+        "active_sop_per_image": 22447746.0,
+        "mvm_input_activity": 0.23786487579345703,
+        "lif_spike_activity": 0.04080929027663337,
+        "adc_request_activity": 0.5253598444991642,
+        "mvm_output_nonzero_activity": 0.5955462137858073,
+        "input_activity": 0.23786487579345703,
+        "output_activity": 0.04080929027663337,
+        "adc_activity_proxy": 0.5253598444991642
+      },
+      {
+        "layer": "conv2",
+        "dense_sop_total": 217432719360.0,
+        "active_sop_total": 20555362944.0,
+        "dense_sop_per_image": 754974720.0,
+        "active_sop_per_image": 71372788.0,
+        "mvm_input_activity": 0.09453665945265029,
+        "lif_spike_activity": 0.033044404453701444,
+        "adc_request_activity": 0.7624787701500787,
+        "mvm_output_nonzero_activity": 0.9394777218500773,
+        "input_activity": 0.09453665945265029,
+        "output_activity": 0.033044404453701444,
+        "adc_activity_proxy": 0.7624787701500787
+      },
+      {
+        "layer": "conv3",
+        "dense_sop_total": 217432719360.0,
+        "active_sop_total": 18534094848.0,
+        "dense_sop_per_image": 754974720.0,
+        "active_sop_per_image": 64354496.0,
+        "mvm_input_activity": 0.08524059719509548,
+        "lif_spike_activity": 0.03673132790459527,
+        "adc_request_activity": 0.8133716450797187,
+        "mvm_output_nonzero_activity": 0.982331124941508,
+        "input_activity": 0.08524059719509548,
+        "output_activity": 0.03673132790459527,
+        "adc_activity_proxy": 0.8133716450797187
+      },
+      {
+        "layer": "conv4",
+        "dense_sop_total": 108716359680.0,
+        "active_sop_total": 10282056192.0,
+        "dense_sop_per_image": 377487360.0,
+        "active_sop_per_image": 35701584.0,
+        "mvm_input_activity": 0.09457689921061198,
+        "lif_spike_activity": 0.055427371131049265,
+        "adc_request_activity": 0.8139601177639432,
+        "mvm_output_nonzero_activity": 0.9761061138576932,
+        "input_activity": 0.09457689921061198,
+        "output_activity": 0.055427371131049265,
+        "adc_activity_proxy": 0.8139601177639432
+      },
+      {
+        "layer": "conv5",
+        "dense_sop_total": 217432719360.0,
+        "active_sop_total": 12051724032.0,
+        "dense_sop_per_image": 754974720.0,
+        "active_sop_per_image": 41846264.0,
+        "mvm_input_activity": 0.055427371131049265,
+        "lif_spike_activity": 0.09181394577026367,
+        "adc_request_activity": 0.833530330657959,
+        "mvm_output_nonzero_activity": 0.9997681352827285,
+        "input_activity": 0.055427371131049265,
+        "output_activity": 0.09181394577026367,
+        "adc_activity_proxy": 0.833530330657959
+      },
+      {
+        "layer": "fc1",
+        "dense_sop_total": 188743680.0,
+        "active_sop_total": 170607616.0,
+        "dense_sop_per_image": 655360.0,
+        "active_sop_per_image": 592387.5555555555,
+        "mvm_input_activity": 0.9039116753472223,
+        "lif_spike_activity": 0.3606363932291667,
+        "adc_request_activity": 0.9132771809895833,
+        "mvm_output_nonzero_activity": 1.0,
+        "input_activity": 0.9039116753472223,
+        "output_activity": 0.3606363932291667,
+        "adc_activity_proxy": 0.9132771809895833
+      }
+    ]
+  },
+  "adc_requests": {
+    "num_samples": 288,
+    "hapr_group_size": 8,
+    "adc_requests_total": 121765271.20405316,
+    "adc_requests_per_image": 422796.08056962903,
+    "adc_group_opportunities_total": 121927680.0,
+    "adc_group_request_activity": 0.9986679907634851,
+    "adc_activity_proxy": 0.9986679907634851,
+    "layers": {
+      "conv1": {
+        "hapr_group_size": 8,
+        "adc_group_opportunities": 62914560.0,
+        "adc_element_request_activity": 0.5253598444991642,
+        "adc_group_request_activity": 0.9974241781617621,
+        "adc_activity_proxy": 0.9974241781617621,
+        "adc_requests_total": 62752503.302408874
+      },
+      "conv2": {
+        "hapr_group_size": 8,
+        "adc_group_opportunities": 31457280.0,
+        "adc_element_request_activity": 0.7624787701500787,
+        "adc_group_request_activity": 0.9999898697662535,
+        "adc_activity_proxy": 0.9999898697662535,
+        "adc_requests_total": 31456961.33040057
+      },
+      "conv3": {
+        "hapr_group_size": 8,
+        "adc_group_opportunities": 15728640.0,
+        "adc_element_request_activity": 0.8133716450797187,
+        "adc_group_request_activity": 0.9999985282941266,
+        "adc_activity_proxy": 0.9999985282941266,
+        "adc_requests_total": 15728616.852068132
+      },
+      "conv4": {
+        "hapr_group_size": 8,
+        "adc_group_opportunities": 3932160.0,
+        "adc_element_request_activity": 0.8139601177639432,
+        "adc_group_request_activity": 0.9999985650114115,
+        "adc_activity_proxy": 0.9999985650114115,
+        "adc_requests_total": 3932154.357395272
+      },
+      "conv5": {
+        "hapr_group_size": 8,
+        "adc_group_opportunities": 7864320.0,
+        "adc_element_request_activity": 0.833530330657959,
+        "adc_group_request_activity": 0.9999994102323659,
+        "adc_activity_proxy": 0.9999994102323659,
+        "adc_requests_total": 7864315.3618786
+      },
+      "fc1": {
+        "hapr_group_size": 8,
+        "adc_group_opportunities": 30720.0,
+        "adc_element_request_activity": 0.9132771809895833,
+        "adc_group_request_activity": 0.9999999968006107,
+        "adc_activity_proxy": 0.9999999968006107,
+        "adc_requests_total": 30719.99990171476
+      }
+    }
+  },
+  "adc_pool": {
+    "hapr_group_size": 8,
+    "hapr_output_lanes_total": 32,
+    "adc_macros": 16,
+    "comparator_threshold_fs_default": 0.02,
+    "adc_requests_per_image": 422796.08056962903,
+    "cycles_per_image_input": 36058.84789360894,
+    "adc_demand_per_cycle": 11.725168863328141,
+    "adc_macro_utilization": 0.7328230539580088,
+    "adc_service_cycles_per_image": 26424.755035601815,
+    "adc_stall_cycles_proxy": 0.0,
+    "adc_is_saturated": false
+  },
+  "timing": {
+    "peak_sop_per_cycle_total": 16384.0,
+    "effective_clock_hz": 1000000000.0,
+    "effective_utilization": 0.4,
+    "realized_active_rate_sop_per_s": 6553600000000.0,
+    "dense_sop_per_image": 2737438720.0,
+    "active_sop_per_image": 236315265.55555555,
+    "mvm_cycles_per_image": 36058.84789360894,
+    "cycles_per_image": 36058.84789360894,
+    "latency_s_per_image": 3.605884789360894e-05,
+    "latency_us_per_image": 36.05884789360894,
+    "throughput_images_per_s": 27732.444557033108,
+    "base_cycles_per_image": 36058.84789360894,
+    "adc_stall_cycles_proxy": 0.0
+  },
+  "power": {
+    "component_power_mw": {
+      "cw_laser": 1473.0,
+      "mrr_stabilization": 0.0,
+      "leakage_misc_io": 90.0,
+      "modulator_driver": 60.33538798243712,
+      "pd_tia_comparator_hapr": 204.79999999999998,
+      "adc_pool": 173.5324991772565,
+      "sram_register_files": 242.92598875321775,
+      "noc_bus_controller_clock": 18.515401931762696,
+      "digital_lif_update": 2.426763217555269
+    },
+    "total_power_mw": 2265.5360410622293,
+    "total_power_w": 2.265536041062229,
+    "latency_us_per_image": 36.05884789360894,
+    "throughput_images_per_s": 27732.444557033108,
+    "energy_uJ_per_image": 81.6926195021519,
+    "dense_equivalent_GOPS_per_W": 33509.00897391217,
+    "active_GOPS_per_W": 2892.737030538367,
+    "activity_factors": {
+      "input_spike_activity": 0.23786487579345703,
+      "mvm_input_activity_mean": 0.10474893746950889,
+      "active_sop_ratio": 0.08632714362846287,
+      "lif_spike_activity": 0.042121704849956955,
+      "adc_request_activity": 0.9986679907634851,
+      "adc_macro_utilization": 0.7328230539580088,
+      "membrane_update_activity_proxy": 0.9986679907634851,
+      "noc_activity_proxy": 0.23786487579345703
+    }
+  }
+}
