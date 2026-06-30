@@ -1,0 +1,10 @@
+component,power_mw
+cw_laser,1473.0
+mrr_stabilization,0.0
+leakage_misc_io,90.0
+modulator_driver,60.33538798243712
+pd_tia_comparator_hapr,204.79999999999998
+adc_pool,173.5324991772565
+sram_register_files,242.92598875321775
+noc_bus_controller_clock,18.515401931762696
+digital_lif_update,2.426763217555269
