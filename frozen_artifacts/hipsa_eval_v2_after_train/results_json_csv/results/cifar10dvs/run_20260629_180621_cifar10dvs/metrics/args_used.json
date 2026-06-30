@@ -1,0 +1,9 @@
+{
+  "config": "configs/config_cifar10dvs_clip3_b64_wd001_do03.yaml",
+  "device": "auto",
+  "resume": null,
+  "weights": null,
+  "checkpoint": "./results/cifar10dvs/run_20260629_160802_cifar10dvs/checkpoints/best_val.pth",
+  "test_only": true,
+  "eval_only": false
+}

@@ -1,0 +1,9 @@
+{
+  "config": "configs/config_cifar10dvs_b64_wd001_do03.yaml",
+  "device": "auto",
+  "resume": null,
+  "weights": null,
+  "checkpoint": null,
+  "test_only": false,
+  "eval_only": false
+}

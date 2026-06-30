@@ -1,0 +1,10 @@
+{
+  "best_epoch": 76,
+  "best_val_acc": 92.5,
+  "test": {
+    "loss": 0.6508035527335273,
+    "acc": 88.19444444444444,
+    "total": 288.0
+  },
+  "run_dir": "results/dvsgesture/run_20260629_185932_dvsgesture"
+}

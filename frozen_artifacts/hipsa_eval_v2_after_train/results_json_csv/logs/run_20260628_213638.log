@@ -1,0 +1,5 @@
+2026-06-28 21:36:38 - DEBUG - [logger.py:58] - This is a DEBUG log (Only saved to the file).
+2026-06-28 21:36:38 - INFO - [logger.py:59] - This is an INFO log (Printed to console and saved to file).
+2026-06-28 21:36:38 - WARNING - [logger.py:60] - This is a WARNING log.
+2026-06-28 21:36:38 - ERROR - [logger.py:61] - This is an ERROR log.
+2026-06-28 21:36:38 - CRITICAL - [logger.py:62] - This is a CRITICAL log.

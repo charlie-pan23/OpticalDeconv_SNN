@@ -1,0 +1,32 @@
+{
+  "dataset": "dvsgesture",
+  "config": "./results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+  "checkpoint": "results/dvsgesture/best_dvsgesture_acc88p54.pth",
+  "split": "test",
+  "metrics": {
+    "loss": 0.4110616048177083,
+    "acc": 88.54166666666667,
+    "correct": 255,
+    "total": 288
+  },
+  "artifacts": {
+    "dataset": "dvsgesture",
+    "config_path": "/root/autodl-tmp/OpticalDeconv_SNN/results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+    "project_root": "/root/autodl-tmp/OpticalDeconv_SNN",
+    "checkpoint": "/root/autodl-tmp/OpticalDeconv_SNN/results/dvsgesture/best_dvsgesture_acc88p54.pth",
+    "run_dir": "/root/autodl-tmp/OpticalDeconv_SNN/results/dvsgesture/run_20260629_191844_dvsgesture",
+    "train_run": "/root/autodl-tmp/OpticalDeconv_SNN/results/dvsgesture/run_20260629_191844_dvsgesture",
+    "test_run": "/root/autodl-tmp/OpticalDeconv_SNN/results/dvsgesture/run_20260629_191844_dvsgesture",
+    "final_test_json": "/root/autodl-tmp/OpticalDeconv_SNN/results/dvsgesture/final_test_acc88p54.json",
+    "dataset_root": "/root/autodl-tmp/OpticalDeconv_SNN/datasets/DVSGesture",
+    "frame_dir": "/root/autodl-tmp/OpticalDeconv_SNN/datasets/DVSGesture/frames_number_10_split_by_number",
+    "split_file": "/root/autodl-tmp/OpticalDeconv_SNN/datasets/DVSGesture/splits/dvsgesture_T10_seed42_split.pth",
+    "time_steps": 10,
+    "num_classes": 11,
+    "model_class": "SpikingGestureCNN",
+    "input_encoding": "binary",
+    "clipped_count_max": null,
+    "expected_test_acc": 88.54,
+    "expected_test_loss": 0.4111
+  }
+}

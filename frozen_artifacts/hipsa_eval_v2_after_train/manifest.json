@@ -1,0 +1,48 @@
+{
+  "tag": "hipsa_eval_v2_after_train",
+  "created_utc": "2026-06-30T09:50:38.818975Z",
+  "root_dir": "/root/autodl-tmp/OpticalDeconv_SNN",
+  "git_commit": "443c7d1ed4467eebfe806e1255229d1b54c2f631",
+  "git_branch": "5090",
+  "platform": "Linux-5.15.0-94-generic-x86_64-with-glibc2.35",
+  "datasets": {
+    "cifar10dvs": {
+      "model": "SpikingVGGGAP",
+      "timestep": 10,
+      "encoding": "clipped_count",
+      "clipped_count_max": 3,
+      "best_val_percent": 73.3,
+      "test_acc_percent_user_record": 76.4,
+      "test_loss_user_record": 0.9317,
+      "checkpoint": "checkpoints/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+      "config": "configs/cifar10dvs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+      "original_train_run": "train_runs/cifar10dvs/run_20260629_194703_cifar10dvs",
+      "formal_test_run": "test_runs/cifar10dvs/run_20260629_223733_cifar10dvs"
+    },
+    "dvsgesture": {
+      "model": "SpikingGestureCNN",
+      "timestep": 10,
+      "encoding": "binary",
+      "best_val_percent": 91.67,
+      "test_acc_percent_user_record": 88.54,
+      "test_loss_user_record": 0.4111,
+      "train_samples": 1056,
+      "val_samples": 120,
+      "test_samples": 288,
+      "best_checkpoint_epoch": 46,
+      "checkpoint": "checkpoints/dvsgesture/best_dvsgesture_acc88p54.pth",
+      "config": "configs/dvsgesture/config_dvsgesture_acc88p54.yaml",
+      "final_test_result": "test_runs/dvsgesture/final_test_acc88p54.json",
+      "original_train_run": "train_runs/dvsgesture/run_20260629_191844_dvsgesture",
+      "formal_test_run": "train_runs/dvsgesture/run_20260629_191844_dvsgesture"
+    }
+  },
+  "intended_next_steps": [
+    "Audit eval scripts before trusting final paper numbers",
+    "Re-run clean accuracy sanity check",
+    "Generate activity traces",
+    "Run threshold / HAPR / ADC pool sensitivity",
+    "Run device-specific robustness",
+    "Generate paper figures and tables"
+  ]
+}

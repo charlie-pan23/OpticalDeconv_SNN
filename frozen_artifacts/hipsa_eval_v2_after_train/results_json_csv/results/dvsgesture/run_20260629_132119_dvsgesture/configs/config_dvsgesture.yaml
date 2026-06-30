@@ -1,0 +1,222 @@
+# ==============================================================================
+# HIPSA DVS Gesture configuration
+# Purpose:
+#   1) Use the official DVS Gesture train/test protocol when available.
+#   2) Train a second SNN workload for sparse-event behavior.
+#   3) Reuse the same HIPSA hardware/device model as CIFAR10-DVS.
+# ==============================================================================
+
+experiment:
+  name: "dvsgesture_hipsa_snn"
+  seed: 42
+  deterministic: true
+  benchmark: false
+  notes: "DVS Gesture sparse event workload for HIPSA activity and energy scaling."
+
+paths:
+  project_root: "."
+  dataset_root: "./datasets/DVSGesture"
+  tar_file: "./datasets/DVSGesture/DvsGesture.tar.gz"
+  extracted_dir: "./datasets/DVSGesture/DvsGesture"
+  gesture_mapping_csv: "./datasets/DVSGesture/gesture_mapping.csv"
+  events_np_dir: "./datasets/DVSGesture/events_np"
+  frame_dir: "./datasets/DVSGesture/frames_number_10_split_by_number"
+  split_dir: "./datasets/DVSGesture/splits"
+  manifest_dir: "./datasets/DVSGesture/manifest"
+  run_root: "./results/dvsgesture"
+  log_root: "./logs"
+  hardware_config: "./configs/hardware_hipsa.yaml"
+  device_config: "./configs/device_params.yaml"
+
+logger:
+  module: "utils.logger"
+  object: "logger"
+  log_dir: "./logs"
+  console_level: "INFO"
+  file_level: "DEBUG"
+
+dataset:
+  name: "dvsgesture"
+  spikingjelly_class: "DVS128Gesture"
+  sensor_size: [128, 128]
+  channels: 2
+  num_classes: 11
+  class_names:
+    - "hand_clapping"
+    - "right_hand_wave"
+    - "left_hand_wave"
+    - "right_arm_clockwise"
+    - "right_arm_counter_clockwise"
+    - "left_arm_clockwise"
+    - "left_arm_counter_clockwise"
+    - "arm_roll"
+    - "air_drums"
+    - "air_guitar"
+    - "other_gestures"
+  time_steps: 10
+  data_type: "frame"
+  split_by: "number"
+  batch_first_from_dataset: true
+  model_input_layout: "T,B,C,H,W"
+  official_split: true
+
+preprocess:
+  force_rebuild: false
+  verify_after_build: true
+  expected_users: 29
+  allow_numpy_legacy_patch: false
+  input_encoding: "binary"
+  binary_threshold: 0.0
+  clipped_count_max: 3.0
+  normalize_eps: 1.0e-6
+  save_manifest: true
+  manifest_file: "./datasets/DVSGesture/manifest/dvsgesture_T10_manifest.json"
+
+split:
+  method: "official_train_test"
+  val_ratio_from_train: 0.1
+  seed: 42
+  split_file: "./datasets/DVSGesture/splits/dvsgesture_T10_seed42_split.pth"
+  reuse_if_exists: true
+
+model:
+  type: "snn_gesture_cnn"
+  module: "models.snn_gesture_cnn"
+  class_name: "SpikingGestureCNN"
+  fallback_module: "models.snn_vgg_gap"
+  fallback_class_name: "SpikingVGGGAP"
+  num_classes: 11
+  input_channels: 2
+  input_size: [128, 128]
+  time_steps: 10
+  neuron:
+    type: "LIFNode"
+    tau: 2.0
+    v_threshold: 1.0
+    v_reset: 0.0
+    surrogate: "sigmoid"
+    surrogate_alpha: 4.0
+  regularization:
+    dropout: 0.2
+    use_batchnorm: true
+
+training:
+  epochs: 80
+  batch_size_train: 16
+  batch_size_eval: 32
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+  train_drop_last: true
+  eval_drop_last: false
+  amp: false
+  channels_last: false
+  compile_model: false
+  reset_net_each_batch: true
+  logits_aggregation: "mean_time"
+  optimizer:
+    name: "adamw"
+    lr: 0.001
+    weight_decay: 0.0005
+    betas: [0.9, 0.999]
+  scheduler:
+    name: "cosine_warmup"
+    warmup_epochs: 5
+    min_lr: 1.0e-5
+  loss:
+    name: "cross_entropy"
+    label_smoothing: 0.05
+    use_tet_loss: true
+    tet_loss_weight: 0.5
+  grad_clip_norm: 1.0
+  checkpoint:
+    monitor: "val_acc"
+    mode: "max"
+    save_best: true
+    save_last: true
+    save_interval_epochs: 10
+  early_stopping:
+    enabled: false
+    patience: 25
+
+augmentation:
+  enabled: true
+  spatial:
+    random_crop: true
+    crop_padding: 4
+    random_horizontal_flip: true
+    horizontal_flip_p: 0.5
+    random_shift: true
+    max_shift_pixels: 4
+  temporal:
+    random_temporal_shift: true
+    max_shift_steps: 1
+    event_drop: true
+    event_drop_p: 0.03
+  regularization:
+    cutout: true
+    cutout_size: 16
+    cutout_p: 0.2
+    mixup: false
+    mixup_alpha: 0.2
+
+evaluation:
+  batch_size: 1
+  num_workers: 4
+  use_test_split_file: true
+  split_file: "./datasets/DVSGesture/splits/dvsgesture_T10_seed42_split.pth"
+  checkpoint: "best_val.pth"
+  output_dir: "./results/dvsgesture/eval"
+  report_accuracy: true
+  report_confusion_matrix: true
+  save_predictions: true
+
+activity_trace:
+  enabled: true
+  output_dir: "./results/dvsgesture/activity"
+  collect_layer_input_spikes: true
+  collect_layer_output_spikes: true
+  collect_dense_sop: true
+  collect_active_sop: true
+  collect_hapr_adc_requests: true
+  comparator_threshold_fs: 0.02
+  full_scale_calibration_batches: 8
+
+baseline:
+  enabled: true
+  output_dir: "./results/dvsgesture/baseline"
+  warmup_batches: 20
+  measure_batches: null
+  include_data_loading: false
+  cpu: true
+  gpu: true
+  power:
+    measure_idle_power: true
+    measure_runtime_power: true
+    energy_uses_active_minus_idle: true
+    gpu_power_sampling_ms: 50
+
+power_perf:
+  enabled: true
+  output_dir: "./results/dvsgesture/power"
+  use_layerwise_activity_trace: true
+  operation_definition: "SOP"
+  report_units: "GOPS_per_W"
+  derive_total_power_from_components: true
+  forbid_fixed_total_power_claim: true
+
+robustness:
+  enabled: true
+  output_dir: "./results/dvsgesture/robustness"
+  batch_size: 1
+  trials: 3
+  target_modules: "photonic_mvm_layers"
+  include_final_classifier: false
+  sweeps:
+    mrr_static_weight_perturb_pct: [0, 1, 2, 3, 5]
+    laser_intensity_fluctuation_pct: [0, 1, 2, 3]
+    wdm_adjacent_crosstalk_db: [-30, -25, -20, -15]
+    adc_bits: [4, 5, 6, 8]
+    comparator_threshold_fs: [0.01, 0.02, 0.05, 0.10]
+    hapr_group_size: [4, 8, 16]
+    tia_noise_fs_pct: [0, 0.5, 1.0, 2.0, 3.0]

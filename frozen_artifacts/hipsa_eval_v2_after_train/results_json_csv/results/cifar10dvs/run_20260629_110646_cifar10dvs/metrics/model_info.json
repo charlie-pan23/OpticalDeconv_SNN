@@ -1,0 +1,14 @@
+{
+  "class_name": "SpikingVGGGAP",
+  "trainable_parameters": 1194752,
+  "total_parameters": 1194752,
+  "photonic_mvm_layer_names": [
+    "conv1",
+    "conv2",
+    "conv3",
+    "conv4",
+    "conv5",
+    "conv6",
+    "fc1"
+  ]
+}

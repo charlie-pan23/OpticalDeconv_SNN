@@ -1,0 +1,8 @@
+{
+  "split_file": "datasets/DVSGesture/splits/dvsgesture_T10_seed42_split.pth",
+  "split_summary": {
+    "train": 1056,
+    "val": 120,
+    "test": 288
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "checkpoint": "./results/cifar10dvs/test_snapshots/clip3_b96_best_val_snapshot.pth",
+  "split_file": "datasets/CIFAR10DVS/splits/cifar10dvs_T10_seed42_split.pth",
+  "config_path": "configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+  "test": {
+    "loss": 0.963647659778595,
+    "acc": 73.3,
+    "total": 1000.0
+  },
+  "run_dir": "results/cifar10dvs/run_20260629_213302_cifar10dvs"
+}
