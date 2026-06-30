@@ -1,0 +1,73 @@
+{
+  "num_samples": 1000,
+  "dense_sop_total": 5379850240000.0,
+  "active_sop_total": 525792116992.0,
+  "dense_sop_per_image": 5379850240.0,
+  "active_sop_per_image": 525792116.992,
+  "active_sop_ratio": 0.09773359731887257,
+  "layers": [
+    {
+      "layer": "conv1",
+      "dense_sop_total": 94371840000.0,
+      "active_sop_total": 32718644352.0,
+      "dense_sop_per_image": 94371840.0,
+      "active_sop_per_image": 32718644.352,
+      "input_activity": 0.34669923095703126,
+      "output_activity": 0.7555584468841553
+    },
+    {
+      "layer": "conv2",
+      "dense_sop_total": 754974720000.0,
+      "active_sop_total": 116462678400.0,
+      "dense_sop_per_image": 754974720.0,
+      "active_sop_per_image": 116462678.4,
+      "input_activity": 0.15426036834716797,
+      "output_activity": 0.9968532180786133
+    },
+    {
+      "layer": "conv3",
+      "dense_sop_total": 754974720000.0,
+      "active_sop_total": 120942529920.0,
+      "dense_sop_per_image": 754974720.0,
+      "active_sop_per_image": 120942529.92,
+      "input_activity": 0.16019414520263672,
+      "output_activity": 0.9999997329711914
+    },
+    {
+      "layer": "conv4",
+      "dense_sop_total": 1509949440000.0,
+      "active_sop_total": 107872937856.00002,
+      "dense_sop_per_image": 1509949440.0,
+      "active_sop_per_image": 107872937.85600002,
+      "input_activity": 0.07144142379760743,
+      "output_activity": 0.9999990348815918
+    },
+    {
+      "layer": "conv5",
+      "dense_sop_total": 754974720000.0,
+      "active_sop_total": 84967331328.0,
+      "dense_sop_per_image": 754974720.0,
+      "active_sop_per_image": 84967331.328,
+      "input_activity": 0.11254328002929688,
+      "output_activity": 0.9999998046875
+    },
+    {
+      "layer": "conv6",
+      "dense_sop_total": 1509949440000.0,
+      "active_sop_total": 62217248256.00001,
+      "dense_sop_per_image": 1509949440.0,
+      "active_sop_per_image": 62217248.256000005,
+      "input_activity": 0.04120485534667969,
+      "output_activity": 0.9999864486694336
+    },
+    {
+      "layer": "fc1",
+      "dense_sop_total": 655360000.0,
+      "active_sop_total": 610746880.0,
+      "dense_sop_per_image": 655360.0,
+      "active_sop_per_image": 610746.88,
+      "input_activity": 0.93192578125,
+      "output_activity": 1.0
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "num_samples": 288,
+  "num_batches": 3,
+  "input_active_count": 22447746,
+  "input_total_count": 94371840,
+  "input_spike_activity": 0.23786487579345703,
+  "dense_sop_total": 788382351360.0,
+  "active_sop_total": 68058796480.0,
+  "dense_sop_per_image": 2737438720.0,
+  "active_sop_per_image": 236315265.55555555,
+  "active_sop_ratio": 0.08632714362846287,
+  "adc_request_active": 2260898312,
+  "adc_request_total": 2926264320,
+  "adc_activity_proxy": 0.7726227246621385,
+  "layers": {
+    "conv1": {
+      "name": "conv1",
+      "module_type": "Conv2d",
+      "calls": 30,
+      "input_shape_last": [
+        32,
+        2,
+        128,
+        128
+      ],
+      "output_shape_last": [
+        32,
+        32,
+        128,
+        128
+      ],
+      "input_active": 22447746,
+      "input_total": 94371840,
+      "input_activity": 0.23786487579345703,
+      "output_active": 899244672,
+      "output_total": 1509949440,
+      "output_activity": 0.5955462137858073,
+      "adc_request_active": 899244672,
+      "adc_request_total": 1509949440,
+      "adc_activity_proxy": 0.5955462137858073,
+      "dense_sop_total": 27179089920.0,
+      "active_sop_total": 6464950848.0,
+      "dense_sop_per_image": 94371840.0,
+      "active_sop_per_image": 22447746.0,
+      "output_mean_abs": 0.2054839548137453,
+      "output_rms": 0.3876521255435711,
+      "output_max_abs": 1.9920061826705933
+    },
+    "conv2": {
+      "name": "conv2",
+      "module_type": "Conv2d",
+      "calls": 30,
+      "input_shape_last": [
+        32,
+        32,
+        64,
+        64
+      ],
+      "output_shape_last": [
+        32,
+        64,
+        64,
+        64
+      ],
+      "input_active": 35686394,
+      "input_total": 377487360,
+      "input_activity": 0.09453665945265029,
+      "output_active": 709281930,
+      "output_total": 754974720,
+      "output_activity": 0.9394777218500773,
+      "adc_request_active": 709281930,
+      "adc_request_total": 754974720,
+      "adc_activity_proxy": 0.9394777218500773,
+      "dense_sop_total": 217432719360.0,
+      "active_sop_total": 20555362944.0,
+      "dense_sop_per_image": 754974720.0,
+      "active_sop_per_image": 71372788.0,
+      "output_mean_abs": 0.31997892144653534,
+      "output_rms": 0.46692885320341854,
+      "output_max_abs": 3.609180450439453
+    },
+    "conv3": {
+      "name": "conv3",
+      "module_type": "Conv2d",
+      "calls": 30,
+      "input_shape_last": [
+        32,
+        64,
+        32,
+        32
+      ],
+      "output_shape_last": [
+        32,
+        128,
+        32,
+        32
+      ],
+      "input_active": 16088624,
+      "input_total": 188743680,
+      "input_activity": 0.08524059719509548,
+      "output_active": 370817583,
+      "output_total": 377487360,
+      "output_activity": 0.982331124941508,
+      "adc_request_active": 370817583,
+      "adc_request_total": 377487360,
+      "adc_activity_proxy": 0.982331124941508,
+      "dense_sop_total": 217432719360.0,
+      "active_sop_total": 18534094848.0,
+      "dense_sop_per_image": 754974720.0,
+      "active_sop_per_image": 64354496.0,
+      "output_mean_abs": 0.45841287242041695,
+      "output_rms": 0.6388646474215213,
+      "output_max_abs": 5.063364028930664
+    },
+    "conv4": {
+      "name": "conv4",
+      "module_type": "Conv2d",
+      "calls": 30,
+      "input_shape_last": [
+        32,
+        128,
+        16,
+        16
+      ],
+      "output_shape_last": [
+        32,
+        128,
+        16,
+        16
+      ],
+      "input_active": 8925396,
+      "input_total": 94371840,
+      "input_activity": 0.09457689921061198,
+      "output_active": 92116930,
+      "output_total": 94371840,
+      "output_activity": 0.9761061138576932,
+      "adc_request_active": 92116930,
+      "adc_request_total": 94371840,
+      "adc_activity_proxy": 0.9761061138576932,
+      "dense_sop_total": 108716359680.0,
+      "active_sop_total": 10282056192.0,
+      "dense_sop_per_image": 377487360.0,
+      "active_sop_per_image": 35701584.0,
+      "output_mean_abs": 0.6177652008003659,
+      "output_rms": 0.8564994583209823,
+      "output_max_abs": 7.407207012176514
+    },
+    "conv5": {
+      "name": "conv5",
+      "module_type": "Conv2d",
+      "calls": 30,
+      "input_shape_last": [
+        32,
+        128,
+        16,
+        16
+      ],
+      "output_shape_last": [
+        32,
+        256,
+        16,
+        16
+      ],
+      "input_active": 5230783,
+      "input_total": 94371840,
+      "input_activity": 0.055427371131049265,
+      "output_active": 188699917,
+      "output_total": 188743680,
+      "output_activity": 0.9997681352827285,
+      "adc_request_active": 188699917,
+      "adc_request_total": 188743680,
+      "adc_activity_proxy": 0.9997681352827285,
+      "dense_sop_total": 217432719360.0,
+      "active_sop_total": 12051724032.0,
+      "dense_sop_per_image": 754974720.0,
+      "active_sop_per_image": 41846264.0,
+      "output_mean_abs": 0.3169649942053689,
+      "output_rms": 0.42900799766384334,
+      "output_max_abs": 4.183801174163818
+    },
+    "fc1": {
+      "name": "fc1",
+      "module_type": "Linear",
+      "calls": 30,
+      "input_shape_last": [
+        32,
+        256
+      ],
+      "output_shape_last": [
+        32,
+        256
+      ],
+      "input_active": 666436,
+      "input_total": 737280,
+      "input_activity": 0.9039116753472223,
+      "output_active": 737280,
+      "output_total": 737280,
+      "output_activity": 1.0,
+      "adc_request_active": 737280,
+      "adc_request_total": 737280,
+      "adc_activity_proxy": 1.0,
+      "dense_sop_total": 188743680.0,
+      "active_sop_total": 170607616.0,
+      "dense_sop_per_image": 655360.0,
+      "active_sop_per_image": 592387.5555555555,
+      "output_mean_abs": 1.4832327571180133,
+      "output_rms": 1.9436478220655184,
+      "output_max_abs": 11.096894264221191
+    }
+  },
+  "dataset": "dvsgesture",
+  "config": "./results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+  "checkpoint": "results/dvsgesture/best_dvsgesture_acc88p54.pth",
+  "adc_threshold_abs": 0.0,
+  "target_layers": [
+    "conv1",
+    "conv2",
+    "conv3",
+    "conv4",
+    "conv5",
+    "fc1"
+  ]
+}
