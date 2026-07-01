@@ -1,0 +1,32 @@
+{
+  "eval_name": "eval_04",
+  "command": "/root/autodl-tmp/OpticalDeconv_SNN/eval/eval_04.py --datasets cifar10dvs dvsgesture --input-root results/eval_v2 --output-root results/eval_v2 --hardware configs/hardware_hipsa.yaml --device-params configs/device_params.yaml --adc-pool-sizes 8 16 32 64 128 --hapr-group-sizes 4 8 16 32",
+  "inputs": {
+    "eval01_summary": "results/eval_v2/cifar10dvs/eval_01/summary.json",
+    "hardware": "configs/hardware_hipsa.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "outputs": {
+    "summary": "summary.json",
+    "adc_pool_sweep": "adc_pool_sweep.csv",
+    "hapr_adc_sweep": "hapr_adc_sweep.csv",
+    "mrr_sensitivity": "mrr_sensitivity.csv",
+    "selected_design_points": "selected_design_points.csv"
+  },
+  "extra": {
+    "dataset": "cifar10dvs",
+    "adc_pool_sizes": [
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "hapr_group_sizes": [
+      4,
+      8,
+      16,
+      32
+    ]
+  }
+}

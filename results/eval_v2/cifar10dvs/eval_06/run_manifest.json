@@ -1,0 +1,20 @@
+{
+  "eval_name": "eval_06",
+  "command": "/root/autodl-tmp/OpticalDeconv_SNN/eval/eval_06.py --dataset cifar10dvs --config configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml --checkpoint results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth --output-root results/eval_v2 --devices cpu cuda --batch-size 1 --num-workers 0 --num-warmup 20 --num-runs 100",
+  "inputs": {
+    "config": "configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+    "checkpoint": "results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth"
+  },
+  "outputs": {
+    "runtime_summary": "runtime_summary.json",
+    "runtime_samples": "runtime_samples.csv",
+    "platform_info": "platform_info.json"
+  },
+  "extra": {
+    "dataset": "cifar10dvs",
+    "devices": [
+      "cpu",
+      "cuda"
+    ]
+  }
+}

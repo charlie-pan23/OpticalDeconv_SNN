@@ -1,0 +1,28 @@
+{
+  "eval_name": "eval_03",
+  "command": "/root/autodl-tmp/OpticalDeconv_SNN/eval/eval_03.py --dataset cifar10dvs --config configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml --checkpoint results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth --output-root results/eval_v2 --thresholds 0.0 0.01 0.02 0.05 0.10 0.20 --batch-size 128 --num-workers 4 --device auto",
+  "inputs": {
+    "config": "configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+    "checkpoint": "results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+    "hardware": "configs/hardware_hipsa.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "outputs": {
+    "summary": "summary.json",
+    "threshold_sweep": "threshold_sweep.csv",
+    "layer_threshold_sweep": "layer_threshold_sweep.csv",
+    "config_snapshot": "config_snapshot.yaml"
+  },
+  "extra": {
+    "dataset": "cifar10dvs",
+    "thresholds": [
+      0.0,
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.2
+    ],
+    "apply_threshold_to_model": true
+  }
+}

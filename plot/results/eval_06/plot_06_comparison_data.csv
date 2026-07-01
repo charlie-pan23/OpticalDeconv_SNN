@@ -1,0 +1,7 @@
+platform,device,latency_ms_per_image,energy_mJ_per_image,accuracy_percent,dataset,dataset_label,source
+CPU,cpu,48.597700372338295,,73.0,cifar10dvs,CIFAR10-DVS,
+GPU,cuda,10.166537463665009,,73.0,cifar10dvs,CIFAR10-DVS,
+HIPSA HAPR16/ADC32,hipsa,0.0802295100390625,0.17938208667693104,76.3,cifar10dvs,CIFAR10-DVS,results/eval_v2/cifar10dvs/eval_04/hapr_adc_sweep.csv
+CPU,cpu,38.38652018457651,,92.0,dvsgesture,DVS Gesture,
+GPU,cuda,7.726192623376846,,92.0,dvsgesture,DVS Gesture,
+HIPSA HAPR16/ADC32,hipsa,0.03605884789360894,0.08668927249678832,88.54166666666667,dvsgesture,DVS Gesture,results/eval_v2/dvsgesture/eval_04/hapr_adc_sweep.csv

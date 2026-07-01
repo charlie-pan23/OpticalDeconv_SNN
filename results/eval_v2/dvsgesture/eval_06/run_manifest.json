@@ -1,0 +1,20 @@
+{
+  "eval_name": "eval_06",
+  "command": "/root/autodl-tmp/OpticalDeconv_SNN/eval/eval_06.py --dataset dvsgesture --config results/dvsgesture/config_dvsgesture_acc88p54.yaml --checkpoint results/dvsgesture/best_dvsgesture_acc88p54.pth --output-root results/eval_v2 --devices cpu cuda --batch-size 1 --num-workers 0 --num-warmup 20 --num-runs 100",
+  "inputs": {
+    "config": "results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+    "checkpoint": "results/dvsgesture/best_dvsgesture_acc88p54.pth"
+  },
+  "outputs": {
+    "runtime_summary": "runtime_summary.json",
+    "runtime_samples": "runtime_samples.csv",
+    "platform_info": "platform_info.json"
+  },
+  "extra": {
+    "dataset": "dvsgesture",
+    "devices": [
+      "cpu",
+      "cuda"
+    ]
+  }
+}

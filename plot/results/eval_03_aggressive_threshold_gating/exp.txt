@@ -1,0 +1,1 @@
+This sweep applies threshold-induced zeroing to the MVM output before LIF update, representing an aggressive front-end gating stress test.

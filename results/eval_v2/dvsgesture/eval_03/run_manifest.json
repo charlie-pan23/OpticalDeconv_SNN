@@ -1,0 +1,28 @@
+{
+  "eval_name": "eval_03",
+  "command": "/root/autodl-tmp/OpticalDeconv_SNN/eval/eval_03.py --dataset dvsgesture --config results/dvsgesture/config_dvsgesture_acc88p54.yaml --checkpoint results/dvsgesture/best_dvsgesture_acc88p54.pth --output-root results/eval_v2 --thresholds 0.0 0.01 0.02 0.05 0.10 0.20 --batch-size 128 --num-workers 4 --device auto",
+  "inputs": {
+    "config": "results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+    "checkpoint": "results/dvsgesture/best_dvsgesture_acc88p54.pth",
+    "hardware": "configs/hardware_hipsa.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "outputs": {
+    "summary": "summary.json",
+    "threshold_sweep": "threshold_sweep.csv",
+    "layer_threshold_sweep": "layer_threshold_sweep.csv",
+    "config_snapshot": "config_snapshot.yaml"
+  },
+  "extra": {
+    "dataset": "dvsgesture",
+    "thresholds": [
+      0.0,
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.2
+    ],
+    "apply_threshold_to_model": true
+  }
+}
