@@ -316,7 +316,7 @@ def validate_eval_config(cfg: Mapping[str, Any]) -> Tuple[bool, list[str]]:
 CANONICAL_EVAL_ARTIFACTS: Dict[str, Dict[str, Any]] = {
     "cifar10dvs": {
         "config": "configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
-        "checkpoint": "results/cifar10dvs/cifar10dvs_best_T10_clip3_b96_wd001_do03_val733_test764.pth",
+        "checkpoint": "results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
         "train_run": "results/cifar10dvs/cifar10dvs/run_20260629_194703_cifar10dvs",
         "test_run": "results/cifar10dvs/run_20260629_223733_cifar10dvs",
         "input_encoding": "clipped_count",

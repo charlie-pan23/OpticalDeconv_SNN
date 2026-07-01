@@ -1,0 +1,29 @@
+{
+  "version": "eval_v2",
+  "purpose": "Device-calibrated HIPSA Section 4 evaluation",
+  "datasets": {
+    "cifar10dvs": {
+      "model": "SpikingVGGGAP",
+      "checkpoint": "results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+      "config": "configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+      "timestep": 10,
+      "encoding": "clipped_count",
+      "clipped_count_max": 3,
+      "expected_test_acc_percent": 76.40,
+      "role": "count-coded high-activity stress workload"
+    },
+    "dvsgesture": {
+      "model": "SpikingGestureCNN",
+      "checkpoint": "results/dvsgesture/best_dvsgesture_acc88p54.pth",
+      "config": "results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+      "timestep": 10,
+      "encoding": "binary",
+      "expected_test_acc_percent": 88.54,
+      "role": "strict binary event-stream workload"
+    }
+  },
+  "output_rule": {
+    "eval_data": "results/eval_v2/<dataset>/eval_<number>/",
+    "plot_figures": "plot/results/plot_<number>/"
+  }
+}
