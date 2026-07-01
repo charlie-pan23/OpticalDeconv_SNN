@@ -1,0 +1,74 @@
+{
+  "eval_name": "eval_00",
+  "purpose": "clean_accuracy_sanity_check",
+  "created_utc": "2026-07-01T06:37:10.108549Z",
+  "command": "/root/autodl-tmp/OpticalDeconv_SNN/eval/eval_00.py --config results/dvsgesture/config_dvsgesture_acc88p54.yaml --checkpoint results/dvsgesture/best_dvsgesture_acc88p54.pth --output-root results/eval_v2 --split test --batch-size 128 --num-workers 4 --device auto --save-logits",
+  "dataset": "dvsgesture",
+  "split": "test",
+  "num_classes": 11,
+  "num_samples": 288,
+  "accuracy_percent": 88.54166666666667,
+  "loss": 0.4110616048177083,
+  "correct": 255,
+  "total": 288,
+  "expected_accuracy_percent": 88.54,
+  "expected_loss": 0.4111,
+  "accuracy_delta_percent": 0.0016666666666651508,
+  "loss_delta": -3.839518229170613e-05,
+  "config_path": "/root/autodl-tmp/OpticalDeconv_SNN/results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+  "checkpoint_path": "/root/autodl-tmp/OpticalDeconv_SNN/results/dvsgesture/best_dvsgesture_acc88p54.pth",
+  "checkpoint_summary": {
+    "path": "results/dvsgesture/best_dvsgesture_acc88p54.pth",
+    "type": "dict",
+    "keys": [
+      "config",
+      "epoch",
+      "metrics",
+      "optimizer",
+      "scheduler",
+      "state_dict"
+    ],
+    "epoch": 46,
+    "metrics": {
+      "train": {
+        "loss": 0.18827191786840558,
+        "acc": 97.94921875,
+        "total": 1024.0
+      },
+      "val": {
+        "loss": 0.3133459687232971,
+        "acc": 91.66666666666667,
+        "total": 120.0
+      }
+    },
+    "num_tensors": 32,
+    "num_parameters": 605893,
+    "first_keys": [
+      "conv1.weight",
+      "bn1.weight",
+      "bn1.bias",
+      "bn1.running_mean",
+      "bn1.running_var",
+      "bn1.num_batches_tracked",
+      "conv2.weight",
+      "bn2.weight",
+      "bn2.bias",
+      "bn2.running_mean"
+    ]
+  },
+  "input_encoding": "binary",
+  "clipped_count_max": null,
+  "time_steps": 10,
+  "model_class": "SpikingGestureCNN",
+  "device": "cuda",
+  "torch_version": "2.11.0+cu128",
+  "cuda_available": true,
+  "cuda_device": "NVIDIA GeForce RTX 5090",
+  "outputs": {
+    "summary_json": "summary.json",
+    "predictions_csv": "predictions.csv",
+    "confusion_matrix_csv": "confusion_matrix.csv",
+    "per_class_accuracy_csv": "per_class_accuracy.csv",
+    "logits_npy": "logits.npy"
+  }
+}

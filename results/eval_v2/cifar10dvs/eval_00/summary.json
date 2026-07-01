@@ -1,0 +1,78 @@
+{
+  "eval_name": "eval_00",
+  "purpose": "clean_accuracy_sanity_check",
+  "created_utc": "2026-07-01T06:36:45.913956Z",
+  "command": "/root/autodl-tmp/OpticalDeconv_SNN/eval/eval_00.py --config configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml --checkpoint results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth --output-root results/eval_v2 --split test --batch-size 128 --num-workers 4 --device auto --save-logits",
+  "dataset": "cifar10dvs",
+  "split": "test",
+  "num_classes": 10,
+  "num_samples": 1000,
+  "accuracy_percent": 76.3,
+  "loss": 0.7489867782592774,
+  "correct": 763,
+  "total": 1000,
+  "expected_accuracy_percent": 76.4,
+  "expected_loss": 0.9317,
+  "accuracy_delta_percent": -0.10000000000000853,
+  "loss_delta": -0.18271322174072258,
+  "config_path": "/root/autodl-tmp/OpticalDeconv_SNN/configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+  "checkpoint_path": "/root/autodl-tmp/OpticalDeconv_SNN/results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+  "checkpoint_summary": {
+    "path": "results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+    "type": "dict",
+    "keys": [
+      "config",
+      "epoch",
+      "metrics",
+      "optimizer",
+      "scheduler",
+      "state_dict"
+    ],
+    "epoch": 92,
+    "metrics": {
+      "train": {
+        "loss": 0.9083137835364744,
+        "acc": 95.78313253012048,
+        "total": 7968.0
+      },
+      "val": {
+        "loss": 1.0082174367904664,
+        "acc": 73.3,
+        "total": 1000.0
+      },
+      "best_val": 73.3,
+      "best_epoch": 92,
+      "early_best_val": 73.3,
+      "epochs_without_improve": 0
+    },
+    "num_tensors": 38,
+    "num_parameters": 1196486,
+    "first_keys": [
+      "conv1.weight",
+      "bn1.weight",
+      "bn1.bias",
+      "bn1.running_mean",
+      "bn1.running_var",
+      "bn1.num_batches_tracked",
+      "conv2.weight",
+      "bn2.weight",
+      "bn2.bias",
+      "bn2.running_mean"
+    ]
+  },
+  "input_encoding": "clipped_count",
+  "clipped_count_max": 3.0,
+  "time_steps": 10,
+  "model_class": "SpikingVGGGAP",
+  "device": "cuda",
+  "torch_version": "2.11.0+cu128",
+  "cuda_available": true,
+  "cuda_device": "NVIDIA GeForce RTX 5090",
+  "outputs": {
+    "summary_json": "summary.json",
+    "predictions_csv": "predictions.csv",
+    "confusion_matrix_csv": "confusion_matrix.csv",
+    "per_class_accuracy_csv": "per_class_accuracy.csv",
+    "logits_npy": "logits.npy"
+  }
+}
