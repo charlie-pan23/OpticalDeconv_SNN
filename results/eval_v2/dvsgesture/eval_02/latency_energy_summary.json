@@ -1,0 +1,23 @@
+{
+  "dataset": "dvsgesture",
+  "num_samples": 288,
+  "accuracy_percent": 88.54166666666667,
+  "loss": 0.4110616048177083,
+  "dense_sop_per_image": 2737438720.0,
+  "active_sop_per_image": 236315265.55555555,
+  "active_sop_ratio": 0.08632714362846287,
+  "model_input_activity": 0.23786487579345703,
+  "mvm_input_activity": 0.10474893746950889,
+  "lif_spike_activity": 0.042121704849956955,
+  "adc_element_request_activity": 0.6529718925049122,
+  "adc_group_request_activity": 0.9986679907634849,
+  "adc_macro_utilization": 1.0,
+  "base_latency_us_per_image": 36.05884789360894,
+  "latency_us_per_image": 79.27426510680543,
+  "throughput_images_per_s": 12614.434188102658,
+  "total_power_w": 2.5755307899142,
+  "total_power_mw": 2575.5307899142,
+  "energy_uJ_per_image": 204.17331063039828,
+  "active_GOPS_per_W": 1157.424860408625,
+  "dense_equivalent_GOPS_per_W": 13407.426815718378
+}

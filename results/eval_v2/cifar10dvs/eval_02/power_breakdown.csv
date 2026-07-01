@@ -1,0 +1,13 @@
+component,power_mw,power_w,count,activity_factor,note
+cw_laser,1473.0,1.473,1,1.0,CW laser link-budget power; not timestep-gated.
+mrr_stabilization,0.0,0.0,main_case,1.0,Main case excludes continuous per-ring thermal locking.
+leakage_misc_io,90.0,0.09,1,1.0,Static leakage / miscellaneous I/O proxy.
+binary_modulator_driver,72.86975964863359,0.07286975964863358,256,0.12650999938998886,Activity source: mvm_input_activity; no full multi-bit DAC.
+photodiodes,281.6,0.2816,256,1.0,PDs are counted before HAPR reduction.
+tia,96.0,0.096,32,1.0,TIA lanes after HAPR current summing.
+comparators,70.4,0.0704,32,1.0,Comparator lanes after HAPR.
+hapr_selection_proxy,3.2,0.0032,32,1.0,Local selection / request proxy after HAPR.
+adc_pool,236.8,0.2368,16,1.0,Activity-scaled conventional ADC macro pool.
+sram_register_files,243.25,0.24325,reference,1.0,Scaled by ADC/membrane update activity proxy.
+noc_bus_controller_clock,26.987068137695314,0.026987068137695313,reference,0.34669923095703126,"Scaled by max(input activity, LIF spike activity)."
+digital_lif_update,2.43,0.0024300000000000003,reference,1.0,Scaled by membrane update activity proxy.

@@ -1,0 +1,2 @@
+dataset,throughput_images_per_s,latency_us_per_image,active_sop_per_image,dense_sop_per_image,realized_active_rate_sop_per_s,realized_active_rate_tsop_per_s,effective_clock_hz,effective_utilization,base_cycles_per_image,adc_stall_cycles_proxy,cycles_per_image
+cifar10dvs,10850.827390973174,92.1588708370665,525792116.992,5379850240.0,6553600000000.0,6.5536,1000000000.0,0.4,80229.51003906249,11929.36079800401,92158.8708370665

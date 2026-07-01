@@ -1,0 +1,228 @@
+{
+  "eval_name": "eval_02",
+  "purpose": "device_calibrated_latency_power_energy_model",
+  "created_utc": "2026-07-01T07:45:08.731591+00:00",
+  "command": "/root/autodl-tmp/OpticalDeconv_SNN/eval/eval_02.py --datasets cifar10dvs dvsgesture --input-root results/eval_v2 --output-root results/eval_v2 --hardware configs/hardware_hipsa.yaml --device-params configs/device_params.yaml",
+  "dataset": "dvsgesture",
+  "input_eval01_summary": "results/eval_v2/dvsgesture/eval_01/summary.json",
+  "hardware_config": "configs/hardware_hipsa.yaml",
+  "device_params": "configs/device_params.yaml",
+  "counts": {
+    "num_tiles": 4,
+    "array_rows": 64,
+    "array_cols": 64,
+    "tile_outputs": 64,
+    "hapr_group_size": 8,
+    "hapr_lanes_per_tile": 8,
+    "hapr_output_lanes_total": 32,
+    "adc_macros": 16,
+    "photodetector_outputs_total": 256,
+    "modulator_lanes_total": 256
+  },
+  "timing": {
+    "peak_sop_per_cycle_total": 16384.0,
+    "effective_clock_hz": 1000000000.0,
+    "effective_utilization": 0.4,
+    "realized_active_rate_sop_per_s": 6553600000000.0,
+    "realized_active_rate_tsop_per_s": 6.5536,
+    "dense_sop_per_image": 2737438720.0,
+    "active_sop_per_image": 236315265.55555555,
+    "base_cycles_per_image": 36058.84789360894,
+    "adc_stall_cycles_proxy": 43215.41721319649,
+    "cycles_per_image": 79274.26510680543,
+    "base_latency_s_per_image": 3.605884789360894e-05,
+    "latency_s_per_image": 7.927426510680543e-05,
+    "base_latency_us_per_image": 36.05884789360894,
+    "latency_us_per_image": 79.27426510680543,
+    "throughput_images_per_s": 12614.434188102658
+  },
+  "adc_requests": {
+    "num_samples": 288,
+    "hapr_group_size": 8,
+    "adc_requests_total": 365295813.61215943,
+    "adc_requests_per_image": 1268388.2417088868,
+    "adc_group_opportunities_total": 365783040.0,
+    "adc_group_opportunities_per_image": 1270080.0,
+    "adc_group_request_activity": 0.9986679907634849,
+    "adc_element_request_activity": 0.6529718925049122,
+    "layers": [
+      {
+        "layer": "conv1",
+        "hapr_group_size": 8,
+        "output_shape_last": [
+          32,
+          32,
+          128,
+          128
+        ],
+        "output_channels": 32,
+        "output_elements_total": 1509949440.0,
+        "adc_element_request_activity": 0.5253598444991642,
+        "adc_group_request_activity": 0.9974241781617621,
+        "adc_group_opportunities_total": 188743680.0,
+        "adc_requests_total": 188257509.90722662
+      },
+      {
+        "layer": "conv2",
+        "hapr_group_size": 8,
+        "output_shape_last": [
+          32,
+          64,
+          64,
+          64
+        ],
+        "output_channels": 64,
+        "output_elements_total": 754974720.0,
+        "adc_element_request_activity": 0.7624787701500787,
+        "adc_group_request_activity": 0.9999898697662535,
+        "adc_group_opportunities_total": 94371840.0,
+        "adc_requests_total": 94370883.99120171
+      },
+      {
+        "layer": "conv3",
+        "hapr_group_size": 8,
+        "output_shape_last": [
+          32,
+          128,
+          32,
+          32
+        ],
+        "output_channels": 128,
+        "output_elements_total": 377487360.0,
+        "adc_element_request_activity": 0.8133716450797187,
+        "adc_group_request_activity": 0.9999985282941266,
+        "adc_group_opportunities_total": 47185920.0,
+        "adc_requests_total": 47185850.55620439
+      },
+      {
+        "layer": "conv4",
+        "hapr_group_size": 8,
+        "output_shape_last": [
+          32,
+          128,
+          16,
+          16
+        ],
+        "output_channels": 128,
+        "output_elements_total": 94371840.0,
+        "adc_element_request_activity": 0.8139601177639432,
+        "adc_group_request_activity": 0.9999985650114115,
+        "adc_group_opportunities_total": 11796480.0,
+        "adc_requests_total": 11796463.072185816
+      },
+      {
+        "layer": "conv5",
+        "hapr_group_size": 8,
+        "output_shape_last": [
+          32,
+          256,
+          16,
+          16
+        ],
+        "output_channels": 256,
+        "output_elements_total": 188743680.0,
+        "adc_element_request_activity": 0.833530330657959,
+        "adc_group_request_activity": 0.9999994102323659,
+        "adc_group_opportunities_total": 23592960.0,
+        "adc_requests_total": 23592946.0856358
+      },
+      {
+        "layer": "fc1",
+        "hapr_group_size": 8,
+        "output_shape_last": [
+          32,
+          256
+        ],
+        "output_channels": 256,
+        "output_elements_total": 737280.0,
+        "adc_element_request_activity": 0.9132771809895833,
+        "adc_group_request_activity": 0.9999999968006107,
+        "adc_group_opportunities_total": 92160.0,
+        "adc_requests_total": 92159.99970514428
+      }
+    ]
+  },
+  "adc_pool": {
+    "adc_macros": 16,
+    "adc_requests_per_image": 1268388.2417088868,
+    "base_cycles_per_image": 36058.84789360894,
+    "adc_demand_per_cycle": 35.175506589984415,
+    "adc_macro_utilization": 1.0,
+    "adc_service_cycles_per_image": 79274.26510680543,
+    "adc_stall_cycles_proxy": 43215.41721319649,
+    "adc_is_saturated": true
+  },
+  "power": {
+    "component_power_mw": {
+      "cw_laser": 1473.0,
+      "mrr_stabilization": 0.0,
+      "leakage_misc_io": 90.0,
+      "binary_modulator_driver": 60.33538798243712,
+      "photodiodes": 281.6,
+      "tia": 96.0,
+      "comparators": 70.4,
+      "hapr_selection_proxy": 3.2,
+      "adc_pool": 236.8,
+      "sram_register_files": 243.25,
+      "noc_bus_controller_clock": 18.515401931762696,
+      "digital_lif_update": 2.43
+    },
+    "total_power_mw": 2575.5307899142,
+    "total_power_w": 2.5755307899142,
+    "latency_us_per_image": 79.27426510680543,
+    "throughput_images_per_s": 12614.434188102658,
+    "energy_uJ_per_image": 204.17331063039828,
+    "active_GOPS_per_W": 1157.424860408625,
+    "dense_equivalent_GOPS_per_W": 13407.426815718378,
+    "adc_power_mode": "activity_scaled",
+    "adc_activity_scaled_power_mw": 236.8,
+    "adc_all_biased_power_mw": 236.8,
+    "activity_factors": {
+      "model_input_activity": 0.23786487579345703,
+      "mvm_input_activity": 0.10474893746950889,
+      "active_sop_ratio": 0.08632714362846287,
+      "lif_spike_activity": 0.042121704849956955,
+      "adc_macro_utilization": 1.0,
+      "adc_group_request_activity": 1.0,
+      "modulator_activity": 0.10474893746950889,
+      "membrane_update_activity_proxy": 1.0,
+      "noc_activity_proxy": 0.23786487579345703
+    }
+  },
+  "area": {
+    "available_area_total_um2": 47200.0,
+    "available_area_total_mm2": 0.0472,
+    "note": "Area total includes only components with area parameters available in device_params.yaml."
+  },
+  "latency_energy_summary": {
+    "dataset": "dvsgesture",
+    "num_samples": 288,
+    "accuracy_percent": 88.54166666666667,
+    "loss": 0.4110616048177083,
+    "dense_sop_per_image": 2737438720.0,
+    "active_sop_per_image": 236315265.55555555,
+    "active_sop_ratio": 0.08632714362846287,
+    "model_input_activity": 0.23786487579345703,
+    "mvm_input_activity": 0.10474893746950889,
+    "lif_spike_activity": 0.042121704849956955,
+    "adc_element_request_activity": 0.6529718925049122,
+    "adc_group_request_activity": 0.9986679907634849,
+    "adc_macro_utilization": 1.0,
+    "base_latency_us_per_image": 36.05884789360894,
+    "latency_us_per_image": 79.27426510680543,
+    "throughput_images_per_s": 12614.434188102658,
+    "total_power_w": 2.5755307899142,
+    "total_power_mw": 2575.5307899142,
+    "energy_uJ_per_image": 204.17331063039828,
+    "active_GOPS_per_W": 1157.424860408625,
+    "dense_equivalent_GOPS_per_W": 13407.426815718378
+  },
+  "notes": {
+    "latency_formula": "latency = (active_sop_per_image / realized_active_rate) plus ADC stall proxy.",
+    "energy_formula": "energy = total_component_power * modeled_latency.",
+    "pd_count_policy": "Photodiodes are counted before HAPR reduction; TIA/comparator lanes are counted after HAPR.",
+    "adc_policy": "ADC pool uses conventional ADC macros; HIPSA contributes request-driven pooling, not a new ADC circuit.",
+    "mrr_policy": "Main case does not include continuous per-ring thermal locking unless --mrr-stabilization-mw is passed.",
+    "cifar10dvs_note": "If CIFAR10-DVS uses clipped_count max=3, report it as count-coded high-activity stress workload, not strict binary spike input."
+  }
+}

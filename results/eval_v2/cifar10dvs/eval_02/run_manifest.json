@@ -1,0 +1,24 @@
+{
+  "eval_name": "eval_02",
+  "command": "/root/autodl-tmp/OpticalDeconv_SNN/eval/eval_02.py --datasets cifar10dvs dvsgesture --input-root results/eval_v2 --output-root results/eval_v2 --hardware configs/hardware_hipsa.yaml --device-params configs/device_params.yaml",
+  "inputs": {
+    "eval01_summary": "results/eval_v2/cifar10dvs/eval_01/summary.json",
+    "hardware": "configs/hardware_hipsa.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "outputs": {
+    "summary": "summary.json",
+    "latency_energy_summary": "latency_energy_summary.json",
+    "power_breakdown": "power_breakdown.csv",
+    "area_breakdown": "area_breakdown.csv",
+    "throughput_summary": "throughput_summary.csv",
+    "adc_pool_summary": "adc_pool_summary.json",
+    "layer_adc_requests": "layer_adc_requests.csv",
+    "derived_counts": "derived_counts.json"
+  },
+  "extra": {
+    "dataset": "cifar10dvs",
+    "adc_power_mode": "activity_scaled",
+    "modulator_activity_source": "mvm_input_activity"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "dataset": "cifar10dvs",
+  "num_samples": 1000,
+  "accuracy_percent": 76.3,
+  "loss": 0.7489867782592774,
+  "dense_sop_per_image": 5379850240.0,
+  "active_sop_per_image": 525792116.992,
+  "active_sop_ratio": 0.09773359731887257,
+  "model_input_activity": 0.34669923095703126,
+  "mvm_input_activity": 0.12650999938998886,
+  "lif_spike_activity": 0.0636730786572467,
+  "adc_element_request_activity": 0.7691186361771806,
+  "adc_group_request_activity": 0.9997707836522728,
+  "adc_macro_utilization": 1.0,
+  "base_latency_us_per_image": 80.22951003906249,
+  "latency_us_per_image": 92.1588708370665,
+  "throughput_images_per_s": 10850.827390973174,
+  "total_power_w": 2.596536827786329,
+  "total_power_mw": 2596.536827786329,
+  "energy_uJ_per_image": 239.2939021356467,
+  "active_GOPS_per_W": 2197.265004663379,
+  "dense_equivalent_GOPS_per_W": 22482.18693408395
+}

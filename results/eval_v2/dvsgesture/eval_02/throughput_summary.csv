@@ -1,0 +1,2 @@
+dataset,throughput_images_per_s,latency_us_per_image,active_sop_per_image,dense_sop_per_image,realized_active_rate_sop_per_s,realized_active_rate_tsop_per_s,effective_clock_hz,effective_utilization,base_cycles_per_image,adc_stall_cycles_proxy,cycles_per_image
+dvsgesture,12614.434188102658,79.27426510680543,236315265.55555555,2737438720.0,6553600000000.0,6.5536,1000000000.0,0.4,36058.84789360894,43215.41721319649,79274.26510680543

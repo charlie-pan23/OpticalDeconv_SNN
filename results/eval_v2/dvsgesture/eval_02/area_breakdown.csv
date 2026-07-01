@@ -1,0 +1,5 @@
+component,count,area_per_unit_um2,area_total_um2,area_total_mm2,available,note
+photodiodes,256,,,,False,PD area is reported only if provided in device_params.yaml.
+tia,32,50.0,1600.0,0.0016,True,TIA lanes after HAPR.
+comparators,32,,,,False,Comparator area is reported only if provided in device_params.yaml.
+adc_pool,16,2850.0,45600.0,0.0456,True,Conventional ADC macro pool.

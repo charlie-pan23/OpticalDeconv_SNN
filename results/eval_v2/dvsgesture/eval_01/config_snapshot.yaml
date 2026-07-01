@@ -1,0 +1,398 @@
+experiment:
+  name: dvsgesture_hipsa_snn
+  seed: 42
+  deterministic: true
+  benchmark: false
+  notes: DVS Gesture sparse event workload for HIPSA activity and energy scaling.
+paths:
+  project_root: .
+  dataset_root: ./datasets/DVSGesture
+  tar_file: ./datasets/DVSGesture/DvsGesture.tar.gz
+  extracted_dir: ./datasets/DVSGesture/DvsGesture
+  gesture_mapping_csv: ./datasets/DVSGesture/gesture_mapping.csv
+  events_np_dir: ./datasets/DVSGesture/events_np
+  frame_dir: ./datasets/DVSGesture/frames_number_10_split_by_number
+  split_dir: ./datasets/DVSGesture/splits
+  manifest_dir: ./datasets/DVSGesture/manifest
+  run_root: ./results/dvsgesture
+  log_root: ./logs
+  hardware_config: configs/hardware_hipsa.yaml
+  device_config: ./configs/device_params.yaml
+  device_params: configs/device_params.yaml
+logger:
+  module: utils.logger
+  object: logger
+  log_dir: ./logs
+  console_level: INFO
+  file_level: DEBUG
+dataset:
+  name: dvsgesture
+  spikingjelly_class: DVS128Gesture
+  sensor_size:
+  - 128
+  - 128
+  channels: 2
+  num_classes: 11
+  class_names:
+  - hand_clapping
+  - right_hand_wave
+  - left_hand_wave
+  - right_arm_clockwise
+  - right_arm_counter_clockwise
+  - left_arm_clockwise
+  - left_arm_counter_clockwise
+  - arm_roll
+  - air_drums
+  - air_guitar
+  - other_gestures
+  time_steps: 10
+  data_type: frame
+  split_by: number
+  batch_first_from_dataset: true
+  model_input_layout: T,B,C,H,W
+  official_split: true
+preprocess:
+  force_rebuild: false
+  verify_after_build: true
+  expected_users: 29
+  allow_numpy_legacy_patch: false
+  input_encoding: binary
+  binary_threshold: 0.0
+  clipped_count_max: 3.0
+  normalize_eps: 1.0e-06
+  save_manifest: true
+  manifest_file: ./datasets/DVSGesture/manifest/dvsgesture_T10_manifest.json
+split:
+  method: official_train_test
+  val_ratio_from_train: 0.1
+  seed: 42
+  split_file: ./datasets/DVSGesture/splits/dvsgesture_T10_seed42_split.pth
+  reuse_if_exists: true
+model:
+  type: snn_gesture_cnn
+  module: models.snn_gesture_cnn
+  class_name: SpikingGestureCNN
+  fallback_module: models.snn_vgg_gap
+  fallback_class_name: SpikingVGGGAP
+  num_classes: 11
+  input_channels: 2
+  input_size:
+  - 128
+  - 128
+  time_steps: 10
+  neuron:
+    type: LIFNode
+    tau: 2.0
+    v_threshold: 1.0
+    v_reset: 0.0
+    surrogate: sigmoid
+    surrogate_alpha: 4.0
+  regularization:
+    dropout: 0.2
+    use_batchnorm: true
+training:
+  epochs: 80
+  batch_size_train: 64
+  batch_size_eval: 128
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+  train_drop_last: true
+  eval_drop_last: false
+  amp: false
+  channels_last: false
+  compile_model: false
+  reset_net_each_batch: true
+  logits_aggregation: mean_time
+  optimizer:
+    name: adamw
+    lr: 0.001
+    weight_decay: 0.0005
+    betas:
+    - 0.9
+    - 0.999
+  scheduler:
+    name: cosine_warmup
+    warmup_epochs: 5
+    min_lr: 1.0e-05
+  loss:
+    name: cross_entropy
+    label_smoothing: 0.0
+    use_tet_loss: true
+    tet_loss_weight: 0.2
+  grad_clip_norm: 1.0
+  checkpoint:
+    monitor: val_acc
+    mode: max
+    save_best: true
+    save_last: true
+    save_interval_epochs: 5
+  early_stopping:
+    enabled: true
+    patience: 20
+augmentation:
+  enabled: true
+  spatial:
+    random_crop: false
+    crop_padding: 4
+    random_horizontal_flip: false
+    horizontal_flip_p: 0.5
+    random_shift: true
+    max_shift_pixels: 4
+  temporal:
+    random_temporal_shift: true
+    max_shift_steps: 1
+    event_drop: true
+    event_drop_p: 0.01
+  regularization:
+    cutout: true
+    cutout_size: 16
+    cutout_p: 0.1
+    mixup: false
+    mixup_alpha: 0.2
+evaluation:
+  batch_size: 1
+  num_workers: 4
+  use_test_split_file: true
+  split_file: ./datasets/DVSGesture/splits/dvsgesture_T10_seed42_split.pth
+  checkpoint: best_val.pth
+  output_dir: ./results/dvsgesture/eval
+  report_accuracy: true
+  report_confusion_matrix: true
+  save_predictions: true
+activity_trace:
+  enabled: true
+  output_dir: ./results/dvsgesture/activity
+  collect_layer_input_spikes: true
+  collect_layer_output_spikes: true
+  collect_dense_sop: true
+  collect_active_sop: true
+  collect_hapr_adc_requests: true
+  comparator_threshold_fs: 0.02
+  full_scale_calibration_batches: 8
+baseline:
+  enabled: true
+  output_dir: ./results/dvsgesture/baseline
+  warmup_batches: 20
+  measure_batches: null
+  include_data_loading: false
+  cpu: true
+  gpu: true
+  power:
+    measure_idle_power: true
+    measure_runtime_power: true
+    energy_uses_active_minus_idle: true
+    gpu_power_sampling_ms: 50
+power_perf:
+  enabled: true
+  output_dir: ./results/dvsgesture/power
+  use_layerwise_activity_trace: true
+  operation_definition: SOP
+  report_units: GOPS_per_W
+  derive_total_power_from_components: true
+  forbid_fixed_total_power_claim: true
+robustness:
+  enabled: true
+  output_dir: ./results/dvsgesture/robustness
+  batch_size: 1
+  trials: 3
+  target_modules: photonic_mvm_layers
+  include_final_classifier: false
+  sweeps:
+    mrr_static_weight_perturb_pct:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 5
+    laser_intensity_fluctuation_pct:
+    - 0
+    - 1
+    - 2
+    - 3
+    wdm_adjacent_crosstalk_db:
+    - -30
+    - -25
+    - -20
+    - -15
+    adc_bits:
+    - 4
+    - 5
+    - 6
+    - 8
+    comparator_threshold_fs:
+    - 0.01
+    - 0.02
+    - 0.05
+    - 0.1
+    hapr_group_size:
+    - 4
+    - 8
+    - 16
+    tia_noise_fs_pct:
+    - 0
+    - 0.5
+    - 1.0
+    - 2.0
+    - 3.0
+hardware:
+  architecture:
+    name: HIPSA
+    evaluation_scope: architecture_level_model
+    batch_size_for_latency: 1
+    timestep_optical_power_gating: false
+    cw_laser_always_on: true
+    mrr_weights_configured_before_inference: true
+    mrr_retuned_every_timestep: false
+  photonic_tiles:
+    num_tiles: 4
+    logical_array_size:
+    - 64
+    - 64
+    peak_sop_per_cycle_per_tile: 4096
+    peak_sop_per_cycle_total: 16384
+    effective_clock_hz: 1000000000
+    effective_utilization: 0.4
+    realized_active_rate_sop_per_s: 6553600000000
+    realized_active_rate_tsop_per_s: 6.5536
+    utilization_reason:
+    - layer-size mismatch
+    - ADC arbitration
+    - SRAM stalls
+    - inter-tile synchronization
+    - NoC pressure
+    - digital reduction overhead
+  precision:
+    spike_bits: 1
+    weight_bits: 6
+    adc_bits: 6
+    membrane_bits: 16
+    accumulation_domain: photonic_current_then_electronic_fixed_point
+  hapr_adc_backend:
+    hapr_group_size: 8
+    tile_outputs: 64
+    hapr_output_lanes_total: 32
+    adc_macros: 16
+    adc_organization: threshold-driven shared conventional ADC macro pool
+    comparator_threshold_fs_default: 0.02
+    adc_request_source: HAPR/TIA comparator trace
+    adc_activity_from_trace_required: true
+  memory_and_traffic:
+    track_weight_sram: true
+    track_membrane_sram: true
+    track_event_buffers: true
+    track_noc_traffic: true
+    track_output_writes: true
+  operation_definition:
+    primary_metric: SOP
+    report_efficiency_as: GOPS_per_W
+    dense_equivalent_sop_computed_layerwise: true
+    active_sop_computed_layerwise: true
+    forbid_hardcoded_total_sop: true
+  main_case_nominal_values:
+    nominal_input_spike_activity: 0.15
+    nominal_adc_request_activity: 0.38
+    nominal_cycles_per_image: 71700
+    nominal_adc_requests_per_image: 871872
+  robustness_injection_points:
+    mrr_static_weight_perturbation: photonic weight-bank equivalent
+    laser_intensity_fluctuation: input/activation carrier amplitude before MVM
+    wdm_adjacent_crosstalk: photonic accumulation output channel mixing
+    adc_quantization: post-TIA pre-digital output
+    comparator_threshold: HAPR/TIA comparator request decision
+    tia_noise: HAPR/TIA output before ADC
+  risk_reduction_rules:
+    no_fixed_1p90w_final_claim: true
+    no_new_adc_circuit_claim: true
+    no_full_multibit_dac_for_binary_spikes: true
+    no_hidden_continuous_per_ring_mrr_locking: true
+    energy_efficiency_derived_from_component_power: true
+device_params:
+  metadata:
+    unit_policy:
+      power: mW unless otherwise stated
+      area: um2 unless otherwise stated
+      energy: pJ unless otherwise stated
+    reporting_rule: derive system power from device parameter x HIPSA count x activity
+      factor
+    no_fixed_total_system_power: true
+  optical_source:
+    cw_laser:
+      power_mw_main_case: 1473.0
+      mode: continuous_wave
+      timestep_gated: false
+      notes: Use link-budget-derived laser power in the main case; do not timestep-gate
+        optical carrier.
+  modulation:
+    binary_modulator_driver:
+      power_per_active_lane_mw: 2.25
+      activity_source: input spike activity trace
+      precision_bits: 1
+      full_multibit_dac_instantiated: false
+  photodetection_frontend:
+    photodiode:
+      power_per_output_mw: 1.1
+      area_per_output_um2: null
+    tia:
+      power_per_hapr_lane_mw: 3.0
+      area_per_lane_um2: 50.0
+    comparator:
+      power_per_hapr_lane_mw: 2.2
+      area_per_lane_um2: null
+    hapr_selection_proxy:
+      power_per_hapr_lane_mw: 0.1
+      notes: Proxy for local selection/request control overhead.
+  adc:
+    conventional_adc_macro:
+      resolution_bits_reference: 8
+      power_per_macro_mw: 14.8
+      sample_rate_gsps: 10
+      area_per_macro_um2: 2850
+      macros_main_case: 16
+      activity_source: comparator request trace
+      notes: Conservative conventional ADC macro for request-driven pooling; not a
+        new ADC circuit claim.
+  memory_digital:
+    sram_register_files:
+      reference_power_mw: 243.25
+      activity_source: membrane/SRAM update count
+    noc_bus_controller_clock:
+      reference_power_mw: 77.84
+      activity_source: request/output traffic trace
+    digital_lif_update:
+      reference_power_mw: 2.43
+      activity_source: LIF update count
+    leakage_misc_io:
+      reference_power_mw: 90.0
+      activity_source: static
+  mrr_stabilization:
+    main_case_power_mw: 0.0
+    included_in_main_case: false
+    notes: Calibrated MRR weights are configured before inference; continuous per-ring
+      thermal locking is not hidden in the main result.
+    stress_cases_mw:
+    - 0.0
+    - 100.0
+    - 250.0
+    - 350.0
+    - 500.0
+  power_model_policy:
+    static_components:
+    - cw_laser
+    - leakage_misc_io
+    activity_scaled_components:
+      modulator_driver: input_spike_activity
+      pd_tia_comparator: hapr_lane_count_and_frontend_policy
+      adc_pool: adc_request_activity
+      sram: membrane_update_activity
+      noc: traffic_activity
+      digital_lif: lif_update_activity
+    output_fields:
+    - component_power_mw
+    - total_power_w
+    - energy_uJ_per_image
+    - throughput_images_per_s
+    - efficiency_GOPS_per_W
+_meta:
+  config_path: results/dvsgesture/config_dvsgesture_acc88p54.yaml
+  project_root: /root/autodl-tmp/OpticalDeconv_SNN

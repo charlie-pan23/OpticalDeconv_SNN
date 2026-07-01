@@ -1,0 +1,10 @@
+{
+  "adc_macros": 16,
+  "adc_requests_per_image": 1268388.2417088868,
+  "base_cycles_per_image": 36058.84789360894,
+  "adc_demand_per_cycle": 35.175506589984415,
+  "adc_macro_utilization": 1.0,
+  "adc_service_cycles_per_image": 79274.26510680543,
+  "adc_stall_cycles_proxy": 43215.41721319649,
+  "adc_is_saturated": true
+}

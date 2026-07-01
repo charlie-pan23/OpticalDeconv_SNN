@@ -1,0 +1,25 @@
+dataset,dataset_label,component,component_label,power_w,power_mw,share_percent
+cifar10dvs,CIFAR10-DVS,cw_laser,CW laser,1.473,1473.0,56.729409120524686
+cifar10dvs,CIFAR10-DVS,mrr_stabilization,MRR stabilization,0.0,0.0,0.0
+cifar10dvs,CIFAR10-DVS,leakage_misc_io,Leakage / misc. I/O,0.09,90.0,3.4661553434129133
+cifar10dvs,CIFAR10-DVS,binary_modulator_driver,Binary modulator,0.07286975964863358,72.86975964863359,2.806421186436955
+cifar10dvs,CIFAR10-DVS,photodiodes,Photodiodes,0.2816,281.6,10.845214941167514
+cifar10dvs,CIFAR10-DVS,tia,TIA,0.096,96.0,3.6972323663071074
+cifar10dvs,CIFAR10-DVS,comparators,Comparators,0.0704,70.4,2.7113037352918785
+cifar10dvs,CIFAR10-DVS,hapr_selection_proxy,HAPR selection,0.0032,3.2,0.12324107887690358
+cifar10dvs,CIFAR10-DVS,adc_pool,ADC pool,0.2368,236.8,9.119839836890865
+cifar10dvs,CIFAR10-DVS,sram_register_files,SRAM / registers,0.24325,243.25,9.368247636502124
+cifar10dvs,CIFAR10-DVS,noc_bus_controller_clock,NoC / control,0.026987068137695313,26.987068137695314,1.0393485603169
+cifar10dvs,CIFAR10-DVS,digital_lif_update,Digital LIF,0.0024300000000000003,2.43,0.09358619427214866
+dvsgesture,DVS Gesture,cw_laser,CW laser,1.473,1473.0,57.19209437403274
+dvsgesture,DVS Gesture,mrr_stabilization,MRR stabilization,0.0,0.0,0.0
+dvsgesture,DVS Gesture,leakage_misc_io,Leakage / misc. I/O,0.09,90.0,3.4944253181690064
+dvsgesture,DVS Gesture,binary_modulator_driver,Binary modulator,0.06033538798243712,60.33538798243712,2.3426389705264254
+dvsgesture,DVS Gesture,photodiodes,Photodiodes,0.2816,281.6,10.933668551071024
+dvsgesture,DVS Gesture,tia,TIA,0.096,96.0,3.7273870060469396
+dvsgesture,DVS Gesture,comparators,Comparators,0.0704,70.4,2.733417137767756
+dvsgesture,DVS Gesture,hapr_selection_proxy,HAPR selection,0.0032,3.2,0.124246233534898
+dvsgesture,DVS Gesture,adc_pool,ADC pool,0.2368,236.8,9.194221281582452
+dvsgesture,DVS Gesture,sram_register_files,SRAM / registers,0.24325,243.25,9.44465509605123
+dvsgesture,DVS Gesture,noc_bus_controller_clock,NoC / control,0.018515401931762696,18.515401931762696,0.7188965476269654
+dvsgesture,DVS Gesture,digital_lif_update,Digital LIF,0.0024300000000000003,2.43,0.09434948359056318

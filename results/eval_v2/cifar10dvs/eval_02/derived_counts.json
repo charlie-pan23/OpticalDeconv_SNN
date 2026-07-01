@@ -1,0 +1,12 @@
+{
+  "num_tiles": 4,
+  "array_rows": 64,
+  "array_cols": 64,
+  "tile_outputs": 64,
+  "hapr_group_size": 8,
+  "hapr_lanes_per_tile": 8,
+  "hapr_output_lanes_total": 32,
+  "adc_macros": 16,
+  "photodetector_outputs_total": 256,
+  "modulator_lanes_total": 256
+}
