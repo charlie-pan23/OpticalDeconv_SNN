@@ -1,5 +1,7 @@
 /datasets/
 
+__pycache__/
+
 .idea/
 .vscode/
 

@@ -1,0 +1,49 @@
+{
+  "eval_name": "eval_05",
+  "purpose": "device_specific_robustness",
+  "created_utc": "2026-07-02T12:21:20.022056+00:00",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_05.py --dataset dvsgesture --config results/dvsgesture/config_dvsgesture_acc88p54.yaml --checkpoint results/dvsgesture/best_dvsgesture_acc88p54.pth --output-root results/eval_v2 --mode full --batch-size 32 --num-workers 0 --device auto --hapr-group-size 16 --adc-macros 32 --seeds 0 1 2",
+  "dataset": "dvsgesture",
+  "config": "results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+  "checkpoint": "results/dvsgesture/best_dvsgesture_acc88p54.pth",
+  "hardware": "configs/hardware_hipsa.yaml",
+  "device_params": "configs/device_params.yaml",
+  "mode": "full",
+  "batch_size": 32,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "hapr_group_size": 16,
+  "adc_macros": 32,
+  "adc_threshold_fs": 0.02,
+  "adc_threshold_abs": 0.0,
+  "target_layers": [
+    "conv1",
+    "conv2",
+    "conv3",
+    "conv4",
+    "conv5",
+    "fc1"
+  ],
+  "num_rows": 63,
+  "perturbation_types": [
+    "adc_bits",
+    "clean",
+    "combined",
+    "laser",
+    "mrr",
+    "tia",
+    "wdm"
+  ],
+  "notes": {
+    "mrr": "Static per-layer channel multiplicative perturbation applied to MVM output.",
+    "laser": "Common-mode multiplicative gain fluctuation applied per MVM call.",
+    "wdm": "Adjacent-channel crosstalk using power-ratio alpha=10^(dB/10).",
+    "adc_bits": "Symmetric per-call quantization applied to MVM output before LIF.",
+    "tia": "Gaussian output noise scaled by layer RMS and sqrt(HAPR/8).",
+    "combined": "MRR 2%, laser 1%, WDM -25 dB, ADC 6-bit, TIA 1%.",
+    "scope": "Hardware-aware simulation/proxy, not fabricated silicon measurement."
+  }
+}

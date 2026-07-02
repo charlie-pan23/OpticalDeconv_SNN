@@ -1,0 +1,27 @@
+{
+  "eval_name": "eval_05",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_05.py --dataset cifar10dvs --config configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml --checkpoint results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth --output-root results/eval_v2 --mode full --batch-size 16 --num-workers 0 --device auto --hapr-group-size 16 --adc-macros 32 --seeds 0 1 2",
+  "inputs": {
+    "config": "configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+    "checkpoint": "results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+    "hardware": "configs/hardware_hipsa.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "outputs": {
+    "summary": "summary.json",
+    "robustness_summary": "robustness_summary.csv",
+    "robustness_detail": "robustness_detail.csv",
+    "config_snapshot": "config_snapshot.yaml"
+  },
+  "extra": {
+    "dataset": "cifar10dvs",
+    "mode": "full",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "hapr_group_size": 16,
+    "adc_macros": 32
+  }
+}
