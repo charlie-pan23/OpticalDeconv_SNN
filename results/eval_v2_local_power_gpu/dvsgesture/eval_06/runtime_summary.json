@@ -1,0 +1,66 @@
+{
+  "eval_name": "eval_06",
+  "purpose": "cpu_gpu_software_runtime_baseline",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_06.py --dataset dvsgesture --config results/dvsgesture/config_dvsgesture_acc88p54.yaml --checkpoint results/dvsgesture/best_dvsgesture_acc88p54.pth --output-root results/eval_v2_local_power_gpu --devices cuda --batch-size 1 --num-workers 0 --num-warmup 50 --num-runs 1000",
+  "dataset": "dvsgesture",
+  "config": "results/dvsgesture/config_dvsgesture_acc88p54.yaml",
+  "checkpoint": "results/dvsgesture/best_dvsgesture_acc88p54.pth",
+  "split": "test",
+  "batch_size": 1,
+  "num_workers": 0,
+  "num_warmup": 50,
+  "num_runs": 1000,
+  "devices": [
+    "cuda"
+  ],
+  "cpu_active_power_w": null,
+  "gpu_active_power_w": null,
+  "device_results": [
+    {
+      "device": "cuda",
+      "available": true,
+      "dataset": "dvsgesture",
+      "num_warmup": 50,
+      "num_runs_requested": 1000,
+      "num_timed_batches": 238,
+      "batch_size": 1,
+      "total_seen_samples": 288,
+      "total_timed_samples": 238,
+      "accuracy_percent_timed": 89.49579831932773,
+      "loss_timed": 0.3936824322846413,
+      "summary": {
+        "num_timed_batches": 238,
+        "mean_latency_s": 0.01727540798318681,
+        "mean_latency_ms": 17.27540798318681,
+        "median_latency_s": 0.01907854999990377,
+        "median_latency_ms": 19.07854999990377,
+        "std_latency_s": 0.0028483948576302986,
+        "std_latency_ms": 2.8483948576302986,
+        "p50_latency_s": 0.01907854999990377,
+        "p50_latency_ms": 19.07854999990377,
+        "p90_latency_s": 0.01995823000006567,
+        "p90_latency_ms": 19.95823000006567,
+        "p95_latency_s": 0.02011864499972944,
+        "p95_latency_ms": 20.11864499972944,
+        "p99_latency_s": 0.020676589999729912,
+        "p99_latency_ms": 20.676589999729913,
+        "min_latency_s": 0.01260489999958736,
+        "min_latency_ms": 12.60489999958736,
+        "max_latency_s": 0.025665399999979854,
+        "max_latency_ms": 25.665399999979854,
+        "throughput_images_per_s": 57.88575302958079,
+        "mean_latency_s_per_image": 0.01727540798318681,
+        "mean_latency_ms_per_image": 17.27540798318681,
+        "throughput_images_per_s_per_image_latency": 57.88575302958079,
+        "active_power_w": null,
+        "energy_J_per_image": null,
+        "energy_mJ_per_image": null
+      }
+    }
+  ],
+  "notes": {
+    "latency": "Use batch_size=1 for Section 4 latency-oriented edge inference.",
+    "energy": "Software energy is reported only when active power is provided.",
+    "platform_warning": "Do not mix AutoDL server runtime with laptop CPU/GPU names in the paper."
+  }
+}
