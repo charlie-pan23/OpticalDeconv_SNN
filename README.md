@@ -1,17 +1,28 @@
-# OpticalDeconv_SNN / HIPSA Evaluation Notes (branch `5090`)
+# OpticalDeconv_SNN / HIPSA Evaluation README
 
-This branch contains the post-training evaluation pipeline for the HIPSA paper section on device-calibrated evaluation. The current goal is not to train the strongest SNN model, but to produce a traceable evidence chain from trained checkpoints to activity traces, hardware latency/power estimates, sensitivity sweeps, and paper figures.
+This branch (`5090`) contains the post-training evaluation pipeline for the HIPSA paper's device-calibrated evaluation section. The evaluation is organized as a traceable chain:
+
+```text
+frozen checkpoint
+  -> clean accuracy
+  -> activity trace
+  -> active-SOP modeling
+  -> latency / power / energy modeling
+  -> ADC/HAPR sensitivity
+  -> device-specific robustness
+  -> paper figures
+```
 
 ## Repository layout
 
 ```text
-configs/             Hardware, device, and workload configs
+configs/             Workload, HIPSA hardware, and device-parameter configs
 eval/                Evaluation data-generation scripts, eval_00 to eval_06
 plot/                Plotting scripts; plots read saved JSON/CSV only
-results/             Checkpoints, frozen train/test outputs, eval_v2 outputs
-hardware/            Older hardware helper modules; some are now superseded
-utils/               Shared checkpoint/config/data/result I/O helpers
-scripts/             Utility checks and workflow scripts
+results/             Checkpoints, train/test artifacts, and eval_v2 outputs
+hardware/            Older hardware helpers; some are superseded by eval_v2 scripts
+utils/               Shared checkpoint/config/data/result-I/O helpers
+scripts/             Utility scripts
 frozen_artifacts/    Frozen post-training artifacts
 ```
 
@@ -24,54 +35,77 @@ results/eval_v2/<dataset>/eval_xx/
 Figures are written to:
 
 ```text
-plot/results/eval_xx/
+plot/results/<stage_or_final>/
+```
+
+Final paper-style figures are written to:
+
+```text
+plot/results/final/
 ```
 
 ## Frozen workloads
 
-| Dataset | Model | Input encoding | T | Test samples | Current checkpoint |
-|---|---|---:|---:|---:|---|
-| CIFAR10-DVS | SpikingVGGGAP | clipped_count max=3 | 10 | 1000 | `results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth` |
-| DVS Gesture | SpikingGestureCNN | binary | 10 | 288 | `results/dvsgesture/best_dvsgesture_acc88p54.pth` |
+| Dataset | Model | Input encoding | T | Test samples | Role | Checkpoint |
+|---|---|---:|---:|---:|---|---|
+| CIFAR10-DVS | `SpikingVGGGAP` | `clipped_count max=3` | 10 | 1000 | Count-coded high-activity stress workload | `results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth` |
+| DVS Gesture | `SpikingGestureCNN` | binary | 10 | 288 | Strict binary event-stream workload | `results/dvsgesture/best_dvsgesture_acc88p54.pth` |
 
-Important paper note: CIFAR10-DVS is currently a **count-coded high-activity stress workload**, not a strict 1-bit binary spike workload. DVS Gesture is the strict binary event-stream workload. A CIFAR10-DVS binary baseline should be added later if the paper needs a strict 1-bit CIFAR claim.
+Important interpretation note:
 
-## Evaluation pipeline
+- CIFAR10-DVS is **not** a strict 1-bit binary spike workload in the current main checkpoint. It should be described as a count-coded / high-activity stress workload.
+- DVS Gesture is the strict binary event-stream workload.
+- If the paper needs a strict 1-bit CIFAR10-DVS claim, a separate binary CIFAR10-DVS baseline should be trained and evaluated.
 
-| Stage | Script | Purpose | Main outputs |
-|---|---|---|---|
-| eval_00 | `eval/eval_00.py` | Clean accuracy sanity check | `summary.json`, `predictions.csv`, `confusion_matrix.csv` |
-| eval_01 | `eval/eval_01.py` | Activity trace and active SOP statistics | `summary.json`, `sop_summary.json`, `layer_activity.csv` |
-| eval_02 | `eval/eval_02.py` | Device-calibrated latency / power / energy model | `latency_energy_summary.json`, `power_breakdown.csv` |
-| eval_03 | `eval/eval_03.py` | Comparator threshold sensitivity | `threshold_sweep.csv` |
-| eval_04 | `eval/eval_04.py` | HAPR / ADC pool / MRR stabilization sensitivity | `hapr_adc_sweep.csv`, `mrr_sensitivity.csv` |
-| eval_05 | pending | Device-specific robustness | MRR / laser / WDM / ADC / TIA sensitivity |
-| eval_06 | `eval/eval_06.py` | CPU/GPU software runtime baseline | `runtime_summary.json`, `runtime_samples.csv` |
+## Hardware-modeling scope
 
-## Reproduce current evaluation
+All HIPSA numbers in this branch are **device-calibrated architecture-level estimates**, not fabricated-silicon measurements.
 
-### eval_00: clean accuracy
+Main modeling assumptions:
 
-```bash
-python -m eval.eval_00 \
-  --config configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml \
-  --checkpoint results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth \
-  --output-root results/eval_v2 \
-  --split test \
-  --batch-size 128 \
-  --num-workers 4 \
-  --device auto \
-  --save-logits
+- Four logical `64 x 64` PDPU tiles.
+- Effective clock / utilization: `1 GHz / 40%`.
+- Realized active rate: `6.5536 TSOP/s`.
+- CW laser is on during inference.
+- MRR weights are calibrated / static during inference.
+- No timestep-level optical power-gating is hidden in the main result.
+- Continuous per-ring MRR thermal locking is excluded from the main inference-time result and treated as a stress case.
 
-python -m eval.eval_00 \
-  --config results/dvsgesture/config_dvsgesture_acc88p54.yaml \
-  --checkpoint results/dvsgesture/best_dvsgesture_acc88p54.pth \
-  --output-root results/eval_v2 \
-  --split test \
-  --batch-size 128 \
-  --num-workers 4 \
-  --device auto \
-  --save-logits
+The current balanced paper-facing design point is:
+
+```text
+HAPR group size = 16
+ADC macros      = 32
+```
+
+The older default point is:
+
+```text
+HAPR group size = 8
+ADC macros      = 16
+```
+
+The default point is conservative but ADC-saturated, so it is not the final balanced design point.
+
+## Evaluation stages
+
+### eval_00: clean accuracy sanity check
+
+Script: `eval/eval_00.py`
+
+Purpose:
+
+- Load frozen checkpoint and config.
+- Run the frozen test split.
+- Save clean accuracy, loss, predictions, per-class accuracy, and confusion matrix.
+
+Main outputs:
+
+```text
+results/eval_v2/<dataset>/eval_00/summary.json
+results/eval_v2/<dataset>/eval_00/predictions.csv
+results/eval_v2/<dataset>/eval_00/confusion_matrix.csv
+results/eval_v2/<dataset>/eval_00/per_class_accuracy.csv
 ```
 
 Current results:
@@ -81,29 +115,32 @@ Current results:
 | CIFAR10-DVS | 76.30% | 0.748987 |
 | DVS Gesture | 88.54% | 0.411062 |
 
-### eval_01: activity trace
+Limitations:
 
-```bash
-python -m eval.eval_01 \
-  --config configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml \
-  --checkpoint results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth \
-  --output-root results/eval_v2 \
-  --split test \
-  --batch-size 128 \
-  --num-workers 4 \
-  --device auto
+- This stage only validates checkpoint / config / split consistency.
+- It does not collect hardware activity.
+- CIFAR10-DVS accuracy corresponds to `clipped_count max=3`.
 
-python -m eval.eval_01 \
-  --config results/dvsgesture/config_dvsgesture_acc88p54.yaml \
-  --checkpoint results/dvsgesture/best_dvsgesture_acc88p54.pth \
-  --output-root results/eval_v2 \
-  --split test \
-  --batch-size 128 \
-  --num-workers 4 \
-  --device auto
+### eval_01: activity trace and active-SOP statistics
+
+Script: `eval/eval_01.py`
+
+Purpose:
+
+- Trace model activity through forward hooks.
+- Compute dense SOPs and active SOPs.
+- Separate MVM activity, LIF spike activity, and ADC request proxy.
+
+Main outputs:
+
+```text
+results/eval_v2/<dataset>/eval_01/summary.json
+results/eval_v2/<dataset>/eval_01/sop_summary.json
+results/eval_v2/<dataset>/eval_01/layer_activity.csv
+results/eval_v2/<dataset>/eval_01/timestep_activity.csv
 ```
 
-Current activity summary:
+Headline activity:
 
 | Dataset | Dense SOP/image | Active SOP/image | Active SOP ratio | MVM input activity | LIF spike activity | ADC request activity |
 |---|---:|---:|---:|---:|---:|---:|
@@ -112,150 +149,267 @@ Current activity summary:
 
 Definitions:
 
-- `mvm_input_activity`: primary signal for active SOP counting.
+- `mvm_input_activity`: primary signal for active-SOP counting.
 - `mvm_output_nonzero_activity`: debug field only.
-- `lif_spike_activity`: digital spike / NoC proxy.
+- `lif_spike_activity`: post-LIF spike activity, used as digital/NoC proxy.
 - `adc_request_activity`: comparator-request proxy before HAPR/ADC modeling.
 
-### eval_02: default device-calibrated model
+Limitations:
 
-```bash
-python -m eval.eval_02 \
-  --datasets cifar10dvs dvsgesture \
-  --input-root results/eval_v2 \
-  --output-root results/eval_v2 \
-  --hardware configs/hardware_hipsa.yaml \
-  --device-params configs/device_params.yaml
+- Activity is traced from PyTorch inference, not measured on silicon.
+- ADC request is a modeling proxy.
+- CIFAR10-DVS activity is based on count-coded input.
+
+### eval_02: default device-calibrated latency / power / energy
+
+Script: `eval/eval_02.py`
+
+Purpose:
+
+- Read eval_01 activity summaries.
+- Apply the HIPSA timing and device-calibrated power model.
+- Compute latency, throughput, power, energy, and ADC pool behavior.
+- Default point: `HAPR=8`, `ADC=16`.
+
+Main outputs:
+
+```text
+results/eval_v2/<dataset>/eval_02/summary.json
+results/eval_v2/<dataset>/eval_02/latency_energy_summary.json
+results/eval_v2/<dataset>/eval_02/power_breakdown.csv
+results/eval_v2/<dataset>/eval_02/adc_pool_summary.json
 ```
 
-Default point: HAPR group size = 8, ADC macros = 16. This point is conservative but ADC-saturated.
+Default-point headline results:
 
-| Dataset | Latency | Energy | Power | Throughput | ADC saturated |
-|---|---:|---:|---:|---:|---:|
-| CIFAR10-DVS | 92.16 us | 239.29 uJ | 2.60 W | 10,850 img/s | yes |
-| DVS Gesture | 79.27 us | 204.17 uJ | 2.58 W | 12,614 img/s | yes |
+| Dataset | Latency | Energy | Power | Throughput | ADC status |
+|---|---:|---:|---:|---:|---|
+| CIFAR10-DVS | 92.16 us | 239.29 uJ | 2.60 W | 10,851 img/s | saturated |
+| DVS Gesture | 79.27 us | 204.17 uJ | 2.58 W | 12,614 img/s | saturated |
+
+Limitations:
+
+- Default `HAPR=8 / ADC=16` is intentionally conservative and ADC-saturated.
+- This is not the final balanced paper design point.
+- Power is derived from component models and activity factors.
+- Energy is model-derived as `power x latency`.
 
 ### eval_03: comparator threshold sensitivity
 
-```bash
-python -m eval.eval_03 \
-  --dataset cifar10dvs \
-  --config configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml \
-  --checkpoint results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth \
-  --output-root results/eval_v2 \
-  --thresholds 0.0 0.01 0.02 0.05 0.10 0.20 \
-  --batch-size 128 \
-  --num-workers 4 \
-  --device auto
+Script: `eval/eval_03.py`
 
-python -m eval.eval_03 \
-  --dataset dvsgesture \
-  --config results/dvsgesture/config_dvsgesture_acc88p54.yaml \
-  --checkpoint results/dvsgesture/best_dvsgesture_acc88p54.pth \
-  --output-root results/eval_v2 \
-  --thresholds 0.0 0.01 0.02 0.05 0.10 0.20 \
-  --batch-size 128 \
-  --num-workers 4 \
-  --device auto
-```
+Purpose:
 
-Conclusion: aggressive comparator thresholding is not a good primary optimization knob. It quickly damages accuracy while ADC utilization remains high under moderate thresholds. Treat this as sensitivity / stress evidence, not as the main performance-improvement mechanism.
+- Sweep comparator threshold.
+- Evaluate whether thresholding can reduce ADC pressure.
+- Default mode applies threshold-induced zeroing before LIF update.
 
-### eval_04: HAPR / ADC / MRR sensitivity
-
-```bash
-python -m eval.eval_04 \
-  --datasets cifar10dvs dvsgesture \
-  --input-root results/eval_v2 \
-  --output-root results/eval_v2 \
-  --hardware configs/hardware_hipsa.yaml \
-  --device-params configs/device_params.yaml \
-  --adc-pool-sizes 8 16 32 64 128 \
-  --hapr-group-sizes 4 8 16 32
-```
-
-Key design insight: the default 16-ADC backend is saturated. HAPR/ADC co-design removes the ADC bottleneck and restores SOP-bound latency.
-
-Recommended provisional main point:
-
-| Design | CIFAR10-DVS | DVS Gesture | Comment |
-|---|---:|---:|---|
-| HAPR=8, ADC=64 | 80.23 us / 197.09 uJ | 36.06 us / 99.11 uJ | conservative HAPR, more ADCs |
-| **HAPR=16, ADC=32** | **80.23 us / 179.38 uJ** | **36.06 us / 86.69 uJ** | **balanced main candidate** |
-| HAPR=32, ADC=16 | 80.23 us / 170.52 uJ | 36.06 us / 80.46 uJ | energy-oriented, but aggressive HAPR |
-
-Do not blindly use the auto-selected `HAPR=32, ADC=128` point as the final design. Under the current activity-scaled ADC power model, overprovisioned ADCs are not penalized enough by static bias/clock/area overhead. A later final pass should choose a balanced point manually.
-
-MRR stabilization: practical sub-watt cases should be plotted separately from the full per-ring thermal-locking stress case. The full-locking case is an upper-bound warning, not the main inference-time assumption.
-
-### eval_06: CPU/GPU software baseline
-
-```bash
-python -m eval.eval_06 \
-  --dataset cifar10dvs \
-  --config configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml \
-  --checkpoint results/cifar10dvs/cifar10dvs_best_clip3_b96_w001_do03_val733_test764.pth \
-  --output-root results/eval_v2 \
-  --devices cpu cuda \
-  --batch-size 1 \
-  --num-workers 0 \
-  --num-warmup 20 \
-  --num-runs 100
-```
-
-Use the actual checkpoint path if the command above is copied manually:
+Main outputs:
 
 ```text
-results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth
+results/eval_v2/<dataset>/eval_03/summary.json
+results/eval_v2/<dataset>/eval_03/threshold_sweep.csv
+results/eval_v2/<dataset>/eval_03/layer_threshold_sweep.csv
 ```
 
-Current AutoDL server results, latency only:
+Main conclusion:
 
-| Dataset | CPU latency | CUDA latency | Note |
+- Naive comparator thresholding is **not** a reliable primary optimization knob.
+- Moderate thresholds do not sufficiently relieve ADC saturation.
+- Aggressive thresholds reduce activity but quickly damage accuracy.
+
+Limitations:
+
+- This stage is a sensitivity / stress test, not the final optimization method.
+- Threshold-induced zeroing is an aggressive proxy.
+
+### eval_04: HAPR / ADC pool / MRR stabilization sensitivity
+
+Script: `eval/eval_04.py`
+
+Purpose:
+
+- Read eval_01 activity summaries.
+- Sweep HAPR group size and ADC pool size.
+- Evaluate MRR stabilization overhead.
+- Identify default, conservative, balanced, and aggressive design points.
+
+Main outputs:
+
+```text
+results/eval_v2/<dataset>/eval_04/summary.json
+results/eval_v2/<dataset>/eval_04/adc_pool_sweep.csv
+results/eval_v2/<dataset>/eval_04/hapr_adc_sweep.csv
+results/eval_v2/<dataset>/eval_04/mrr_sensitivity.csv
+results/eval_v2/<dataset>/eval_04/selected_design_points.csv
+```
+
+Representative design points:
+
+| Design | HAPR | ADC macros | Interpretation |
 |---|---:|---:|---|
-| CIFAR10-DVS | 48.60 ms/image | 10.17 ms/image | 100 timed samples |
-| DVS Gesture | 38.39 ms/image | 7.73 ms/image | 100 timed samples |
+| Default | 8 | 16 | Conservative but ADC-saturated |
+| Conservative | 8 | 64 | Lower HAPR risk, more ADCs |
+| Balanced | 16 | 32 | Recommended paper-facing design point |
+| Aggressive | 32 | 16 | Lower energy, higher HAPR analog risk |
 
-Energy is not reported because active CPU/GPU power was not supplied. Do not use these results as laptop CPU/GPU baselines unless they are rerun on the laptop hardware that will be named in the paper.
+Balanced design point:
 
-## Plotting
+| Dataset | Latency | Energy | Power |
+|---|---:|---:|---:|
+| CIFAR10-DVS | 80.23 us | 179.38 uJ | 2.24 W |
+| DVS Gesture | 36.06 us | 86.69 uJ | 2.40 W |
 
-Representative plot commands:
+Limitations:
 
-```bash
-python -m plot.plot_01 --input-root results/eval_v2 --output-root plot/results/eval_01 --datasets cifar10dvs dvsgesture
-python -m plot.plot_02 --input-root results/eval_v2 --output-root plot/results/eval_02 --datasets cifar10dvs dvsgesture
-python -m plot.plot_03 --input-root results/eval_v2 --output-root plot/results/eval_02 --datasets cifar10dvs dvsgesture
-python -m plot.plot_04 --input-root results/eval_v2 --output-root plot/results/eval_03 --datasets cifar10dvs dvsgesture
-python -m plot.plot_05 --input-root results/eval_v2 --output-root plot/results/eval_04 --datasets cifar10dvs dvsgesture
-python -m plot.plot_06 --input-root results/eval_v2 --output-root plot/results/eval_06 --datasets cifar10dvs dvsgesture --hipsa-hapr 16 --hipsa-adc 32
+- Activity-scaled ADC power can under-penalize very large ADC pools.
+- HAPR=32 is aggressive and should not be used as the default without robustness support.
+- eval_04 does not directly simulate HAPR summing noise or TIA dynamic-range limits.
+- MRR full thermal-locking cases are stress cases, not main assumptions.
+
+### eval_05: device-specific robustness
+
+Script: `eval/eval_05.py`
+
+Purpose:
+
+- Run hardware-aware forward-only robustness sweeps.
+- Inject device-specific perturbations around the photonic/electronic front end.
+- Evaluate accuracy drop and energy/activity impact under the balanced design context.
+
+Perturbation types:
+
+- ADC precision: `4 / 5 / 6 / 8 bits`
+- MRR transmission perturbation: `1 / 2 / 3 / 5%`
+- Laser intensity fluctuation: `1 / 2 / 3%`
+- WDM crosstalk: `-30 / -25 / -20 / -15 dB`
+- TIA/HAPR output noise: `0.5 / 1 / 2 / 3%`
+- Combined stress case
+
+Main outputs:
+
+```text
+results/eval_v2/<dataset>/eval_05/summary.json
+results/eval_v2/<dataset>/eval_05/robustness_summary.csv
+results/eval_v2/<dataset>/eval_05/robustness_detail.csv
 ```
 
-Final paper figures should be redrawn from the saved CSV/JSON outputs. Do not directly use the first generated plots without checking axis scale, units, and selected design points.
+Paper-facing summary:
 
-## Paper work that can start now
+- Full sweep results are stored in eval_05 outputs.
+- Main paper figure uses representative practical points:
+  - ADC 6-bit
+  - MRR 3%
+  - Laser 3%
+  - WDM -20 dB
+  - TIA/HAPR 2%
+  - Combined stress
 
-The following parts of Section 4 can already be drafted:
+Limitations:
 
-1. Workload and checkpoint protocol: frozen checkpoints, T=10, batch size 1 for latency-oriented evaluation.
-2. Clean accuracy table: eval_00 results.
-3. Activity trace and active SOP analysis: eval_01 results.
-4. Device-calibrated default model: eval_02, with explicit ADC saturation caveat.
-5. Comparator threshold sensitivity: eval_03, interpreted as a stress/sensitivity result.
-6. HAPR/ADC design-space discussion: eval_04, with HAPR=16 / ADC=32 as provisional balanced point.
-7. CPU/GPU baseline methodology: eval_06, but final platform numbers should be rerun on the hardware named in the paper.
+- eval_05 is a hardware-aware simulation/proxy, not a fabricated-device measurement.
+- Negative energy change can occur when perturbation suppresses activity; this is activity-dependent model behavior, not a physical energy-saving mechanism.
+- Full perturbation sweeps should remain in the repository / appendix; main text should use representative points.
 
-## Remaining work before final paper numbers
+### eval_06: CPU/GPU software runtime baseline
 
-- Implement eval_05 device-specific robustness: MRR perturbation, laser fluctuation, WDM crosstalk, ADC precision, TIA/HAPR noise.
-- Rerun a final eval_02-style summary using the chosen final main design, probably HAPR=16 / ADC=32.
-- Add all-biased ADC upper-bound or explicitly state that current ADC power is activity-scaled.
-- Add or report a CIFAR10-DVS binary baseline if strict 1-bit CIFAR hardware-facing claims are needed.
-- Redraw final figures with paper-ready labels and units.
-- Keep full per-ring thermal locking as a stress table, not as a normal curve on the same axis as practical sub-watt overheads.
+Script: `eval/eval_06.py`
 
-## Current interpretation
+Purpose:
 
-The current evaluation already supports the following narrative:
+- Measure PyTorch CPU and CUDA runtime baselines.
+- Use batch size 1 for latency-oriented edge inference.
+- Estimate software energy when active platform power is provided.
 
-> HIPSA gains come from exploiting SNN event sparsity and photonic MVM throughput. The default ADC backend is conservative and can become saturated, but HAPR/ADC co-design restores SOP-bound latency. Comparator thresholding alone is not a reliable optimization knob because it harms accuracy early. The final design should use conservative thresholding, balanced HAPR/ADC pooling, and device-specific robustness analysis.
+Main outputs:
+
+```text
+results/eval_v2/<dataset>/eval_06/         # runtime outputs
+plot/results/eval_06_local/                # local paper-facing summary and figures
+plot/results/eval_06_local/plot_06_comparison_data.csv
+```
+
+Paper-facing local summary:
+
+| Dataset | Platform | Latency | Energy |
+|---|---|---:|---:|
+| CIFAR10-DVS | CPU | 57.95 ms | 4262.18 mJ |
+| CIFAR10-DVS | GPU | 29.57 ms | 2069.27 mJ |
+| CIFAR10-DVS | HIPSA HAPR16/ADC32 | 0.080 ms | 0.179 mJ |
+| DVS Gesture | CPU | 41.96 ms | 3028.39 mJ |
+| DVS Gesture | GPU | 25.63 ms | 1485.22 mJ |
+| DVS Gesture | HIPSA HAPR16/ADC32 | 0.036 ms | 0.0867 mJ |
+
+Limitations:
+
+- CPU/GPU runtime and energy are platform-specific.
+- Do not mix AutoDL server results with local laptop CPU/GPU claims.
+- Software energy is only meaningful when active power is measured and provided.
+
+## Plot scripts
+
+### Stage plots
+
+| Script | Purpose | Main inputs | Main outputs |
+|---|---|---|---|
+| `plot/plot_00.py` | Confusion matrix from eval_00 | `results/eval_v2/<dataset>/eval_00/confusion_matrix.csv` | `plot/results/eval_00/` |
+| `plot/plot_01.py` | Workload activity | eval_01 summaries | `plot/results/eval_01/` |
+| `plot/plot_02.py` | HIPSA latency / energy overview | eval_02 summaries | `plot/results/eval_02/` |
+| `plot/plot_03.py` | HIPSA power breakdown | eval_02 power CSVs | `plot/results/eval_02/` |
+| `plot/plot_04.py` | Comparator threshold sweep | eval_03 threshold CSVs | `plot/results/eval_03/` |
+| `plot/plot_05.py` | HAPR/ADC/MRR sensitivity | eval_04 CSVs | `plot/results/eval_04/` |
+| `plot/plot_06.py` | CPU/GPU/HIPSA comparison | eval_06 + eval_04 | `plot/results/eval_06/` |
+| `plot/plot_07.py` / `plot_07_*` | Robustness sweeps and summaries | eval_05 robustness CSVs | `plot/results/eval_05*/` |
+
+### Final paper figures
+
+| Script | Figure | Outputs |
+|---|---|---|
+| `plot/plot_final_fig5.py` | Activity + latency + energy | `fig5_activity_performance.pdf`, `fig5a_activity.pdf`, `fig5b_latency.pdf`, `fig5c_energy.pdf` |
+| `plot/plot_final_fig6.py` | Power breakdown + HAPR/ADC design | `fig6_power_adc_hapr.pdf`, `fig6a_power_breakdown.pdf`, `fig6b_hapr_adc_energy.pdf`, `fig6c_adc_utilization.pdf` |
+| `plot/plot_final_fig7.py` | Representative robustness summary | `fig7_robustness_summary.pdf`, `fig7_robustness_summary_panel.pdf` |
+
+The combined figures are useful for previewing. The individual panel PDFs are intended for LaTeX `subfigure` / `subcaption` layouts, where subfigure titles and captions can be controlled by the paper template.
+
+## Recommended paper Section 4 mapping
+
+```text
+4 Device-Calibrated Evaluation
+  4.1 Evaluation Protocol and Frozen Workloads
+      Table: workload, encoding, T, samples, checkpoint, accuracy
+
+  4.2 Activity Trace and Active-SOP Modeling
+      Fig. 5(a): workload activity
+
+  4.3 Latency, Throughput, and Energy
+      Fig. 5(b)(c): CPU/GPU/HIPSA latency and energy
+
+  4.4 Power Breakdown and ADC/HAPR Sensitivity
+      Fig. 6(a): balanced power breakdown
+      Fig. 6(b)(c): HAPR/ADC energy and ADC backend pressure
+
+  4.5 Device-Specific Robustness
+      Fig. 7: representative robustness summary
+```
+
+A separate `4.6 Discussion and Limitations` section is optional. With a short paper page limit, limitations are better integrated into the corresponding subsections and summarized briefly in the conclusion.
+
+## Known limitations and next steps
+
+1. **CIFAR10-DVS binary baseline**  
+   Current CIFAR10-DVS uses `clipped_count max=3`. Add a binary CIFAR10-DVS baseline if strict 1-bit CIFAR claims are required.
+
+2. **Architecture-level estimates**  
+   HIPSA latency/power/energy are device-calibrated estimates, not silicon measurements.
+
+3. **ADC model**  
+   Activity-scaled ADC power is useful for design exploration but may under-penalize very large ADC pools. Balanced point `HAPR=16 / ADC=32` is the recommended paper-facing point.
+
+4. **MRR locking**  
+   Continuous per-ring thermal locking is excluded from the main inference-time power and should only be reported as a stress case.
+
+5. **Robustness simulation**  
+   eval_05 perturbations are proxy injections. They support sensitivity analysis but do not replace device-level measurement or detailed circuit simulation.
+
+6. **CPU/GPU baseline**  
+   eval_06 results are platform-specific. The paper-facing local results should be traced to the same machine and active-power measurements used in the final figures.
