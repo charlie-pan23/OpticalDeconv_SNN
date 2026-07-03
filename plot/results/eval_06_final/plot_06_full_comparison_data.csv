@@ -1,0 +1,7 @@
+dataset,dataset_label,platform,source,latency_ms_per_image,energy_mJ_per_image,active_power_w,accuracy_percent,note
+cifar10dvs,CIFAR10-DVS,CPU,results\eval_v2_local_energy\cifar10dvs\eval_06\runtime_summary.json,57.954836631581294,4262.578234252805,73.55,76.3157894736842,measured_software_baseline
+cifar10dvs,CIFAR10-DVS,GPU,results\eval_v2_local_energy\cifar10dvs\eval_06\runtime_summary.json,27.788927263134514,1944.9470191467847,69.99,76.10526315789474,measured_software_baseline
+cifar10dvs,CIFAR10-DVS,HIPSA,results\eval_v2\cifar10dvs\eval_04\hapr_adc_sweep.csv,0.0802295100390625,0.17938208667693104,2.235861674707881,76.3,HIPSA_HAPR16_ADC32
+dvsgesture,DVS Gesture,CPU,results\eval_v2_local_energy\dvsgesture\eval_06\runtime_summary.json,42.914178151171534,3097.1162371700498,72.17,89.49579831932773,measured_software_baseline
+dvsgesture,DVS Gesture,GPU,results\eval_v2_local_energy\dvsgesture\eval_06\runtime_summary.json,23.455142436952364,1359.2255042213897,57.95,89.49579831932773,measured_software_baseline
+dvsgesture,DVS Gesture,HIPSA,results\eval_v2\dvsgesture\eval_04\hapr_adc_sweep.csv,0.03605884789360894,0.08668927249678832,2.404105443206717,88.54166666666667,HIPSA_HAPR16_ADC32
