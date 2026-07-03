@@ -1,0 +1,2 @@
+device,batch_size,available,accuracy_percent_timed,mean_batch_latency_ms,mean_latency_ms_per_image,throughput_images_per_s,active_power_w,energy_mJ_per_image,num_timed_batches,total_timed_samples
+cuda,8,True,76.6875,25.329175999931977,3.166146999991497,315.84130490551627,90.36000000000001,286.0930429192317,200,1600

@@ -1,0 +1,24 @@
+{
+  "python_version": "3.10.20 | packaged by conda-forge | (main, Jun 11 2026, 03:28:51) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 170 Stepping 4, GenuineIntel",
+  "machine": "AMD64",
+  "system": "Windows",
+  "release": "10",
+  "torch_version": "2.5.1",
+  "cuda_available": true,
+  "cuda_version": "12.1",
+  "cudnn_version": 90100,
+  "cuda_devices": [
+    {
+      "index": 0,
+      "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+      "total_memory_bytes": 8585216000,
+      "major": 8,
+      "minor": 9,
+      "multi_processor_count": 36
+    }
+  ],
+  "nvidia_smi": "NVIDIA GeForce RTX 4070 Laptop GPU, 610.62, [N/A], 10.91 W",
+  "lscpu": null
+}

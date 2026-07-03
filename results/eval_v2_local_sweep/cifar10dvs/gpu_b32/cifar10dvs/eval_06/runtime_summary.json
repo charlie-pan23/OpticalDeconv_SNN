@@ -1,0 +1,109 @@
+{
+  "eval_name": "eval_06",
+  "purpose": "cpu_cuda_software_baseline_batch_sweep",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_06_sweep.py --dataset cifar10dvs --config configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml --checkpoint results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth --output-root results/eval_v2_local_sweep/cifar10dvs/gpu_b32 --devices cuda --batch-sizes 32 --num-workers 0 --num-warmup 30 --num-runs 200 --target-timed-samples 0 --min-runs-per-batch 10 --gpu-idle-power-w 44.44 --gpu-runtime-power-w 138.06",
+  "dataset": "cifar10dvs",
+  "config": "configs/config_cifar10dvs_clip3_b96_wd001_do03.yaml",
+  "checkpoint": "results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+  "split": "test",
+  "devices": [
+    "cuda"
+  ],
+  "batch_sizes": "32",
+  "cpu_batch_sizes": null,
+  "gpu_batch_sizes": null,
+  "num_workers": 0,
+  "num_warmup": 30,
+  "num_runs": 200,
+  "target_timed_samples": 0,
+  "min_runs_per_batch": 10,
+  "cycle_loader": true,
+  "cuda_timing": "wall",
+  "power_measurement": {
+    "cuda": {
+      "direct_active_power_w": null,
+      "idle_average_power_w": 44.44,
+      "runtime_average_power_w": 138.06,
+      "computed_active_power_w": 93.62,
+      "method": "runtime_average_minus_idle_average"
+    }
+  },
+  "device_results": [
+    {
+      "device": "cuda",
+      "available": true,
+      "dataset": "cifar10dvs",
+      "main_metric": "best_throughput_equivalent_latency",
+      "selected_batch_size": 32,
+      "selection_rule": "minimum mean_latency_ms_per_image over batch sweep",
+      "accuracy_percent_timed": 75.6418485237484,
+      "loss_timed": 0.7562908690150191,
+      "summary": {
+        "available": true,
+        "num_timed_batches": 200,
+        "total_timed_samples": 6400,
+        "total_forward_time_s": 18.14441770000667,
+        "mean_batch_latency_s": 0.09072208850003335,
+        "mean_batch_latency_ms": 90.72208850003335,
+        "median_batch_latency_ms": 91.97539999968285,
+        "std_batch_latency_ms": 13.322708881033993,
+        "p90_batch_latency_ms": 93.07705999945028,
+        "p95_batch_latency_ms": 93.7118300000293,
+        "mean_latency_s_per_image": 0.0028350652656260423,
+        "mean_latency_ms_per_image": 2.835065265626042,
+        "mean_of_batch_latency_ms_per_image": 2.9677478593760043,
+        "median_latency_ms_per_image": 2.874807812503377,
+        "p90_latency_ms_per_image": 2.9088756250018832,
+        "p95_latency_ms_per_image": 2.934951718700063,
+        "throughput_images_per_s": 352.7255658360228,
+        "active_power_w": 93.62,
+        "energy_J_per_image": 0.2654188101679101,
+        "energy_mJ_per_image": 265.41881016791007,
+        "selected_batch_size": 32,
+        "selection_rule": "minimum mean_latency_ms_per_image over batch sweep"
+      },
+      "batch1_summary": null,
+      "batch_sweep": [
+        {
+          "device": "cuda",
+          "batch_size": 32,
+          "available": true,
+          "accuracy_percent_timed": 75.6418485237484,
+          "loss_timed": 0.7562908690150191,
+          "summary": {
+            "available": true,
+            "num_timed_batches": 200,
+            "total_timed_samples": 6400,
+            "total_forward_time_s": 18.14441770000667,
+            "mean_batch_latency_s": 0.09072208850003335,
+            "mean_batch_latency_ms": 90.72208850003335,
+            "median_batch_latency_ms": 91.97539999968285,
+            "std_batch_latency_ms": 13.322708881033993,
+            "p90_batch_latency_ms": 93.07705999945028,
+            "p95_batch_latency_ms": 93.7118300000293,
+            "mean_latency_s_per_image": 0.0028350652656260423,
+            "mean_latency_ms_per_image": 2.835065265626042,
+            "mean_of_batch_latency_ms_per_image": 2.9677478593760043,
+            "median_latency_ms_per_image": 2.874807812503377,
+            "p90_latency_ms_per_image": 2.9088756250018832,
+            "p95_latency_ms_per_image": 2.934951718700063,
+            "throughput_images_per_s": 352.7255658360228,
+            "active_power_w": 93.62,
+            "energy_J_per_image": 0.2654188101679101,
+            "energy_mJ_per_image": 265.41881016791007
+          }
+        }
+      ]
+    }
+  ],
+  "notes": {
+    "main_metric": "For each software device, the main reported latency is the minimum effective per-image latency over the compact batch sweep.",
+    "default_batch_points": "1 is the strict single-image reference, 8 is a small-batch latency-throughput point, and 32 is the throughput-oriented GPU point.",
+    "run_budget": "Timed iterations are adapted per batch size from target_timed_samples and capped by num_runs, so large batches do not dominate runtime.",
+    "batch1": "Batch-1 latency is retained in batch1_summary for latency-oriented discussion, but it is not forced as the main GPU baseline.",
+    "effective_latency": "effective per-image latency = total timed forward time / total timed samples",
+    "energy": "energy per image = active power * selected effective latency per image",
+    "timed_region": "Forward pass only; data loading, batch preparation, logit aggregation, loss, and accuracy are outside the timed region.",
+    "paper_wording": "Call the selected metric throughput-equivalent per-image latency, not strict single-image latency."
+  }
+}

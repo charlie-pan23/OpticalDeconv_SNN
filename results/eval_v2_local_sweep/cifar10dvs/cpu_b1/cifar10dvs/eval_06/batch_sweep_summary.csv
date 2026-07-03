@@ -1,0 +1,2 @@
+device,batch_size,available,accuracy_percent_timed,mean_batch_latency_ms,mean_latency_ms_per_image,throughput_images_per_s,active_power_w,energy_mJ_per_image,num_timed_batches,total_timed_samples
+cpu,1,True,75.5,57.87478950003788,57.87478950003788,17.278680555708036,87.78,5080.2490223133245,200,200

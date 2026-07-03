@@ -1,0 +1,11 @@
+run,device,batch_size,mean_latency_ms_per_image,throughput_images_per_s,active_power_w,energy_mJ_per_image,num_timed_batches,total_timed_samples,source
+cpu_b1,cpu,1,57.87478950003788,17.278680555708036,87.78,5080.2490223133245,200,200,results\eval_v2_local_sweep\cifar10dvs\cpu_b1\cifar10dvs\eval_06\batch_sweep_summary.csv
+cpu_b4,cpu,4,41.044079499995405,24.364049874723392,86.34,3543.745824029603,200,800,results\eval_v2_local_sweep\cifar10dvs\cpu_b4\cifar10dvs\eval_06\batch_sweep_summary.csv
+cpu_b8,cpu,8,40.606627937505664,24.62652159984863,86.56,3514.90971427049,200,1600,results\eval_v2_local_sweep\cifar10dvs\cpu_b8\cifar10dvs\eval_06\batch_sweep_summary.csv
+cpu_b16,cpu,16,41.53532331250119,24.07589300500335,82.12,3410.880750422598,200,3200,results\eval_v2_local_sweep\cifar10dvs\cpu_b16\cifar10dvs\eval_06\batch_sweep_summary.csv
+cpu_b32,cpu,32,40.728144578123135,24.55304582023959,78.54,3198.788475165791,200,6400,results\eval_v2_local_sweep\cifar10dvs\cpu_b32\cifar10dvs\eval_06\batch_sweep_summary.csv
+gpu_b1,cuda,1,20.061251999923115,49.84733754422867,75.36,1511.8159507142059,200,200,results\eval_v2_local_sweep\cifar10dvs\gpu_b1\cifar10dvs\eval_06\batch_sweep_summary.csv
+gpu_b4,cuda,4,4.641891374983516,215.42942719196034,81.62,378.8711740261545,200,800,results\eval_v2_local_sweep\cifar10dvs\gpu_b4\cifar10dvs\eval_06\batch_sweep_summary.csv
+gpu_b8,cuda,8,3.166146999991497,315.84130490551627,90.36000000000001,286.0930429192317,200,1600,results\eval_v2_local_sweep\cifar10dvs\gpu_b8\cifar10dvs\eval_06\batch_sweep_summary.csv
+gpu_b16,cuda,16,2.60023487499609,384.58064293192115,103.21000000000001,268.37024144834646,200,3200,results\eval_v2_local_sweep\cifar10dvs\gpu_b16\cifar10dvs\eval_06\batch_sweep_summary.csv
+gpu_b32,cuda,32,2.835065265626042,352.7255658360228,93.62,265.41881016791007,200,6400,results\eval_v2_local_sweep\cifar10dvs\gpu_b32\cifar10dvs\eval_06\batch_sweep_summary.csv
