@@ -42,7 +42,7 @@ photodetection_frontend:
 
 adc:
   conventional_adc_macro:
-    resolution_bits_reference: 8
+    resolution_bits_reference: 8 # Reference macro resolution for power/area modeling, not necessarily the functional ADC precision.
     power_per_macro_mw: 14.8
     sample_rate_gsps: 10
     area_per_macro_um2: 2850

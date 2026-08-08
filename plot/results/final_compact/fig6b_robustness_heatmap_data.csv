@@ -1,0 +1,23 @@
+dataset,condition,accuracy_drop_pp
+cifar10dvs,"ADC
+6b",1.4000000000000057
+cifar10dvs,"MRR
+3%",1.2999999999999972
+cifar10dvs,"Laser
+3%",0.0666666666666723
+cifar10dvs,"WDM
+-20 dB",2.299999999999997
+cifar10dvs,"TIA
+2%",0.1666666666666714
+cifar10dvs,Combined,1.8666666666666696
+dvsgesture,"ADC
+6b",-1.7361111111111
+dvsgesture,"MRR
+3%",1.3888888888888904
+dvsgesture,"Laser
+3%",0.3472222222222285
+dvsgesture,"WDM
+-20 dB",-1.0416666666666572
+dvsgesture,"TIA
+2%",0.4629629629629666
+dvsgesture,Combined,0.5787037037037047

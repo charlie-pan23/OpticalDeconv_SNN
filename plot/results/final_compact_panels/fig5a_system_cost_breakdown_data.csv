@@ -1,0 +1,31 @@
+row_type,dataset,row_label,component,value,share_percent,total_value,total_label
+power,cifar10dvs,"CIFAR10-DVS
+power",Laser/link,1.473,65.87656529516995,2.2359999999999998,2.236 W
+power,cifar10dvs,"CIFAR10-DVS
+power",Modulation,0.073,3.2647584973166373,2.2359999999999998,2.236 W
+power,cifar10dvs,"CIFAR10-DVS
+power",O/E + ADC,0.502,22.45080500894455,2.2359999999999998,2.236 W
+power,cifar10dvs,"CIFAR10-DVS
+power",Digital,0.098,4.382826475849733,2.2359999999999998,2.236 W
+power,cifar10dvs,"CIFAR10-DVS
+power",Other static,0.09,4.025044722719142,2.2359999999999998,2.236 W
+power,dvsgesture,"DVS Gesture
+power",Laser/link,1.473,61.27287853577372,2.404,2.404 W
+power,dvsgesture,"DVS Gesture
+power",Modulation,0.06,2.4958402662229617,2.404,2.404 W
+power,dvsgesture,"DVS Gesture
+power",O/E + ADC,0.627,26.08153078202995,2.404,2.404 W
+power,dvsgesture,"DVS Gesture
+power",Digital,0.154,6.405990016638936,2.404,2.404 W
+power,dvsgesture,"DVS Gesture
+power",Other static,0.09,3.743760399334443,2.404,2.404 W
+area,modeled_macro_area,"Modeled
+macro area",Laser/link,0.12,7.444168734491314,1.612,1.612 mm$^2$
+area,modeled_macro_area,"Modeled
+macro area",Modulation,1.331,82.5682382133995,1.612,1.612 mm$^2$
+area,modeled_macro_area,"Modeled
+macro area",O/E + ADC,0.161,9.987593052109181,1.612,1.612 mm$^2$
+area,modeled_macro_area,"Modeled
+macro area",Digital,0.0,0.0,1.612,1.612 mm$^2$
+area,modeled_macro_area,"Modeled
+macro area",Other static,0.0,0.0,1.612,1.612 mm$^2$
