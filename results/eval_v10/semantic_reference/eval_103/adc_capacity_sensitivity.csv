@@ -1,0 +1,7 @@
+adc_macros,samples_per_macro_per_cycle,post_hapr_lanes,nominal_slots_per_window,capacity_margin_slots,same_window_admission_feasible,evidence_class
+6,8,64,48,-16,False,architecture_level_capacity_only
+6,10,64,60,-4,False,architecture_level_capacity_only
+6,12,64,72,8,True,architecture_level_capacity_only
+8,8,64,64,0,True,architecture_level_capacity_only
+8,10,64,80,16,True,architecture_level_capacity_only
+8,12,64,96,32,True,architecture_level_capacity_only

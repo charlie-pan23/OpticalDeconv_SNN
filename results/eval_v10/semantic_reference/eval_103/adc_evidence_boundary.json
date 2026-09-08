@@ -1,0 +1,139 @@
+{
+  "capacity_margin_slots": 16,
+  "claim_boundary": "mux_settling_adc_aperture_tia_recovery_and_operating_mode_power_are_not_closed",
+  "config": {
+    "adc_macros": 8,
+    "adc_power_mw_per_macro": 14.8,
+    "architecture_clock_ghz": 1.0,
+    "mux_ratio": "64:8",
+    "post_hapr_lanes": 64,
+    "samples_per_macro_per_cycle": 10,
+    "temporal_analog_storage": false
+  },
+  "forbidden_claims": [
+    "timing closure",
+    "physically closed",
+    "silicon validated"
+  ],
+  "items": [
+    {
+      "affects_admission_capacity": true,
+      "affects_physical_timing": false,
+      "affects_power_applicability": false,
+      "declared_input": "64 post-HAPR lanes",
+      "model_treatment": "Used as the number of analog requests that must be admitted per service window.",
+      "modeled": true,
+      "name": "post_hapr_lane_count",
+      "required_evidence_to_close": "None for the logical count; provenance of HAPR mapping must remain explicit.",
+      "safe_claim": "architecture-level lane/admission accounting",
+      "status": "modeled_architecture_capacity"
+    },
+    {
+      "affects_admission_capacity": true,
+      "affects_physical_timing": true,
+      "affects_power_applicability": true,
+      "declared_input": "64:8",
+      "model_treatment": "The queue uses the resulting nominal ADC slot capacity; mux fan-in, switching, and settling are not simulated.",
+      "modeled": false,
+      "name": "input_multiplexing_64_to_8",
+      "required_evidence_to_close": "Transient mux/TIA simulation or measured settling and recovery under the declared 1 ns window.",
+      "safe_claim": "capacity assumption; not mux timing closure",
+      "status": "capacity_assumption_only"
+    },
+    {
+      "affects_admission_capacity": true,
+      "affects_physical_timing": true,
+      "affects_power_applicability": false,
+      "declared_input": "not supplied",
+      "model_treatment": "No settling penalty or usable-aperture reduction is applied.",
+      "modeled": false,
+      "name": "mux_switching_settling",
+      "required_evidence_to_close": "Circuit-level settling characterization with worst-case load and multiplexing schedule.",
+      "safe_claim": "not demonstrated",
+      "status": "not_modeled"
+    },
+    {
+      "affects_admission_capacity": true,
+      "affects_physical_timing": true,
+      "affects_power_applicability": false,
+      "declared_input": "not supplied",
+      "model_treatment": "Conversion latency is modeled as a pipeline completion delay, not as an aperture/track-and-hold waveform.",
+      "modeled": false,
+      "name": "adc_aperture",
+      "required_evidence_to_close": "ADC sampling aperture and track/hold timing under the muxed input waveform.",
+      "safe_claim": "not demonstrated",
+      "status": "not_modeled"
+    },
+    {
+      "affects_admission_capacity": true,
+      "affects_physical_timing": true,
+      "affects_power_applicability": false,
+      "declared_input": "not supplied",
+      "model_treatment": "No TIA recovery or inter-request interference penalty is included.",
+      "modeled": false,
+      "name": "tia_output_recovery",
+      "required_evidence_to_close": "TIA transient/recovery simulation or measurement at the declared request rate.",
+      "safe_claim": "not demonstrated",
+      "status": "not_modeled"
+    },
+    {
+      "affects_admission_capacity": true,
+      "affects_physical_timing": true,
+      "affects_power_applicability": false,
+      "declared_input": "temporal_analog_storage=false",
+      "model_treatment": "Requests that cannot start conversion in the arrival window are rejected; a digital FIFO does not rescue the analog sample.",
+      "modeled": true,
+      "name": "hapr_analog_hold_behavior",
+      "required_evidence_to_close": "Front-end hold/settling evidence if the claim is strengthened beyond architecture-level admission.",
+      "safe_claim": "no temporal analog storage in the selected-point model",
+      "status": "no_temporal_storage_selected_point"
+    },
+    {
+      "affects_admission_capacity": true,
+      "affects_physical_timing": false,
+      "affects_power_applicability": false,
+      "declared_input": "per-request/default conversion latency cycles",
+      "model_treatment": "Latency delays completion while declared pipelined issue capacity remains unchanged.",
+      "modeled": true,
+      "name": "conversion_latency",
+      "required_evidence_to_close": "ADC pipeline implementation or a measured latency/throughput pair if making silicon claims.",
+      "safe_claim": "architecture-level pipelined conversion semantics",
+      "status": "modeled_pipeline_semantics"
+    },
+    {
+      "affects_admission_capacity": false,
+      "affects_physical_timing": false,
+      "affects_power_applicability": true,
+      "declared_input": "14.8 mW per ADC macro",
+      "model_treatment": "Available as a declared power parameter; applicability to the exact muxed operating mode is not established by this model.",
+      "modeled": true,
+      "name": "adc_power_14_8_mw_per_macro",
+      "required_evidence_to_close": "Operating-mode-matched ADC power data including muxing, aperture, and throughput conditions.",
+      "safe_claim": "parameterized power anchor, not demonstrated operating-mode measurement",
+      "status": "conditional_parameter_anchor"
+    }
+  ],
+  "model_scope": "architecture_level_capacity_admission_and_transaction_semantics",
+  "nominal_slots_per_window": 80,
+  "physically_closed": false,
+  "safe_claim": "architecture-level capacity/admission analysis",
+  "sensitivity_axes": {
+    "adc_macros": [
+      6,
+      8
+    ],
+    "adc_power_mw_per_macro": [
+      14.8
+    ],
+    "post_hapr_lanes": [
+      64
+    ],
+    "samples_per_macro_per_cycle": [
+      8,
+      10,
+      12
+    ]
+  },
+  "silicon_validated": false,
+  "timing_closure": false
+}

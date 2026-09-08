@@ -1,0 +1,10 @@
+{
+  "evaluation": "eval_103",
+  "evidence_class": "architecture_level_semantic_reference_model",
+  "generated_at_utc": "2026-09-08T11:36:26.657520+00:00",
+  "git_revision": "aa75d3fd5132ece6bcaa73e686aa68a4a7a11cb9",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.10.20 | packaged by conda-forge | (main, Jun 11 2026, 03:28:51) [MSC v.1944 64 bit (AMD64)]",
+  "repository_relative_output": "results/eval_v10/semantic_reference/eval_103",
+  "script": "eval/eval_103.py"
+}

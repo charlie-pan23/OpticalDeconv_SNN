@@ -1,0 +1,13 @@
+variant,sample_id,timestep_id,layer_id,output_neuron_id,output_tile_id,expected_partition_ids,received_partition_ids,partition_count,all_partitions_received_cycle,commit_cycle,commit_sequence,elapsed_steps,membrane_before,membrane_after_decay,input_current,input_scale,membrane_pre_threshold,threshold,spike,reset_applied,reset_mode,membrane_after_commit,decay_count,threshold_count,reset_count
+canonical,semantic-sample-0,0,semantic_lif,0,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,3,3,0,1,0.0,0.0,2.4,0.5,1.19921875,1.0,1,1,zero,0.0,1,1,1
+canonical,semantic-sample-0,1,semantic_lif,0,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,7,7,1,1,0.0,0.0,0.6,0.5,0.30078125,1.0,0,0,zero,0.30078125,1,1,0
+canonical,semantic-sample-0,0,semantic_lif,1,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,9,9,2,1,0.0,0.0,0.8,0.5,0.3984375,1.0,0,0,zero,0.3984375,1,1,0
+canonical,semantic-sample-0,1,semantic_lif,1,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,13,13,3,1,0.3984375,0.19921875,1.7999999999999998,0.5,1.09765625,1.0,1,1,zero,0.0,1,1,1
+reverse,semantic-sample-0,0,semantic_lif,1,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,6,6,0,1,0.0,0.0,0.8,0.5,0.3984375,1.0,0,0,zero,0.3984375,1,1,0
+reverse,semantic-sample-0,1,semantic_lif,1,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,4,6,1,1,0.3984375,0.19921875,1.7999999999999998,0.5,1.09765625,1.0,1,1,zero,0.0,1,1,1
+reverse,semantic-sample-0,0,semantic_lif,0,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,12,12,2,1,0.0,0.0,2.4,0.5,1.19921875,1.0,1,1,zero,0.0,1,1,1
+reverse,semantic-sample-0,1,semantic_lif,0,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,10,12,3,1,0.0,0.0,0.6,0.5,0.30078125,1.0,0,0,zero,0.30078125,1,1,0
+random,semantic-sample-0,0,semantic_lif,0,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,8,8,0,1,0.0,0.0,2.4,0.5,1.19921875,1.0,1,1,zero,0.0,1,1,1
+random,semantic-sample-0,1,semantic_lif,0,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,11,11,1,1,0.0,0.0,0.6,0.5,0.30078125,1.0,0,0,zero,0.30078125,1,1,0
+random,semantic-sample-0,0,semantic_lif,1,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,12,12,2,1,0.0,0.0,0.8,0.5,0.3984375,1.0,0,0,zero,0.3984375,1,1,0
+random,semantic-sample-0,1,semantic_lif,1,tile0,"[""p0"", ""p1"", ""p2""]","[""p0"", ""p1"", ""p2""]",3,12,12,3,1,0.3984375,0.19921875,1.7999999999999998,0.5,1.09765625,1.0,1,1,zero,0.0,1,1,1

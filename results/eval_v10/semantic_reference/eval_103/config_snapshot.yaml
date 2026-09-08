@@ -1,0 +1,21 @@
+evaluation: eval_103_queue_state_hapr_semantic_validation
+fixture_scope: deterministic_semantic_reference_not_dataset_runtime_replay
+seed: 42
+macroarchitecture:
+  photonic_tiles: 4
+  array_per_tile: 64x64
+  hapr_group_size: 4
+  post_hapr_lanes: 64
+  adc_macros: 8
+  samples_per_macro_per_cycle: 10
+  service_slots_per_window: 80
+  architecture_clock_ghz: 1
+  temporal_analog_storage: false
+state_commit:
+  decay: 0.5
+  input_scale: 0.5
+  threshold: 1.0
+  membrane_bits: 16
+  fractional_bits: 8
+  reset_mode: zero
+  initial_last_timestep: -1

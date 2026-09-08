@@ -1,0 +1,1093 @@
+{
+  "a6_counterexample": {
+    "accepted": 60,
+    "accepted_conservation_valid": true,
+    "adc_macros": 6,
+    "arrival_conservation_valid": true,
+    "arrivals": 64,
+    "circuit_timing_closed": false,
+    "claim_boundary": "architecture_level_admission_and_transaction_conservation; not_mux_tia_aperture_or_circuit_timing_closure",
+    "completion_reordered_vs_admission": false,
+    "cycles_observed": 2,
+    "default_conversion_latency_cycles": 1,
+    "evidence_class": "architecture_level_transaction_reference_model",
+    "fifo_depth": 4096,
+    "final_conversion_inflight": 0,
+    "final_fifo_occupancy": 0,
+    "final_pending_fifo_occupancy": 0,
+    "first_cycle": 0,
+    "last_arrival_cycle": 0,
+    "last_observed_cycle": 1,
+    "post_hapr_lanes": 64,
+    "queue_max": 0,
+    "queue_mean": 0.0,
+    "queue_p95": 0.0,
+    "queue_p99": 0.0,
+    "rejected": 4,
+    "requests_dropped": 0,
+    "same_window_admission_feasible": false,
+    "same_window_capacity_shortfall": 4,
+    "samples_per_macro_per_cycle": 10,
+    "selected_point_valid": false,
+    "served": 60,
+    "service_capacity_per_cycle": 60,
+    "tail_drain_complete": true,
+    "tail_drain_requested": true,
+    "temporal_analog_storage": false,
+    "unaccounted_accepted_requests": 0,
+    "unaccounted_requests": 0
+  },
+  "adc_capacity_sensitivity": [
+    {
+      "adc_macros": 6,
+      "capacity_margin_slots": -16,
+      "evidence_class": "architecture_level_capacity_only",
+      "nominal_slots_per_window": 48,
+      "post_hapr_lanes": 64,
+      "same_window_admission_feasible": false,
+      "samples_per_macro_per_cycle": 8
+    },
+    {
+      "adc_macros": 6,
+      "capacity_margin_slots": -4,
+      "evidence_class": "architecture_level_capacity_only",
+      "nominal_slots_per_window": 60,
+      "post_hapr_lanes": 64,
+      "same_window_admission_feasible": false,
+      "samples_per_macro_per_cycle": 10
+    },
+    {
+      "adc_macros": 6,
+      "capacity_margin_slots": 8,
+      "evidence_class": "architecture_level_capacity_only",
+      "nominal_slots_per_window": 72,
+      "post_hapr_lanes": 64,
+      "same_window_admission_feasible": true,
+      "samples_per_macro_per_cycle": 12
+    },
+    {
+      "adc_macros": 8,
+      "capacity_margin_slots": 0,
+      "evidence_class": "architecture_level_capacity_only",
+      "nominal_slots_per_window": 64,
+      "post_hapr_lanes": 64,
+      "same_window_admission_feasible": true,
+      "samples_per_macro_per_cycle": 8
+    },
+    {
+      "adc_macros": 8,
+      "capacity_margin_slots": 16,
+      "evidence_class": "architecture_level_capacity_only",
+      "nominal_slots_per_window": 80,
+      "post_hapr_lanes": 64,
+      "same_window_admission_feasible": true,
+      "samples_per_macro_per_cycle": 10
+    },
+    {
+      "adc_macros": 8,
+      "capacity_margin_slots": 32,
+      "evidence_class": "architecture_level_capacity_only",
+      "nominal_slots_per_window": 96,
+      "post_hapr_lanes": 64,
+      "same_window_admission_feasible": true,
+      "samples_per_macro_per_cycle": 12
+    }
+  ],
+  "adc_evidence": {
+    "capacity_margin_slots": 16,
+    "claim_boundary": "mux_settling_adc_aperture_tia_recovery_and_operating_mode_power_are_not_closed",
+    "config": {
+      "adc_macros": 8,
+      "adc_power_mw_per_macro": 14.8,
+      "architecture_clock_ghz": 1.0,
+      "mux_ratio": "64:8",
+      "post_hapr_lanes": 64,
+      "samples_per_macro_per_cycle": 10,
+      "temporal_analog_storage": false
+    },
+    "forbidden_claims": [
+      "timing closure",
+      "physically closed",
+      "silicon validated"
+    ],
+    "items": [
+      {
+        "affects_admission_capacity": true,
+        "affects_physical_timing": false,
+        "affects_power_applicability": false,
+        "declared_input": "64 post-HAPR lanes",
+        "model_treatment": "Used as the number of analog requests that must be admitted per service window.",
+        "modeled": true,
+        "name": "post_hapr_lane_count",
+        "required_evidence_to_close": "None for the logical count; provenance of HAPR mapping must remain explicit.",
+        "safe_claim": "architecture-level lane/admission accounting",
+        "status": "modeled_architecture_capacity"
+      },
+      {
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": true,
+        "declared_input": "64:8",
+        "model_treatment": "The queue uses the resulting nominal ADC slot capacity; mux fan-in, switching, and settling are not simulated.",
+        "modeled": false,
+        "name": "input_multiplexing_64_to_8",
+        "required_evidence_to_close": "Transient mux/TIA simulation or measured settling and recovery under the declared 1 ns window.",
+        "safe_claim": "capacity assumption; not mux timing closure",
+        "status": "capacity_assumption_only"
+      },
+      {
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": false,
+        "declared_input": "not supplied",
+        "model_treatment": "No settling penalty or usable-aperture reduction is applied.",
+        "modeled": false,
+        "name": "mux_switching_settling",
+        "required_evidence_to_close": "Circuit-level settling characterization with worst-case load and multiplexing schedule.",
+        "safe_claim": "not demonstrated",
+        "status": "not_modeled"
+      },
+      {
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": false,
+        "declared_input": "not supplied",
+        "model_treatment": "Conversion latency is modeled as a pipeline completion delay, not as an aperture/track-and-hold waveform.",
+        "modeled": false,
+        "name": "adc_aperture",
+        "required_evidence_to_close": "ADC sampling aperture and track/hold timing under the muxed input waveform.",
+        "safe_claim": "not demonstrated",
+        "status": "not_modeled"
+      },
+      {
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": false,
+        "declared_input": "not supplied",
+        "model_treatment": "No TIA recovery or inter-request interference penalty is included.",
+        "modeled": false,
+        "name": "tia_output_recovery",
+        "required_evidence_to_close": "TIA transient/recovery simulation or measurement at the declared request rate.",
+        "safe_claim": "not demonstrated",
+        "status": "not_modeled"
+      },
+      {
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": false,
+        "declared_input": "temporal_analog_storage=false",
+        "model_treatment": "Requests that cannot start conversion in the arrival window are rejected; a digital FIFO does not rescue the analog sample.",
+        "modeled": true,
+        "name": "hapr_analog_hold_behavior",
+        "required_evidence_to_close": "Front-end hold/settling evidence if the claim is strengthened beyond architecture-level admission.",
+        "safe_claim": "no temporal analog storage in the selected-point model",
+        "status": "no_temporal_storage_selected_point"
+      },
+      {
+        "affects_admission_capacity": true,
+        "affects_physical_timing": false,
+        "affects_power_applicability": false,
+        "declared_input": "per-request/default conversion latency cycles",
+        "model_treatment": "Latency delays completion while declared pipelined issue capacity remains unchanged.",
+        "modeled": true,
+        "name": "conversion_latency",
+        "required_evidence_to_close": "ADC pipeline implementation or a measured latency/throughput pair if making silicon claims.",
+        "safe_claim": "architecture-level pipelined conversion semantics",
+        "status": "modeled_pipeline_semantics"
+      },
+      {
+        "affects_admission_capacity": false,
+        "affects_physical_timing": false,
+        "affects_power_applicability": true,
+        "declared_input": "14.8 mW per ADC macro",
+        "model_treatment": "Available as a declared power parameter; applicability to the exact muxed operating mode is not established by this model.",
+        "modeled": true,
+        "name": "adc_power_14_8_mw_per_macro",
+        "required_evidence_to_close": "Operating-mode-matched ADC power data including muxing, aperture, and throughput conditions.",
+        "safe_claim": "parameterized power anchor, not demonstrated operating-mode measurement",
+        "status": "conditional_parameter_anchor"
+      }
+    ],
+    "model_scope": "architecture_level_capacity_admission_and_transaction_semantics",
+    "nominal_slots_per_window": 80,
+    "physically_closed": false,
+    "safe_claim": "architecture-level capacity/admission analysis",
+    "sensitivity_axes": {
+      "adc_macros": [
+        6,
+        8
+      ],
+      "adc_power_mw_per_macro": [
+        14.8
+      ],
+      "post_hapr_lanes": [
+        64
+      ],
+      "samples_per_macro_per_cycle": [
+        8,
+        10,
+        12
+      ]
+    },
+    "silicon_validated": false,
+    "timing_closure": false
+  },
+  "claim_boundary": "request_admission_partition_completion_and_state_commit_semantics; not_dataset_runtime_replay_mux_tia_aperture_commit_bandwidth_or_physical_timing_closure",
+  "completion_order_variants": {
+    "canonical": {
+      "queue_summary": {
+        "accepted": 12,
+        "accepted_conservation_valid": true,
+        "adc_macros": 8,
+        "arrival_conservation_valid": true,
+        "arrivals": 12,
+        "circuit_timing_closed": false,
+        "claim_boundary": "architecture_level_admission_and_transaction_conservation; not_mux_tia_aperture_or_circuit_timing_closure",
+        "completion_reordered_vs_admission": true,
+        "cycles_observed": 14,
+        "default_conversion_latency_cycles": 1,
+        "evidence_class": "architecture_level_transaction_reference_model",
+        "fifo_depth": 4096,
+        "final_conversion_inflight": 0,
+        "final_fifo_occupancy": 0,
+        "final_pending_fifo_occupancy": 0,
+        "first_cycle": 0,
+        "last_arrival_cycle": 1,
+        "last_observed_cycle": 13,
+        "post_hapr_lanes": 64,
+        "queue_max": 0,
+        "queue_mean": 0.0,
+        "queue_p95": 0.0,
+        "queue_p99": 0.0,
+        "rejected": 0,
+        "requests_dropped": 0,
+        "same_window_admission_feasible": true,
+        "same_window_capacity_shortfall": 0,
+        "samples_per_macro_per_cycle": 10,
+        "selected_point_valid": true,
+        "served": 12,
+        "service_capacity_per_cycle": 80,
+        "tail_drain_complete": true,
+        "tail_drain_requested": true,
+        "temporal_analog_storage": false,
+        "unaccounted_accepted_requests": 0,
+        "unaccounted_requests": 0
+      },
+      "semantic_signature": {
+        "commit_count": 4,
+        "commits": [
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.0,
+            "output_neuron_id": 0,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.30078125,
+            "output_neuron_id": 0,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 1
+          },
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.3984375,
+            "output_neuron_id": 1,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.0,
+            "output_neuron_id": 1,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 1
+          }
+        ],
+        "final_states": [
+          {
+            "last_committed_timestep": 1,
+            "layer_id": "semantic_lif",
+            "membrane": 0.30078125,
+            "output_neuron_id": 0,
+            "sample_id": "semantic-sample-0"
+          },
+          {
+            "last_committed_timestep": 1,
+            "layer_id": "semantic_lif",
+            "membrane": 0.0,
+            "output_neuron_id": 1,
+            "sample_id": "semantic-sample-0"
+          }
+        ],
+        "reset_events": [
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 1
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 1
+          }
+        ],
+        "spike_train": [
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 1
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 1
+          }
+        ]
+      },
+      "state_summary": {
+        "all_expected_partitions_received": true,
+        "claim_boundary": "architecture_level_partition_completion_and_state_commit_semantics; not_commit_bandwidth_sram_timing_or_circuit_timing_closure",
+        "commit_count": 4,
+        "commit_engine_bandwidth_modeled": false,
+        "completion_events": 12,
+        "decay_count": 4,
+        "dependency_wait_count": 0,
+        "deterministic_partition_accumulation": true,
+        "duplicate_commit_count": 0,
+        "evidence_class": "architecture_level_state_commit_reference_model",
+        "next_timestep_reads_committed_state": true,
+        "one_commit_per_context": true,
+        "one_decay_per_commit": true,
+        "one_threshold_per_commit": true,
+        "premature_threshold_count": 0,
+        "reset_count": 2,
+        "reset_iff_spike": true,
+        "spike_count": 2,
+        "state_commit_valid": true,
+        "state_contexts_committed": 4,
+        "state_contexts_expected": 4,
+        "state_contexts_incomplete": 0,
+        "threshold_count": 4,
+        "unique_completion_requests": 12
+      }
+    },
+    "random": {
+      "queue_summary": {
+        "accepted": 12,
+        "accepted_conservation_valid": true,
+        "adc_macros": 8,
+        "arrival_conservation_valid": true,
+        "arrivals": 12,
+        "circuit_timing_closed": false,
+        "claim_boundary": "architecture_level_admission_and_transaction_conservation; not_mux_tia_aperture_or_circuit_timing_closure",
+        "completion_reordered_vs_admission": true,
+        "cycles_observed": 13,
+        "default_conversion_latency_cycles": 1,
+        "evidence_class": "architecture_level_transaction_reference_model",
+        "fifo_depth": 4096,
+        "final_conversion_inflight": 0,
+        "final_fifo_occupancy": 0,
+        "final_pending_fifo_occupancy": 0,
+        "first_cycle": 0,
+        "last_arrival_cycle": 1,
+        "last_observed_cycle": 12,
+        "post_hapr_lanes": 64,
+        "queue_max": 0,
+        "queue_mean": 0.0,
+        "queue_p95": 0.0,
+        "queue_p99": 0.0,
+        "rejected": 0,
+        "requests_dropped": 0,
+        "same_window_admission_feasible": true,
+        "same_window_capacity_shortfall": 0,
+        "samples_per_macro_per_cycle": 10,
+        "selected_point_valid": true,
+        "served": 12,
+        "service_capacity_per_cycle": 80,
+        "tail_drain_complete": true,
+        "tail_drain_requested": true,
+        "temporal_analog_storage": false,
+        "unaccounted_accepted_requests": 0,
+        "unaccounted_requests": 0
+      },
+      "semantic_signature": {
+        "commit_count": 4,
+        "commits": [
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.0,
+            "output_neuron_id": 0,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.30078125,
+            "output_neuron_id": 0,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 1
+          },
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.3984375,
+            "output_neuron_id": 1,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.0,
+            "output_neuron_id": 1,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 1
+          }
+        ],
+        "final_states": [
+          {
+            "last_committed_timestep": 1,
+            "layer_id": "semantic_lif",
+            "membrane": 0.30078125,
+            "output_neuron_id": 0,
+            "sample_id": "semantic-sample-0"
+          },
+          {
+            "last_committed_timestep": 1,
+            "layer_id": "semantic_lif",
+            "membrane": 0.0,
+            "output_neuron_id": 1,
+            "sample_id": "semantic-sample-0"
+          }
+        ],
+        "reset_events": [
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 1
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 1
+          }
+        ],
+        "spike_train": [
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 1
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 1
+          }
+        ]
+      },
+      "state_summary": {
+        "all_expected_partitions_received": true,
+        "claim_boundary": "architecture_level_partition_completion_and_state_commit_semantics; not_commit_bandwidth_sram_timing_or_circuit_timing_closure",
+        "commit_count": 4,
+        "commit_engine_bandwidth_modeled": false,
+        "completion_events": 12,
+        "decay_count": 4,
+        "dependency_wait_count": 0,
+        "deterministic_partition_accumulation": true,
+        "duplicate_commit_count": 0,
+        "evidence_class": "architecture_level_state_commit_reference_model",
+        "next_timestep_reads_committed_state": true,
+        "one_commit_per_context": true,
+        "one_decay_per_commit": true,
+        "one_threshold_per_commit": true,
+        "premature_threshold_count": 0,
+        "reset_count": 2,
+        "reset_iff_spike": true,
+        "spike_count": 2,
+        "state_commit_valid": true,
+        "state_contexts_committed": 4,
+        "state_contexts_expected": 4,
+        "state_contexts_incomplete": 0,
+        "threshold_count": 4,
+        "unique_completion_requests": 12
+      }
+    },
+    "reverse": {
+      "queue_summary": {
+        "accepted": 12,
+        "accepted_conservation_valid": true,
+        "adc_macros": 8,
+        "arrival_conservation_valid": true,
+        "arrivals": 12,
+        "circuit_timing_closed": false,
+        "claim_boundary": "architecture_level_admission_and_transaction_conservation; not_mux_tia_aperture_or_circuit_timing_closure",
+        "completion_reordered_vs_admission": true,
+        "cycles_observed": 13,
+        "default_conversion_latency_cycles": 1,
+        "evidence_class": "architecture_level_transaction_reference_model",
+        "fifo_depth": 4096,
+        "final_conversion_inflight": 0,
+        "final_fifo_occupancy": 0,
+        "final_pending_fifo_occupancy": 0,
+        "first_cycle": 0,
+        "last_arrival_cycle": 1,
+        "last_observed_cycle": 12,
+        "post_hapr_lanes": 64,
+        "queue_max": 0,
+        "queue_mean": 0.0,
+        "queue_p95": 0.0,
+        "queue_p99": 0.0,
+        "rejected": 0,
+        "requests_dropped": 0,
+        "same_window_admission_feasible": true,
+        "same_window_capacity_shortfall": 0,
+        "samples_per_macro_per_cycle": 10,
+        "selected_point_valid": true,
+        "served": 12,
+        "service_capacity_per_cycle": 80,
+        "tail_drain_complete": true,
+        "tail_drain_requested": true,
+        "temporal_analog_storage": false,
+        "unaccounted_accepted_requests": 0,
+        "unaccounted_requests": 0
+      },
+      "semantic_signature": {
+        "commit_count": 4,
+        "commits": [
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.0,
+            "output_neuron_id": 0,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.30078125,
+            "output_neuron_id": 0,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 1
+          },
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.3984375,
+            "output_neuron_id": 1,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "membrane_after_commit": 0.0,
+            "output_neuron_id": 1,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 1
+          }
+        ],
+        "final_states": [
+          {
+            "last_committed_timestep": 1,
+            "layer_id": "semantic_lif",
+            "membrane": 0.30078125,
+            "output_neuron_id": 0,
+            "sample_id": "semantic-sample-0"
+          },
+          {
+            "last_committed_timestep": 1,
+            "layer_id": "semantic_lif",
+            "membrane": 0.0,
+            "output_neuron_id": 1,
+            "sample_id": "semantic-sample-0"
+          }
+        ],
+        "reset_events": [
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 1
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "reset_applied": 0,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "reset_applied": 1,
+            "sample_id": "semantic-sample-0",
+            "timestep_id": 1
+          }
+        ],
+        "spike_train": [
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 0,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 1
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 0,
+            "timestep_id": 0
+          },
+          {
+            "layer_id": "semantic_lif",
+            "output_neuron_id": 1,
+            "sample_id": "semantic-sample-0",
+            "spike": 1,
+            "timestep_id": 1
+          }
+        ]
+      },
+      "state_summary": {
+        "all_expected_partitions_received": true,
+        "claim_boundary": "architecture_level_partition_completion_and_state_commit_semantics; not_commit_bandwidth_sram_timing_or_circuit_timing_closure",
+        "commit_count": 4,
+        "commit_engine_bandwidth_modeled": false,
+        "completion_events": 12,
+        "decay_count": 4,
+        "dependency_wait_count": 2,
+        "deterministic_partition_accumulation": true,
+        "duplicate_commit_count": 0,
+        "evidence_class": "architecture_level_state_commit_reference_model",
+        "next_timestep_reads_committed_state": true,
+        "one_commit_per_context": true,
+        "one_decay_per_commit": true,
+        "one_threshold_per_commit": true,
+        "premature_threshold_count": 0,
+        "reset_count": 2,
+        "reset_iff_spike": true,
+        "spike_count": 2,
+        "state_commit_valid": true,
+        "state_contexts_committed": 4,
+        "state_contexts_expected": 4,
+        "state_contexts_incomplete": 0,
+        "threshold_count": 4,
+        "unique_completion_requests": 12
+      }
+    }
+  },
+  "hapr_legality": {
+    "claim_boundary": "architecture_level_HAPR_mapping_legality_and_edge_case_analysis; not_analog_settling_aperture_or_circuit_timing_closure",
+    "config": {
+      "adc_service_capacity": 80,
+      "outputs_per_tile": 64,
+      "physical_tiles": 4,
+      "post_hapr_lanes": 64,
+      "supported_group_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "temporal_analog_storage": false
+    },
+    "edge_cases": [
+      {
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure",
+        "group_size": 4,
+        "groups_per_row_batch": 1,
+        "input_dim": 256,
+        "legal": true,
+        "output_active_lanes": 65,
+        "output_allocated_lanes": 128,
+        "output_dim": 65,
+        "output_tail_lanes": 63,
+        "output_tiles": 2,
+        "partition_contract_valid": true,
+        "physical_fanin_limit": 4,
+        "reasons": [
+          "output_dimension_tail_63_inactive_lanes"
+        ],
+        "row_tile_tail": false,
+        "row_tile_tail_fanin": 0,
+        "row_tiles": 4,
+        "runtime_trace_guard_valid": false,
+        "same_neuron_grouping": true,
+        "status": "formal_selected_point"
+      },
+      {
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure",
+        "group_size": 4,
+        "groups_per_row_batch": 1,
+        "input_dim": 130,
+        "legal": true,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_dim": 64,
+        "output_tail_lanes": 0,
+        "output_tiles": 1,
+        "partition_contract_valid": true,
+        "physical_fanin_limit": 4,
+        "reasons": [
+          "row_tile_tail_partial_fanin_3_of_4"
+        ],
+        "row_tile_tail": true,
+        "row_tile_tail_fanin": 3,
+        "row_tiles": 3,
+        "runtime_trace_guard_valid": false,
+        "same_neuron_grouping": true,
+        "status": "formal_selected_point"
+      },
+      {
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure",
+        "group_size": 4,
+        "groups_per_row_batch": 1,
+        "input_dim": 65,
+        "legal": true,
+        "output_active_lanes": 127,
+        "output_allocated_lanes": 128,
+        "output_dim": 127,
+        "output_tail_lanes": 1,
+        "output_tiles": 2,
+        "partition_contract_valid": true,
+        "physical_fanin_limit": 4,
+        "reasons": [
+          "output_dimension_tail_1_inactive_lanes",
+          "row_tile_tail_partial_fanin_2_of_4",
+          "active_output_lanes_127_require_multi_window_admission"
+        ],
+        "row_tile_tail": true,
+        "row_tile_tail_fanin": 2,
+        "row_tiles": 2,
+        "runtime_trace_guard_valid": false,
+        "same_neuron_grouping": true,
+        "status": "formal_selected_point"
+      }
+    ],
+    "matrix_checks": {
+      "g16_rejected_by_four_tile_fanin": true,
+      "g1_supported_baseline": true,
+      "g2_supported_candidate": true,
+      "g4_formal_selected_point": true,
+      "g8_rejected_by_four_tile_fanin": true,
+      "non_multiple_output_dimension_is_explicit_tail": true,
+      "row_tile_tail_is_explicit": true,
+      "small_row_tile_tail_is_explicit": true
+    },
+    "matrix_passed": true,
+    "nominal_matrix": [
+      {
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure",
+        "group_size": 1,
+        "groups_per_row_batch": 4,
+        "input_dim": 256,
+        "legal": true,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_dim": 64,
+        "output_tail_lanes": 0,
+        "output_tiles": 1,
+        "partition_contract_valid": true,
+        "physical_fanin_limit": 4,
+        "reasons": [],
+        "row_tile_tail": false,
+        "row_tile_tail_fanin": 0,
+        "row_tiles": 4,
+        "runtime_trace_guard_valid": false,
+        "same_neuron_grouping": true,
+        "status": "supported_baseline"
+      },
+      {
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure",
+        "group_size": 2,
+        "groups_per_row_batch": 2,
+        "input_dim": 256,
+        "legal": true,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_dim": 64,
+        "output_tail_lanes": 0,
+        "output_tiles": 1,
+        "partition_contract_valid": true,
+        "physical_fanin_limit": 4,
+        "reasons": [],
+        "row_tile_tail": false,
+        "row_tile_tail_fanin": 0,
+        "row_tiles": 4,
+        "runtime_trace_guard_valid": false,
+        "same_neuron_grouping": true,
+        "status": "supported_candidate"
+      },
+      {
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure",
+        "group_size": 4,
+        "groups_per_row_batch": 1,
+        "input_dim": 256,
+        "legal": true,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_dim": 64,
+        "output_tail_lanes": 0,
+        "output_tiles": 1,
+        "partition_contract_valid": true,
+        "physical_fanin_limit": 4,
+        "reasons": [],
+        "row_tile_tail": false,
+        "row_tile_tail_fanin": 0,
+        "row_tiles": 4,
+        "runtime_trace_guard_valid": false,
+        "same_neuron_grouping": true,
+        "status": "formal_selected_point"
+      },
+      {
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure",
+        "group_size": 8,
+        "groups_per_row_batch": 1,
+        "input_dim": 256,
+        "legal": false,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_dim": 64,
+        "output_tail_lanes": 0,
+        "output_tiles": 1,
+        "partition_contract_valid": true,
+        "physical_fanin_limit": 4,
+        "reasons": [
+          "group_size_8_exceeds_or_does_not_divide_4_physical_tiles",
+          "row_tile_tail_partial_fanin_4_of_8"
+        ],
+        "row_tile_tail": true,
+        "row_tile_tail_fanin": 4,
+        "row_tiles": 4,
+        "runtime_trace_guard_valid": false,
+        "same_neuron_grouping": true,
+        "status": "rejected_by_explicit_constraint"
+      },
+      {
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure",
+        "group_size": 16,
+        "groups_per_row_batch": 1,
+        "input_dim": 256,
+        "legal": false,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_dim": 64,
+        "output_tail_lanes": 0,
+        "output_tiles": 1,
+        "partition_contract_valid": true,
+        "physical_fanin_limit": 4,
+        "reasons": [
+          "group_size_16_exceeds_or_does_not_divide_4_physical_tiles",
+          "row_tile_tail_partial_fanin_4_of_16"
+        ],
+        "row_tile_tail": true,
+        "row_tile_tail_fanin": 4,
+        "row_tiles": 4,
+        "runtime_trace_guard_valid": false,
+        "same_neuron_grouping": true,
+        "status": "rejected_by_explicit_constraint"
+      }
+    ]
+  },
+  "missing_partition_summary": {
+    "all_expected_partitions_received": false,
+    "claim_boundary": "architecture_level_partition_completion_and_state_commit_semantics; not_commit_bandwidth_sram_timing_or_circuit_timing_closure",
+    "commit_count": 2,
+    "commit_engine_bandwidth_modeled": false,
+    "completion_events": 11,
+    "decay_count": 2,
+    "dependency_wait_count": 1,
+    "deterministic_partition_accumulation": true,
+    "duplicate_commit_count": 0,
+    "evidence_class": "architecture_level_state_commit_reference_model",
+    "next_timestep_reads_committed_state": true,
+    "one_commit_per_context": true,
+    "one_decay_per_commit": true,
+    "one_threshold_per_commit": true,
+    "premature_threshold_count": 0,
+    "reset_count": 1,
+    "reset_iff_spike": true,
+    "spike_count": 1,
+    "state_commit_valid": false,
+    "state_contexts_committed": 2,
+    "state_contexts_expected": 4,
+    "state_contexts_incomplete": 2,
+    "threshold_count": 2,
+    "unique_completion_requests": 11
+  },
+  "selected_g4_a8": {
+    "accepted": 64,
+    "accepted_conservation_valid": true,
+    "adc_macros": 8,
+    "arrival_conservation_valid": true,
+    "arrivals": 64,
+    "circuit_timing_closed": false,
+    "claim_boundary": "architecture_level_admission_and_transaction_conservation; not_mux_tia_aperture_or_circuit_timing_closure",
+    "completion_reordered_vs_admission": false,
+    "cycles_observed": 2,
+    "default_conversion_latency_cycles": 1,
+    "evidence_class": "architecture_level_transaction_reference_model",
+    "fifo_depth": 4096,
+    "final_conversion_inflight": 0,
+    "final_fifo_occupancy": 0,
+    "final_pending_fifo_occupancy": 0,
+    "first_cycle": 0,
+    "last_arrival_cycle": 0,
+    "last_observed_cycle": 1,
+    "post_hapr_lanes": 64,
+    "queue_max": 0,
+    "queue_mean": 0.0,
+    "queue_p95": 0.0,
+    "queue_p99": 0.0,
+    "rejected": 0,
+    "requests_dropped": 0,
+    "same_window_admission_feasible": true,
+    "same_window_capacity_shortfall": 0,
+    "samples_per_macro_per_cycle": 10,
+    "selected_point_valid": true,
+    "served": 64,
+    "service_capacity_per_cycle": 80,
+    "tail_drain_complete": true,
+    "tail_drain_requested": true,
+    "temporal_analog_storage": false,
+    "unaccounted_accepted_requests": 0,
+    "unaccounted_requests": 0
+  },
+  "validation_checks": {
+    "a6_exposes_four_request_shortfall": true,
+    "adc_aperture_not_modeled": true,
+    "adc_evidence_boundary_explicit": true,
+    "adc_power_conditional": true,
+    "aggregate_trace_rejected_by_runtime_guard": true,
+    "all_order_variants_queue_valid": true,
+    "all_order_variants_state_valid": true,
+    "capacity_sensitivity_a6_is_60": true,
+    "capacity_sensitivity_g4_a8_is_80": true,
+    "completion_order_invariant": true,
+    "conversion_latency_pipeline_modeled": true,
+    "cross_neuron_hapr_group_rejected": true,
+    "duplicate_partition_rejected": true,
+    "evidence_boundary_explicit": true,
+    "g4_a8_accepts_64_requests": true,
+    "g8_g16_rejected_by_explicit_constraint": true,
+    "hapr_legality_matrix_passed": true,
+    "missing_partition_prevents_target_threshold": true,
+    "mux_settling_not_modeled": true,
+    "no_temporal_analog_storage": true,
+    "no_timing_closure_claim": true,
+    "non64_output_tail_explicit": true,
+    "row_tile_tail_explicit": true,
+    "runtime_schema_guard_accepts_provenance_labeled_trace": true,
+    "tia_recovery_not_modeled": true
+  },
+  "validation_passed": true
+}

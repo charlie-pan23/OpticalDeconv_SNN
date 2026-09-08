@@ -1,0 +1,89 @@
+{
+  "adc_evidence_claim_boundary": "mux_settling_adc_aperture_tia_recovery_and_operating_mode_power_are_not_closed",
+  "aggregate_trace_guard_errors": [
+    "row 0: missing request-level fields ['hapr_group_id', 'layer_id', 'output_neuron_id', 'output_tile_id', 'partition_id', 'request_id', 'sample_id', 'timestep_id']",
+    "row 0: trace_provenance must contain 'real_runtime', got ''"
+  ],
+  "checks": {
+    "a6_exposes_four_request_shortfall": true,
+    "adc_aperture_not_modeled": true,
+    "adc_evidence_boundary_explicit": true,
+    "adc_power_conditional": true,
+    "aggregate_trace_rejected_by_runtime_guard": true,
+    "all_order_variants_queue_valid": true,
+    "all_order_variants_state_valid": true,
+    "capacity_sensitivity_a6_is_60": true,
+    "capacity_sensitivity_g4_a8_is_80": true,
+    "completion_order_invariant": true,
+    "conversion_latency_pipeline_modeled": true,
+    "cross_neuron_hapr_group_rejected": true,
+    "duplicate_partition_rejected": true,
+    "evidence_boundary_explicit": true,
+    "g4_a8_accepts_64_requests": true,
+    "g8_g16_rejected_by_explicit_constraint": true,
+    "hapr_legality_matrix_passed": true,
+    "missing_partition_prevents_target_threshold": true,
+    "mux_settling_not_modeled": true,
+    "no_temporal_analog_storage": true,
+    "no_timing_closure_claim": true,
+    "non64_output_tail_explicit": true,
+    "row_tile_tail_explicit": true,
+    "runtime_schema_guard_accepts_provenance_labeled_trace": true,
+    "tia_recovery_not_modeled": true
+  },
+  "cross_neuron_hapr_error": "HAPR group crosses output tile/neuron boundary: context=('s', 0, 'l', 'shared-group'), first=('tile0', 0), current=('tile0', 1)",
+  "duplicate_partition_error": "duplicate partition 'p0' for state context ('semantic-sample-0', 0, 'semantic_lif', 0)",
+  "hapr_matrix_checks": {
+    "g16_rejected_by_four_tile_fanin": true,
+    "g1_supported_baseline": true,
+    "g2_supported_candidate": true,
+    "g4_formal_selected_point": true,
+    "g8_rejected_by_four_tile_fanin": true,
+    "non_multiple_output_dimension_is_explicit_tail": true,
+    "row_tile_tail_is_explicit": true,
+    "small_row_tile_tail_is_explicit": true
+  },
+  "missing_contexts": [
+    {
+      "expected_partition_ids": [
+        "p0",
+        "p1",
+        "p2"
+      ],
+      "layer_id": "semantic_lif",
+      "missing_partition_ids": [
+        "p2"
+      ],
+      "output_neuron_id": 0,
+      "output_tile_id": "tile0",
+      "received_partition_ids": [
+        "p0",
+        "p1"
+      ],
+      "sample_id": "semantic-sample-0",
+      "state": "RECEIVING_PARTIALS",
+      "timestep_id": 0
+    },
+    {
+      "expected_partition_ids": [
+        "p0",
+        "p1",
+        "p2"
+      ],
+      "layer_id": "semantic_lif",
+      "missing_partition_ids": [],
+      "output_neuron_id": 0,
+      "output_tile_id": "tile0",
+      "received_partition_ids": [
+        "p0",
+        "p1",
+        "p2"
+      ],
+      "sample_id": "semantic-sample-0",
+      "state": "ALL_PARTITIONS_RECEIVED",
+      "timestep_id": 1
+    }
+  ],
+  "passed": true,
+  "runtime_schema_guard_errors": []
+}
