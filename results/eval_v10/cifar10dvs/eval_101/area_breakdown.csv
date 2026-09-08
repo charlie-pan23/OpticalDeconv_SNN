@@ -1,0 +1,10 @@
+component,count,area_per_unit_um2,area_total_um2,area_total_mm2,evidence_status,note
+cw_laser,1,120000.0,120000.0,0.12,adopted_parameter,Laser area anchor; package footprint excluded.
+binary_modulator_driver,256,5200.0,1331200.0,1.3312,adopted_parameter,One binary driver per physical input lane.
+photodiodes,256,40.0,10240.0,0.01024,adopted_parameter,PDs counted before HAPR.
+tia,64,50.0,3200.0,0.0032,adopted_parameter,Same-neuron HAPR lane array.
+comparators,64,78.0,4992.0,0.004992,adopted_parameter,Request comparator per HAPR lane.
+adc_pool,8,2850.0,22800.0,0.0228,adopted_macro_parameter,Conventional ADC macro; no new ADC circuit claim.
+signed_mrr_weight_bank,32768,93.3156,3057765.5808,3.0577655808,instantiated_tile_lower_bound,Area counts concurrently instantiated rings; total model weights remain in weight-mapping/configuration outputs.
+sram_register_file_estimate,1,57300.0,57300.0,0.0573,architecture_estimate,SRAM/register-file estimate; no compiled memory macro.
+synthesized_digital_control,1,7508.648,7508.648,0.007508648,open_45nm_synthesis_anchor,"Yosys/Nangate45 mapped cell area; excludes P&R, clock tree, pads, and SRAM macros."

@@ -1,0 +1,14 @@
+schema_version: 1
+status: template_only_no_external_measurements_supplied
+rtl_integrated_control:
+  required_blocks: [adc_request_fifo, multi_adc_dispatcher, lazy_lif, selective_sram_control]
+  required_metrics: [technology_nm, voltage_v, frequency_mhz, gate_count, area_mm2, dynamic_power_mw, leakage_power_mw]
+  alignment_metrics: [adc_requests, service_cycles, sram_updates]
+  derived_metrics: [control_area_overhead_percent, control_energy_overhead_percent]
+hapr_circuit_anchor:
+  required_path: [photodiode, four_way_current_combine, tia, adc_input]
+  required_metrics: [maximum_linear_input_current_ma, transimpedance_ohm, bandwidth_ghz, settling_time_ns, input_referred_noise_pa_per_sqrt_hz, energy_per_request_pj]
+  required_corners: [tt, ss, ff, voltage_min, voltage_max, temperature_min, temperature_max, mismatch_monte_carlo]
+core_area:
+  required_categories: [photonic, eo_oe, adc, sram_membrane, sram_timestamp, sram_weight_config, digital_control, routing_thermal]
+  required_provenance: [pdk, layout_database, physical_scale, extraction_or_synthesis_report]

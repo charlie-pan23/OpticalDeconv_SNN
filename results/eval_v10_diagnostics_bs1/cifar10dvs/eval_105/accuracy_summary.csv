@@ -1,0 +1,2 @@
+dataset,condition,seed,split,num_samples,accuracy_percent,loss,paired_accuracy_delta_percent_vs_clean,paired_net_correct_change_vs_clean,weight_bits,adc_bits,membrane_bits,evidence_class
+cifar10dvs,clean,0,test,1000,75.8,0.7502186948922462,0.0,0,,,,software_checkpoint_evaluation

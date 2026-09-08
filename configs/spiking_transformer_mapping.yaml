@@ -1,0 +1,19 @@
+# Mapping-only workload used to answer the reviewer coverage question.
+# This is not a trained HIPSA checkpoint and must not be reported as an
+# accuracy, latency, or energy measurement.
+workload:
+  name: Spikformer-2-256 mapping proxy
+  source_model: "Spikformer family evaluated on CIFAR10-DVS/DVS128-Gesture"
+  source_url: "https://papers.nips.cc/paper_files/paper/2023/file/ca0f5358dbadda74b3049711887e9ead-Paper-Conference.pdf"
+  time_steps: 10
+  input_channels: 2
+  patch_size: 16
+  embedding_dim: 256
+  tokens: 64
+  blocks: 2
+  mlp_ratio: 4
+  num_classes: 10
+mapping_policy:
+  static_weight_linear_and_conv: optical_mrr
+  dynamic_spike_attention: electronic_exact_fallback
+  reason: "QK/AV operands are activation-dependent; the existing weight-stationary MRR plane is not retuned per sample or timestep."

@@ -1,0 +1,10 @@
+{
+  "eval_name": "eval_104",
+  "created_utc": "2026-09-08T06:39:01.439824+00:00",
+  "datasets": [
+    "cifar10dvs",
+    "dvsgesture"
+  ],
+  "selected_point": "G4/A8",
+  "lock_fraction": 0.01
+}

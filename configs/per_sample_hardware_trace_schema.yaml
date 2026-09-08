@@ -1,0 +1,33 @@
+schema_version: 1
+status: required_input_not_present_in_supplied_archive
+primary_key: [sample_id, timestep, layer_id, tile_id, group_id, cycle]
+required_fields:
+  sample_id: integer
+  timestep: integer
+  layer_id: string
+  tile_id: integer
+  group_id: integer
+  group_active: boolean
+  adc_request: boolean
+  state_update: boolean
+  cycle: integer
+recommended_fields:
+  adc_queue_depth: integer
+  adc_service_cycle: integer
+  sram_read: boolean
+  sram_write: boolean
+  membrane_before: float
+  membrane_after: float
+  prediction: integer
+  target: integer
+required_reports:
+  latency_us: [mean, p50, p95, p99]
+  adc_queue_depth: [p99, max]
+  adc_stall_cycles: [mean, p99, max]
+  accuracy: [clean, hardware_aware, paired_delta]
+provenance_requirements:
+  - checkpoint_sha256
+  - dataset_split_hash
+  - preprocessing_config_hash
+  - hardware_config_hash
+  - random_seed

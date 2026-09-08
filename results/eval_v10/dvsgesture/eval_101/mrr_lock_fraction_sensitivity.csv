@@ -1,0 +1,5 @@
+locked_fraction,locked_fraction_percent,physical_ring_count,effective_locked_ring_count,locking_power_mw_per_ring,added_lock_power_mw,nominal_power_w_without_lock,total_power_w,latency_us_per_image,energy_uJ_per_image,energy_overhead_percent,recommended_reporting_case,status
+0.0,0.0,32768,0.0,1.2,0.0,2.4961389460655217,2.4961389460655217,391.40390185546875,979.4571041634428,0.0,0,parameterized_literature_anchor_not_hipsa_measurement
+0.01,1.0,32768,327.68,1.2,393.216,2.4961389460655217,2.889354946065522,391.40390185546875,1133.3633808354427,15.71342696048459,1,parameterized_literature_anchor_not_hipsa_measurement
+0.05,5.0,32768,1638.4,1.2,1966.08,2.4961389460655217,4.462218946065522,391.40390185546875,1748.9884875234427,78.56713480242293,0,parameterized_literature_anchor_not_hipsa_measurement
+0.1,10.0,32768,3276.8,1.2,3932.16,2.4961389460655217,6.428298946065522,391.40390185546875,2518.5198708834428,157.13426960484585,0,parameterized_literature_anchor_not_hipsa_measurement

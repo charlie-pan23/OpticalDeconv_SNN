@@ -1,0 +1,39 @@
+{
+  "physical_ring_count": 32768,
+  "locking_power_mw_per_ring": 1.2,
+  "locked_fraction_sensitivity": [
+    {
+      "locked_fraction": 0.0,
+      "locked_rings": 0.0,
+      "lock_power_mw": 0.0
+    },
+    {
+      "locked_fraction": 0.01,
+      "locked_rings": 327.68,
+      "lock_power_mw": 393.216
+    },
+    {
+      "locked_fraction": 0.05,
+      "locked_rings": 1638.4,
+      "lock_power_mw": 1966.08
+    },
+    {
+      "locked_fraction": 0.1,
+      "locked_rings": 3276.8,
+      "lock_power_mw": 3932.16
+    },
+    {
+      "locked_fraction": 1.0,
+      "locked_rings": 32768.0,
+      "lock_power_mw": 39321.6
+    }
+  ],
+  "representative_nonzero_lock_budget_mw": 0.0,
+  "headline_includes_continuous_lock": false,
+  "formula": "P_lock(f) = 32768 physical rings * f_locked * 1.2 mW/ring",
+  "status": "architecture_native_fractional_lock_sensitivity_not_measured",
+  "literature_source": "Zhu et al., Lightening-Transformer, HPCA 2024, Table III",
+  "literature_doi": "",
+  "literature_url": "https://scopex-asu.github.io/files/publications/ONN_HPCA2024_Gu.pdf",
+  "note": "No arbitrary lock budget is selected as the headline. The sensitivity exposes 0/1/5/10/100% simultaneously locked fractions; a real controller and thermal-domain extraction are still required."
+}

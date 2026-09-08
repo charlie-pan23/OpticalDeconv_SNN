@@ -1,0 +1,7 @@
+layer,input_dim,output_dim,row_tiles,col_tiles,weight_tiles,tile_count,tile_utilization_mean,output_positions_per_image,output_positions_per_timestep,trace_provenance
+conv1,18,32,1,1,1,1,0.140625,163840.0,16384.0,derived_from_eval01_layer_summary
+conv2,288,64,5,1,5,5,0.9,40960.0,4096.0,derived_from_eval01_layer_summary
+conv3,576,128,9,2,18,18,1.0,10240.0,1024.0,derived_from_eval01_layer_summary
+conv4,1152,128,18,2,36,36,1.0,2560.0,256.0,derived_from_eval01_layer_summary
+conv5,1152,256,18,4,72,72,1.0,2560.0,256.0,derived_from_eval01_layer_summary
+fc1,256,256,4,4,16,16,1.0,10.0,1.0,derived_from_eval01_layer_summary

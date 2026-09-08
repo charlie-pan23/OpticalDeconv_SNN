@@ -1,0 +1,73 @@
+experiment: {name: dvsgesture_sew_resnet18_hipsa, seed: 42, deterministic: true}
+paths:
+  dataset_root: ./datasets/DVSGesture
+  run_root: ./results/dvsgesture_sew_resnet18
+  log_root: ./logs
+  hardware_config: ./configs/hardware_hipsa.yaml
+  device_config: ./configs/device_params.yaml
+dataset:
+  name: dvsgesture
+  time_steps: 10
+  data_type: frame
+  split_by: number
+  batch_first_from_dataset: true
+  official_split: true
+preprocess: {input_encoding: binary, binary_threshold: 0.0}
+split:
+  method: official_train_test
+  val_ratio_from_train: 0.1
+  seed: 42
+  split_file: ./datasets/DVSGesture/splits/dvsgesture_T10_seed42_transformer_trainval.pth
+model:
+  type: snn_sew_resnet18
+  module: models.snn_sew_resnet18
+  class_name: SpikingSEWResNet18
+  num_classes: 11
+  input_channels: 2
+  # CPU-executable SEW-ResNet-18 width. The canonical eight residual blocks
+  # are retained; only channel width is reduced and must be reflected in the
+  # regenerated HIPSA mapping rather than reusing the 64/128/256/512 counts.
+  channels: [24, 48, 96, 192]
+  time_steps: 10
+  neuron: {type: LIFNode, tau: 2.0, v_threshold: 1.0, v_reset: 0.0, surrogate: sigmoid, surrogate_alpha: 4.0}
+  regularization: {dropout: 0.1, use_batchnorm: true}
+training:
+  epochs: 15
+  batch_size_train: 24
+  batch_size_eval: 32
+  num_workers: 0
+  logits_aggregation: mean_time
+  train_drop_last: true
+  eval_drop_last: false
+  amp: false
+  reset_net_each_batch: true
+  optimizer: {name: adamw, lr: 0.0002, weight_decay: 0.001}
+  scheduler: {name: cosine_warmup, warmup_epochs: 1, min_lr: 0.00001}
+  loss: {name: cross_entropy, label_smoothing: 0.05, use_tet_loss: true, tet_loss_weight: 0.2}
+  grad_clip_norm: 1.0
+  checkpoint: {monitor: val_acc, mode: max, save_best: true}
+evaluation:
+  batch_size: 1
+  num_workers: 0
+  use_test_split_file: true
+  split_file: ./datasets/DVSGesture/splits/dvsgesture_T10_seed42_transformer_trainval.pth
+activity_trace: {enabled: true, full_scale_calibration_batches: 8}
+
+# One frozen anti-overfitting recipe selected from the train/validation gap.
+# No test-set metric is used to choose or alter these values.
+augmentation:
+  enabled: true
+  spatial:
+    random_horizontal_flip: false
+    random_shift: true
+    max_shift_pixels: 3
+  temporal:
+    random_temporal_shift: true
+    max_shift_steps: 1
+    event_drop: true
+    event_drop_p: 0.01
+  regularization:
+    cutout: true
+    cutout_size: 12
+    cutout_p: 0.15
+    mixup: false

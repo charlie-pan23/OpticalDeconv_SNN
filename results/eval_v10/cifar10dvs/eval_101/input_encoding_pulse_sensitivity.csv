@@ -1,0 +1,4 @@
+dataset,input_encoding,first_layer,first_layer_pulse_multiplier,latency_us_per_image,nominal_power_w,nominal_energy_uJ_per_image,lock_aware_power_w,lock_aware_energy_uJ_per_image,adc_requests_per_image,adc_queue_p99,adc_stall_cycles,status
+cifar10dvs,clipped_count_bit_serial_bound,conv1,1,566.8792744140625,2.556317310307246,1452.0177103990795,2.9495333103072463,1674.9237111670795,27665015.48743548,0.0,0.0,bounded_replay_missing_1_2_3_count_histogram
+cifar10dvs,clipped_count_bit_serial_bound,conv1,2,730.6492744140626,2.5478123900603507,1864.4516825007536,2.9410283900603504,2151.7546675887534,30871066.179226846,0.0,0.0,bounded_replay_missing_1_2_3_count_histogram
+cifar10dvs,clipped_count_bit_serial_bound,conv1,3,894.4092744140626,2.542498037942976,2276.9282336757547,2.935714037942976,2628.624270923755,34077116.87101835,0.0,0.0,bounded_replay_missing_1_2_3_count_histogram

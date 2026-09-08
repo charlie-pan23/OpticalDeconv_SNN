@@ -1,0 +1,6 @@
+dataset,adc_idle_bias_fraction,nominal_power_w,nominal_energy_uJ_per_image,lock_aware_power_w,lock_aware_energy_uJ_per_image,status
+dvsgesture,0.0,2.4848054514657005,975.0211301554149,2.8780214514657008,1128.9274068274149,declared_parameter_sensitivity_not_measurement
+dvsgesture,0.1,2.490472198765611,977.2391171594287,2.8836881987656113,1131.1453938314287,declared_parameter_sensitivity_not_measurement
+dvsgesture,0.2,2.4961389460655217,979.4571041634426,2.889354946065522,1133.3633808354425,declared_parameter_sensitivity_not_measurement
+dvsgesture,0.35,2.504639067015388,982.7840846694637,2.8978550670153878,1136.6903613414638,declared_parameter_sensitivity_not_measurement
+dvsgesture,0.5,2.513139187965254,986.1110651754847,2.9063551879652536,1140.0173418474847,declared_parameter_sensitivity_not_measurement

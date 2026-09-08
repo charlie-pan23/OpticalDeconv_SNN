@@ -1,0 +1,53 @@
+{
+  "method": "frozen_per_layer_absmax",
+  "calibration_split": "val",
+  "reporting_split": "test",
+  "calibration_batches_requested": 1,
+  "calibration_batches_used": 1,
+  "calibration_samples_expected": 120,
+  "calibration_samples_used": 64,
+  "full_calibration_split_used": false,
+  "status": "diagnostic_partial_calibration",
+  "batch_size_actual": 64,
+  "weight_bits_during_calibration": 6,
+  "adc_bits": 6,
+  "full_scales": {
+    "conv1": 1.985259771347046,
+    "conv2": 3.4669189453125,
+    "conv3": 5.234821319580078,
+    "conv4": 6.8979387283325195,
+    "conv5": 3.671513557434082,
+    "fc1": 9.153242111206055
+  },
+  "photonic_mvm_layer_names": [
+    "conv1",
+    "conv2",
+    "conv3",
+    "conv4",
+    "conv5",
+    "fc1"
+  ],
+  "include_final_classifier": false,
+  "replay_scope": {
+    "target_policy": "model_photonic_mvm_layer_names_with_safe_fallback",
+    "photonic_mvm_layer_names": [
+      "conv1",
+      "conv2",
+      "conv3",
+      "conv4",
+      "conv5",
+      "fc1"
+    ],
+    "include_final_classifier": false,
+    "electronic_linear_layers": [
+      "fc2"
+    ],
+    "final_classifier_present": true,
+    "final_classifier_excluded": true,
+    "status": "verified_photonic_only"
+  },
+  "split_file": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\datasets\\DVSGesture\\splits\\dvsgesture_T10_seed42_split.pth",
+  "split_file_sha256": "dce783e269efad48e050ba2da8de9f6ad4e227e51b7d5cad209c057ee492e524",
+  "test_data_used_for_calibration": false,
+  "claim_boundary": "software activation-range calibration; fixed for all reporting batches and perturbation conditions"
+}

@@ -1,0 +1,2 @@
+dataset,adc_macros,adc_sample_rate_gsps_per_macro,system_clock_hz,service_capacity_requests_per_cycle,fifo_depth,requests_per_image,nominal_cycles_observed,cycles_observed,queue_mean,queue_p95,queue_p99,queue_max,adc_utilization,service_latency_cycles,stall_cycles,requests_dropped,note
+dvsgesture,8,10.0,1000000000.0,80.0,4096,15827302.277357504,379450,379450,0.0,0.0,0.0,0.0,0.5213895861561966,197841.2784669688,0.0,0.0,Queue is simulated from transaction/HAPR arrivals; 10 GS/s is included in service capacity and backpressure is included in observed latency.

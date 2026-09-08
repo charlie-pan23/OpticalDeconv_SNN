@@ -1,0 +1,149 @@
+{
+  "eval_name": "eval_105",
+  "purpose": "paired_publication_replay",
+  "created_utc": "2026-09-08T05:56:45.552411+00:00",
+  "dataset": "cifar10dvs",
+  "split": "test",
+  "seed": 0,
+  "num_samples": 1000,
+  "clean_accuracy_percent": 75.8,
+  "quantized_clean_accuracy_percent": null,
+  "combined_condition_accuracy_percent": null,
+  "hardware_aware_accuracy_percent": null,
+  "hardware_aware_accuracy_status": "not_run",
+  "precision_contract": {
+    "weight_bits": 6,
+    "adc_bits": 6,
+    "membrane_bits": 16
+  },
+  "g4_a8_contract": {
+    "name": "HIPSA_G4_A8",
+    "num_tiles": 4,
+    "array_rows": 64,
+    "array_cols": 64,
+    "hapr_group_size": 4,
+    "post_hapr_lanes": 64,
+    "derived_post_hapr_lanes": 64,
+    "adc_macros": 8,
+    "samples_per_macro_per_cycle": 10.0,
+    "nominal_sample_slots_per_cycle": 80.0,
+    "system_clock_hz": 1000000000.0,
+    "temporal_analog_storage": false,
+    "checks": {
+      "four_tiles": true,
+      "logical_array_64x64": true,
+      "g4": true,
+      "reported_lanes_match_derived": true,
+      "a8": true,
+      "ten_samples_per_macro_per_cycle": true,
+      "one_ghz_architecture_clock": true,
+      "same_window_capacity": true,
+      "no_temporal_analog_storage": true
+    },
+    "valid": true,
+    "failed_checks": [],
+    "claim_boundary": "architecture_level_capacity_analysis_not_circuit_timing_closure"
+  },
+  "replay_scope": {
+    "target_policy": "model_photonic_mvm_layer_names_with_safe_fallback",
+    "photonic_mvm_layer_names": [
+      "conv1",
+      "conv2",
+      "conv3",
+      "conv4",
+      "conv5",
+      "conv6",
+      "fc1"
+    ],
+    "include_final_classifier": false,
+    "electronic_linear_layers": [
+      "fc2"
+    ],
+    "final_classifier_present": true,
+    "final_classifier_excluded": true,
+    "status": "verified_photonic_only"
+  },
+  "conditions": [
+    {
+      "dataset": "cifar10dvs",
+      "condition": "clean",
+      "seed": 0,
+      "split": "test",
+      "num_samples": 1000,
+      "accuracy_percent": 75.8,
+      "loss": 0.7502186948922462,
+      "paired_accuracy_delta_percent_vs_clean": 0.0,
+      "paired_net_correct_change_vs_clean": 0,
+      "weight_bits": null,
+      "adc_bits": null,
+      "membrane_bits": null,
+      "evidence_class": "software_checkpoint_evaluation"
+    }
+  ],
+  "adc_calibration": null,
+  "split_manifest": {
+    "dataset": "cifar10dvs",
+    "split": "test",
+    "split_file": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\datasets\\CIFAR10DVS\\splits\\cifar10dvs_T10_seed42_split.pth",
+    "split_file_sha256": "624a76f8fc268d4cb80812fc0ea5bd9f3f41495356e484a35605d57f7f0ff09d",
+    "split_order_hash": "edd4b4e11b418fe704d456b0d7126aa5d97fc5395c7a9f37db7ce97081c95610",
+    "num_samples_replayed": 1000,
+    "allow_no_split": false,
+    "status": "verified_split_file"
+  },
+  "hashes": {
+    "config_sha256": "be562ed7b4c4106c89dab41b5f4226e94904d9bcf6ad91ec8e6f9e5b46ec6ce9",
+    "checkpoint_sha256": "7d6a0494f6787ace0075529f3693eb6e3279f511cf02fa4bbff1f2dbfddce471",
+    "hardware_config_sha256": "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066",
+    "device_params_sha256": "fcd2cd58acff908d2773df8b6f51c2ecb6fcd84397a9bbc3ab3cfccc0624b8c5"
+  },
+  "checkpoint_summary": {
+    "path": "results/cifar10dvs/cifar10dvs_best_clip3_b96_wd001_do03_val733_test764.pth",
+    "type": "dict",
+    "keys": [
+      "config",
+      "epoch",
+      "metrics",
+      "optimizer",
+      "scheduler",
+      "state_dict"
+    ],
+    "epoch": 92,
+    "metrics": {
+      "train": {
+        "loss": 0.9083137835364744,
+        "acc": 95.78313253012048,
+        "total": 7968.0
+      },
+      "val": {
+        "loss": 1.0082174367904664,
+        "acc": 73.3,
+        "total": 1000.0
+      },
+      "best_val": 73.3,
+      "best_epoch": 92,
+      "early_best_val": 73.3,
+      "epochs_without_improve": 0
+    },
+    "num_tensors": 38,
+    "num_parameters": 1196486,
+    "first_keys": [
+      "conv1.weight",
+      "bn1.weight",
+      "bn1.bias",
+      "bn1.running_mean",
+      "bn1.running_var",
+      "bn1.num_batches_tracked",
+      "conv2.weight",
+      "bn2.weight",
+      "bn2.bias",
+      "bn2.running_mean"
+    ]
+  },
+  "claim_boundary": {
+    "accuracy": "checkpoint-and-split software replay",
+    "combined": "declared perturbation proxy with validation-calibrated fixed ADC ranges; not silicon measurement",
+    "adc_calibration": "non-test split, frozen per-layer absmax; no reporting-batch oracle scaling",
+    "architecture_performance": "not computed by eval_105; join with eval_101 by matching config hashes"
+  }
+}

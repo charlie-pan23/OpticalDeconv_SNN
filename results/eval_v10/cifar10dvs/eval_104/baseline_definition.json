@@ -1,0 +1,10 @@
+{
+  "baseline_id": "matched_four_tile_w6_adc6_vm16_lock_and_configuration_accounting",
+  "same_four_tiles": true,
+  "same_laser_and_link_budget": true,
+  "same_lock_fraction": 0.01,
+  "same_precision": "W6/ADC6/Vm16",
+  "same_configuration_accounting": true,
+  "same_non_mvm_accounting": true,
+  "accuracy_policy": "full HIPSA joins verified eval_105; other variants require dedicated replay"
+}

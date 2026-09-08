@@ -1,0 +1,13 @@
+component,power_mw,activity_factor,note
+cw_laser,1473.0,1.0,Derived from the explicit optical link budget; CW during inference.
+mrr_stabilization,393.216,1.0,Nominal case is zero; nonzero cases are reported separately.
+leakage_misc_io,90.0,1.0,Static leakage and I/O reference.
+binary_modulator_driver,60.33538798243712,0.10474893746950889,Independent MVM input activity.
+photodiodes,281.6,1.0,Provisioned PD array.
+tia,192.0,1.0,Provisioned same-neuron HAPR lanes.
+comparators,140.8,1.0,Comparator front end.
+hapr_selection,6.4,1.0,Selection/request control.
+adc_pool,73.06602160071495,0.6171116689249573,Per-macro bias/clock fraction plus utilization-scaled conversion power; split is explicit in device_params.yaml.
+sram_register_files,158.83541285181988,0.6529718925049122,State-update activity from actual requested state touches.
+noc_bus_controller,18.515401931762696,0.23786487579345703,Independent spike/control traffic activity.
+digital_lif_update,1.5867216987869366,0.6529718925049122,LIF activity independent of ADC macro count.

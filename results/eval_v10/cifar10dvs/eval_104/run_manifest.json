@@ -1,0 +1,21 @@
+{
+  "eval_name": "eval_104",
+  "command": "eval/eval_07_ablation_v3.py --datasets cifar10dvs dvsgesture --input-root results/eval_v2 --output-root results/eval_v10 --hardware configs/hardware_hipsa_paper.yaml --device-params configs/device_params.yaml --lock-fraction 0.01",
+  "inputs": {
+    "activity_summary": "results\\eval_v2\\cifar10dvs\\eval_01\\summary.json",
+    "hardware": "configs/hardware_hipsa_paper.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "outputs": {
+    "summary": "summary.json",
+    "incremental": "incremental_ablation.csv",
+    "leave_one_out": "leave_one_out_ablation.csv",
+    "orthogonal": "orthogonal_ablation.csv",
+    "baseline": "baseline_definition.json"
+  },
+  "extra": {
+    "dataset": "cifar10dvs",
+    "selected_point": "G4/A8",
+    "lock_fraction": 0.01
+  }
+}

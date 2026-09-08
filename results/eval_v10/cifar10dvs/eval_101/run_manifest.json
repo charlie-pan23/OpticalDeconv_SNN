@@ -1,0 +1,50 @@
+{
+  "eval_name": "eval_101",
+  "command": "eval/eval_06_selected_point.py --datasets cifar10dvs dvsgesture --input-root results/eval_v2 --output-root results/eval_v10 --hardware configs/hardware_hipsa_paper.yaml --device-params configs/device_params.yaml",
+  "inputs": {
+    "eval01_summary": "results\\eval_v2\\cifar10dvs\\eval_01\\summary.json",
+    "hardware": "configs/hardware_hipsa_paper.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "outputs": {
+    "selected_operating_point": "selected_operating_point.json",
+    "design_space": "design_space.csv",
+    "transaction_trace": "transaction_trace.csv",
+    "adc_queue_trace": "adc_queue_trace.csv",
+    "state_update_trace": "state_update_trace.csv",
+    "non_mvm_operator_summary": "non_mvm_operator_summary.csv",
+    "hapr_corner_validation": "hapr_corner_validation.csv",
+    "hapr_bound_derivation": "hapr_bound_derivation.json",
+    "mrr_budget_audit": "mrr_budget_audit.json",
+    "mrr_stabilization_scenarios": "mrr_stabilization_scenarios.csv",
+    "mrr_lock_fraction_sensitivity": "mrr_lock_fraction_sensitivity.csv",
+    "mrr_device_budget_scenarios": "mrr_device_budget_scenarios.csv",
+    "tile_load_sensitivity": "tile_load_sensitivity.csv",
+    "power_breakdown_lock_aware": "power_breakdown_lock_aware.csv",
+    "adc_idle_bias_sensitivity": "adc_idle_bias_sensitivity.csv",
+    "input_encoding_pulse_sensitivity": "input_encoding_pulse_sensitivity.csv",
+    "link_budget_sensitivity": "link_budget_sensitivity.csv",
+    "power_breakdown_headline": "power_breakdown_headline.csv"
+  },
+  "extra": {
+    "dataset": "cifar10dvs",
+    "selected_hapr": 4,
+    "selected_adc_macros": 8,
+    "trace_provenance": "derived_from_eval01_aggregate_counters_not_per_sample_event_trace; output-column tiles batch same-neuron row partials over physical tiles",
+    "mrr_reference_case": {
+      "locked_fraction": 0.01,
+      "locked_fraction_percent": 1.0,
+      "physical_ring_count": 32768,
+      "effective_locked_ring_count": 327.68,
+      "locking_power_mw_per_ring": 1.2,
+      "added_lock_power_mw": 393.216,
+      "nominal_power_w_without_lock": 2.556317310307246,
+      "total_power_w": 2.9495333103072463,
+      "latency_us_per_image": 566.8792744140625,
+      "energy_uJ_per_image": 1674.9237111670795,
+      "energy_overhead_percent": 15.351465699873291,
+      "recommended_reporting_case": 1,
+      "status": "parameterized_literature_anchor_not_hipsa_measurement"
+    }
+  }
+}

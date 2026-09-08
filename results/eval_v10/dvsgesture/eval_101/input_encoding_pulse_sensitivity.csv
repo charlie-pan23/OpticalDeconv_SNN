@@ -1,0 +1,2 @@
+dataset,input_encoding,first_layer,first_layer_pulse_multiplier,latency_us_per_image,nominal_power_w,nominal_energy_uJ_per_image,lock_aware_power_w,lock_aware_energy_uJ_per_image,adc_requests_per_image,adc_queue_p99,adc_stall_cycles,status
+dvsgesture,binary,conv1,1,391.40390185546875,2.4961389460655217,979.4571041634426,2.889354946065522,1133.3633808354425,15827302.277357504,0.0,0.0,binary_input

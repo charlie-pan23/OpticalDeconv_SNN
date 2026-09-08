@@ -1,0 +1,9 @@
+workload,operator,operations_per_image,cycles_per_image,energy_pj_per_image,digital_parallelism,included,note
+cifar10dvs,maxpool1,3932160.0,960.0,983040.0,4096.0,1,Digital max-pool comparisons after the preceding LIF.
+cifar10dvs,maxpool2,1966080.0,480.0,491520.0,4096.0,1,Digital max-pool comparisons after the preceding LIF.
+cifar10dvs,maxpool4,983040.0,240.0,245760.0,4096.0,1,Digital max-pool comparisons after the preceding LIF.
+cifar10dvs,maxpool6,491520.0,120.0,122880.0,4096.0,1,Digital max-pool comparisons after the preceding LIF.
+cifar10dvs,global_average_pool,655360.0,160.0,163840.0,4096.0,1,Digital accumulation and divide; explicitly counted.
+cifar10dvs,digital_fc2,25600.0,6.25,6400.0,4096.0,1,Final classifier is digital in the packaged models.
+cifar10dvs,time_output_aggregation,100.0,0.0244140625,25.0,4096.0,1,Mean/sum over timestep logits.
+cifar10dvs,batchnorm_runtime,0.0,0.0,0.0,4096.0,1,BatchNorm is folded into weights/thresholds for inference.

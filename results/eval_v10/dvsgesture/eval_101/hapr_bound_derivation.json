@@ -1,0 +1,43 @@
+{
+  "selected_group_size": 4,
+  "screened_group_sizes": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "nominal_feasible_group_sizes": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "first_rejected_group_size": 32,
+  "physical_fanin_limit": 4,
+  "physical_feasible_group_sizes": [
+    1,
+    2,
+    4
+  ],
+  "first_physically_rejected_group_size": 8,
+  "criteria": {
+    "min_saturation_margin_db": 1.0,
+    "min_snr_margin_db": 3.0,
+    "settling_time_limit_ns": 0.8,
+    "device_error_bounds_applied": true
+  },
+  "equations": {
+    "lane_current": "I_lane = R_PD * P_PD",
+    "aggregate_current": "I_sum = G * I_lane",
+    "tia_output": "V_TIA = Z_TIA * I_sum",
+    "differential_shot_noise": "sigma_shot = sqrt(2*q*(2*I_sum + I_dark)*B_eff)",
+    "tia_noise": "sigma_tia = i_n*sqrt(B_eff)",
+    "snr": "SNR_dB = 20*log10(I_sum/sqrt(sigma_shot^2 + sigma_tia^2))",
+    "effective_bandwidth": "B_eff = min(B_declared, max(1/(2*pi*Z_TIA*C_in), B_floor))"
+  },
+  "physical_rule": "spatial same-neuron partial sums must be simultaneously available; G divides and cannot exceed N_physical_tiles; no temporal analog storage",
+  "status": "analytical_architecture_and_spatial_concurrency_screen_not_silicon_measurement"
+}

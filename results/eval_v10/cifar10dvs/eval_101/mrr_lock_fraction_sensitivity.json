@@ -1,0 +1,13 @@
+{
+  "physical_ring_count": 32768,
+  "locking_power_mw_per_ring": 1.2,
+  "locked_fractions": [
+    0.0,
+    0.01,
+    0.05,
+    0.1
+  ],
+  "recommended_reporting_fraction": 0.01,
+  "status": "parameterized_literature_anchor_not_hipsa_measurement",
+  "claim_boundary": "parameter_sensitivity_not_measured_lock_power"
+}

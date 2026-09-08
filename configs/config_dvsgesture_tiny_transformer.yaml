@@ -1,0 +1,111 @@
+experiment:
+  name: "dvsgesture_hipsa_tiny_transformer"
+  seed: 42
+  deterministic: true
+  benchmark: false
+  notes: "Two-layer compact spike-driven temporal Transformer initialized from authenticated CNN checkpoint."
+paths:
+  dataset_root: "C:/Users/17225/Documents/Codex/2026-09-04/di/work/datasets/DVSGestureReplay"
+  tar_file: "C:/Users/17225/Documents/Codex/2026-09-04/di/work/datasets/DVSGestureReplay/download/DvsGesture.tar.gz"
+  extracted_dir: "C:/Users/17225/Documents/Codex/2026-09-04/di/work/datasets/DVSGestureReplay/extract/DvsGesture"
+  gesture_mapping_csv: "C:/Users/17225/Documents/Codex/2026-09-04/di/work/datasets/DVSGestureReplay/download/gesture_mapping.csv"
+  events_np_dir: "C:/Users/17225/Documents/Codex/2026-09-04/di/work/datasets/DVSGestureReplay/events_np"
+  frame_dir: "C:/Users/17225/Documents/Codex/2026-09-04/di/work/datasets/DVSGestureReplay/frames_number_10_split_by_number"
+  split_dir: "./datasets/DVSGesture/splits"
+  manifest_dir: "./datasets/DVSGesture/manifest"
+  run_root: "./results/dvsgesture_tiny_transformer"
+  log_root: "./logs"
+dataset:
+  name: "dvsgesture"
+  time_steps: 10
+  data_type: "frame"
+  split_by: "number"
+  num_classes: 11
+  batch_first_from_dataset: true
+  model_input_layout: "T,B,C,H,W"
+  official_split: true
+preprocess:
+  force_rebuild: false
+  verify_after_build: true
+  expected_users: 29
+  allow_numpy_legacy_patch: false
+  input_encoding: "binary"
+  binary_threshold: 0.0
+  clipped_count_max: 3.0
+  normalize_eps: 0.000001
+  save_manifest: true
+  manifest_file: "./datasets/DVSGesture/manifest/dvsgesture_T10_transformer_manifest.json"
+split:
+  method: "official_train_test"
+  val_ratio_from_train: 0.1
+  seed: 42
+  split_file: "./datasets/DVSGesture/splits/dvsgesture_T10_seed42_transformer_trainval.pth"
+model:
+  type: "snn_tiny_transformer"
+  module: "models.snn_tiny_transformer"
+  class_name: "SpikingGestureTinyTransformer"
+  num_classes: 11
+  input_channels: 2
+  channels: [32, 64, 128, 128, 256]
+  hidden_dim: 256
+  transformer_depth: 2
+  num_heads: 4
+  mlp_ratio: 2.0
+  time_steps: 10
+  neuron:
+    type: "LIFNode"
+    tau: 2.0
+    v_threshold: 1.0
+    v_reset: 0.0
+    surrogate: "sigmoid"
+    surrogate_alpha: 4.0
+  regularization:
+    dropout: 0.1
+    use_batchnorm: true
+training:
+  epochs: 12
+  batch_size_train: 16
+  batch_size_eval: 32
+  num_workers: 0
+  pin_memory: false
+  persistent_workers: false
+  train_drop_last: false
+  eval_drop_last: false
+  amp: false
+  reset_net_each_batch: true
+  logits_aggregation: "mean_time"
+  optimizer:
+    name: "adamw"
+    lr: 0.0002
+    weight_decay: 0.0005
+    betas: [0.9, 0.999]
+  scheduler:
+    name: "cosine_warmup"
+    warmup_epochs: 1
+    min_lr: 0.00001
+  loss:
+    name: "cross_entropy"
+    label_smoothing: 0.0
+    use_tet_loss: true
+    tet_loss_weight: 0.2
+  grad_clip_norm: 1.0
+  checkpoint:
+    monitor: "val_acc"
+    mode: "max"
+    save_best: true
+    save_last: true
+    save_interval_epochs: 4
+augmentation:
+  enabled: false
+evaluation:
+  batch_size: 1
+  num_workers: 0
+  use_test_split_file: true
+  split_file: "./datasets/DVSGesture/splits/dvsgesture_T10_seed42_transformer_trainval.pth"
+activity_trace:
+  enabled: true
+  collect_layer_input_spikes: true
+  collect_layer_output_spikes: true
+robustness:
+  enabled: true
+  target_modules: "photonic_mvm_layers"

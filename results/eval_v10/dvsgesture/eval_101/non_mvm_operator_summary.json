@@ -1,0 +1,98 @@
+{
+  "rows": [
+    {
+      "workload": "dvsgesture",
+      "operator": "maxpool1",
+      "operations_per_image": 3932160.0,
+      "cycles_per_image": 960.0,
+      "energy_pj_per_image": 983040.0,
+      "digital_parallelism": 4096.0,
+      "included": 1,
+      "note": "Digital max-pool comparisons after the preceding LIF."
+    },
+    {
+      "workload": "dvsgesture",
+      "operator": "maxpool2",
+      "operations_per_image": 1966080.0,
+      "cycles_per_image": 480.0,
+      "energy_pj_per_image": 491520.0,
+      "digital_parallelism": 4096.0,
+      "included": 1,
+      "note": "Digital max-pool comparisons after the preceding LIF."
+    },
+    {
+      "workload": "dvsgesture",
+      "operator": "maxpool3",
+      "operations_per_image": 983040.0,
+      "cycles_per_image": 240.0,
+      "energy_pj_per_image": 245760.0,
+      "digital_parallelism": 4096.0,
+      "included": 1,
+      "note": "Digital max-pool comparisons after the preceding LIF."
+    },
+    {
+      "workload": "dvsgesture",
+      "operator": "maxpool5",
+      "operations_per_image": 491520.0,
+      "cycles_per_image": 120.0,
+      "energy_pj_per_image": 122880.0,
+      "digital_parallelism": 4096.0,
+      "included": 1,
+      "note": "Digital max-pool comparisons after the preceding LIF."
+    },
+    {
+      "workload": "dvsgesture",
+      "operator": "global_average_pool",
+      "operations_per_image": 655360.0,
+      "cycles_per_image": 160.0,
+      "energy_pj_per_image": 163840.0,
+      "digital_parallelism": 4096.0,
+      "included": 1,
+      "note": "Digital accumulation and divide; explicitly counted."
+    },
+    {
+      "workload": "dvsgesture",
+      "operator": "digital_fc2",
+      "operations_per_image": 28160.0,
+      "cycles_per_image": 6.875,
+      "energy_pj_per_image": 7040.0,
+      "digital_parallelism": 4096.0,
+      "included": 1,
+      "note": "Final classifier is digital in the packaged models."
+    },
+    {
+      "workload": "dvsgesture",
+      "operator": "time_output_aggregation",
+      "operations_per_image": 110.0,
+      "cycles_per_image": 0.02685546875,
+      "energy_pj_per_image": 27.5,
+      "digital_parallelism": 4096.0,
+      "included": 1,
+      "note": "Mean/sum over timestep logits."
+    },
+    {
+      "workload": "dvsgesture",
+      "operator": "batchnorm_runtime",
+      "operations_per_image": 0.0,
+      "cycles_per_image": 0.0,
+      "energy_pj_per_image": 0.0,
+      "digital_parallelism": 4096.0,
+      "included": 1,
+      "note": "BatchNorm is folded into weights/thresholds for inference."
+    }
+  ],
+  "total_cycles_per_image": 1966.90185546875,
+  "total_energy_pj_per_image": 2014107.5,
+  "total_energy_nj_per_image": 2014.1075,
+  "operators_accounted": [
+    "maxpool1",
+    "maxpool2",
+    "maxpool3",
+    "maxpool5",
+    "global_average_pool",
+    "digital_fc2",
+    "time_output_aggregation",
+    "batchnorm_runtime"
+  ],
+  "end_to_end_scope": "photonic MVM + ADC + digital operators + LIF/SRAM + configuration"
+}

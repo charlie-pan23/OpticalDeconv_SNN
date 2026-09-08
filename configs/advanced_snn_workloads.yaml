@@ -1,0 +1,25 @@
+evidence_level: mapping_only
+hardware_contract: four_64x64_weight_stationary_mrr_tiles
+workloads:
+  - name: SEW-ResNet-18-DVS128
+    family: residual_convolutional_snn
+    source: Deep Residual Learning in Spiking Neural Networks, NeurIPS 2021
+    source_url: https://papers.nips.cc/paper/2021/file/afe434653a898da20044041262b3ac74-Paper.pdf
+    input_channels: 2
+    classes: 11
+    stem_kernel: 7
+    stage_channels: [64, 128, 256, 512]
+    blocks_per_stage: [2, 2, 2, 2]
+    mapping_rule: static_convolution_and_classifier_to_optical_mrr; residual_elementwise_ops_to_electronics
+  - name: Spike-driven-Transformer-SDSA-2-256
+    family: spike_driven_transformer
+    source: Spike-driven Transformer, NeurIPS 2023
+    source_url: https://openreview.net/forum?id=9FmolyOHi5
+    input_channels: 2
+    patch_size: 16
+    embedding_dim: 256
+    tokens: 64
+    blocks: 2
+    mlp_ratio: 4
+    classes: 11
+    mapping_rule: static_projection_weights_to_optical_mrr; activation_dependent_sdsa_mask_and_add_to_electronics

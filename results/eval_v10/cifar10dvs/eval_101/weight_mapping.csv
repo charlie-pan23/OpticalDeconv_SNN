@@ -1,0 +1,8 @@
+layer,input_dim,output_dim,row_tiles,col_tiles,logical_weights,physical_mrr_elements,weight_bits,residency
+conv1,18,32,1,1,576,1152,6,layer_weight_tile_major
+conv2,288,64,5,1,18432,36864,6,layer_weight_tile_major
+conv3,576,128,9,2,73728,147456,6,layer_weight_tile_major
+conv4,1152,128,18,2,147456,294912,6,layer_weight_tile_major
+conv5,1152,256,18,4,294912,589824,6,layer_weight_tile_major
+conv6,2304,256,36,4,589824,1179648,6,layer_weight_tile_major
+fc1,256,256,4,4,65536,131072,6,layer_weight_tile_major

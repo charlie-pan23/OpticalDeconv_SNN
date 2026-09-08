@@ -1,0 +1,88 @@
+schema_version: 1
+policy:
+  allowed_uses: [architecture_estimate, sensitivity_anchor, baseline_reconstruction]
+  forbidden_labels: [measured_HIPSA, post_layout, signoff, silicon_validated]
+  required_fields: [parameter, adopted_value, adopted_unit, source, venue, source_location, compatibility, mapping, uncertainty]
+  rule: "A borrowed value is an external reference input, never a HIPSA measurement. Any conclusion-changing value requires a range sweep."
+
+parameters:
+  - parameter: adc_macro_power
+    adopted_value: 14.8
+    adopted_unit: mW
+    source: "H. Zhu et al., Lightening-Transformer"
+    venue: "IEEE HPCA 2024"
+    source_location: "Table III, ADC: 8-bit, 10 GS/s, 14.8 mW, 2850 um2"
+    url: "https://scopex-asu.github.io/files/publications/ONN_HPCA2024_Gu.pdf"
+    compatibility: "Strong: photonic accelerator O/E backend; adopted as a conservative conventional macro for HIPSA's pooled ADC service."
+    mapping: "Power is charged per instantiated HIPSA ADC macro; 20% idle-bias fraction is separately swept because it is not provided by the source."
+    uncertainty: {sweep_multiplier: [0.5, 1.0, 2.0], conclusion_sensitive: true}
+    evidence_class: external_reference
+
+  - parameter: adc_macro_area
+    adopted_value: 2850
+    adopted_unit: um2
+    source: "H. Zhu et al., Lightening-Transformer"
+    venue: "IEEE HPCA 2024"
+    source_location: "Table III"
+    url: "https://scopex-asu.github.io/files/publications/ONN_HPCA2024_Gu.pdf"
+    compatibility: "Strong at architecture-accounting level; excludes HIPSA FIFO and arbitration logic, which are counted separately."
+    mapping: "Multiply by A8/A12/A16 macro count without technology-node area scaling."
+    uncertainty: {sweep_multiplier: [0.75, 1.0, 1.5], conclusion_sensitive: false}
+    evidence_class: external_reference
+
+  - parameter: tia_power
+    adopted_value: 3.0
+    adopted_unit: mW
+    source: "H. Zhu et al., Lightening-Transformer"
+    venue: "IEEE HPCA 2024"
+    source_location: "Table III, TIA row"
+    url: "https://scopex-asu.github.io/files/publications/ONN_HPCA2024_Gu.pdf"
+    compatibility: "Moderate: comparable photonic receive front end, but HIPSA's gain/range are architecture-selected and independently checked."
+    mapping: "Multiply by simultaneously active HAPR/TIA lanes; do not infer noise or gain from this power value."
+    uncertainty: {sweep_multiplier: [0.5, 1.0, 2.0], conclusion_sensitive: true}
+    evidence_class: external_reference
+
+  - parameter: mrr_locking_power
+    adopted_value: 1.2
+    adopted_unit: mW_per_ring_per_0.5FSR
+    source: "H. Zhu et al., Lightening-Transformer"
+    venue: "IEEE HPCA 2024"
+    source_location: "Table III, microring resonator locking power"
+    url: "https://scopex-asu.github.io/files/publications/ONN_HPCA2024_Gu.pdf"
+    compatibility: "Moderate: same MRR device class, not the HIPSA thermal stack or controller."
+    mapping: "Apply only to HIPSA's own signed-weight physical-ring count times an explicitly swept simultaneously locked fraction."
+    uncertainty: {locked_fraction: [0.0, 0.01, 0.05, 0.10, 1.0], conclusion_sensitive: true}
+    evidence_class: external_reference
+
+  - parameter: photodetector_responsivity
+    adopted_value: 0.45
+    adopted_unit: A_per_W
+    source: "Lischke et al., Ultra-fast germanium photodiode with 3-dB bandwidth of 265 GHz"
+    venue: "Nature Photonics 2021"
+    source_location: "Reported internal responsivity range 0.30--0.45 A/W"
+    url: "https://doi.org/10.1038/s41566-021-00893-w"
+    compatibility: "Moderate: silicon-compatible waveguide Ge detector; device is not fabricated in HIPSA."
+    mapping: "Use in link-budget feasibility only; sweep the full reported 0.30--0.45 A/W range."
+    uncertainty: {adopted_range: [0.30, 0.45], conclusion_sensitive: true}
+    evidence_class: external_reference
+
+  - parameter: digital_control_area_leakage_timing
+    adopted_value: "from local Nangate45 mapped netlist"
+    adopted_unit: mixed
+    source: "NangateOpenCellLibrary 45 nm + Yosys/ABC run packaged with HIPSA"
+    venue: "open PDK/library workflow; not a paper-derived number"
+    source_location: "results/hardware_validation/nangate45/ppa_summary.json"
+    compatibility: "Direct RTL mapping of HIPSA control logic, but pre-layout and without SRAM macros, CTS, routing, or extracted parasitics."
+    mapping: "Report unchanged at 45 nm; no unsupported cross-node scaling."
+    uncertainty: {frequency_ghz: [0.8, 0.9, 1.0], conclusion_sensitive: true}
+    evidence_class: local_synthesis
+
+related_work_only:
+  - source: "Duan et al., PICoSNN"
+    venue: "DATE 2026"
+    doi: "10.23919/DATE69613.2026.11539300"
+    use: "closest photonic-SNN architecture comparison; do not transplant its results into HIPSA."
+  - source: "Lu et al., Accelerating spiking neural networks with photonic reconfigurable devices"
+    venue: "Nature Communications 2026"
+    doi: "10.1038/s41467-026-72119-y"
+    use: "modern photonic-SNN breadth/context; measured results remain source-specific."

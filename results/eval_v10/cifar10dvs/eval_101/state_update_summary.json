@@ -1,0 +1,102 @@
+{
+  "rows": [
+    {
+      "layer": "conv1",
+      "dense_state_updates_per_image": 5242880.0,
+      "actual_lif_updates_per_image": 3207558.0330000003,
+      "sram_reads_per_image": 3207558.0330000003,
+      "sram_writes_per_image": 3207558.0330000003,
+      "state_update_activity": 0.6117931428909302,
+      "adc_request_activity_input": 0.6117931428909302,
+      "lif_spike_activity_input": 0.06555219535827636,
+      "lazy_lif_enabled": 1,
+      "activity_independent_of_adc_macro_count": 1,
+      "trace_provenance": "derived_from_eval01_requests_and_lif_activity"
+    },
+    {
+      "layer": "conv2",
+      "dense_state_updates_per_image": 2621440.0,
+      "actual_lif_updates_per_image": 2350542.85,
+      "sram_reads_per_image": 2350542.85,
+      "sram_writes_per_image": 2350542.85,
+      "state_update_activity": 0.8966609382629395,
+      "adc_request_activity_input": 0.8966609382629395,
+      "lif_spike_activity_input": 0.06714980926513672,
+      "lazy_lif_enabled": 1,
+      "activity_independent_of_adc_macro_count": 1,
+      "trace_provenance": "derived_from_eval01_requests_and_lif_activity"
+    },
+    {
+      "layer": "conv3",
+      "dense_state_updates_per_image": 1310720.0,
+      "actual_lif_updates_per_image": 1168315.584,
+      "sram_reads_per_image": 1168315.584,
+      "sram_writes_per_image": 1168315.584,
+      "state_update_activity": 0.891354052734375,
+      "adc_request_activity_input": 0.891354052734375,
+      "lif_spike_activity_input": 0.07144142379760743,
+      "lazy_lif_enabled": 1,
+      "activity_independent_of_adc_macro_count": 1,
+      "trace_provenance": "derived_from_eval01_requests_and_lif_activity"
+    },
+    {
+      "layer": "conv4",
+      "dense_state_updates_per_image": 1310720.0,
+      "actual_lif_updates_per_image": 1175580.116,
+      "sram_reads_per_image": 1175580.116,
+      "sram_writes_per_image": 1175580.116,
+      "state_update_activity": 0.896896450805664,
+      "adc_request_activity_input": 0.896896450805664,
+      "lif_spike_activity_input": 0.045002198791503904,
+      "lazy_lif_enabled": 1,
+      "activity_independent_of_adc_macro_count": 1,
+      "trace_provenance": "derived_from_eval01_requests_and_lif_activity"
+    },
+    {
+      "layer": "conv5",
+      "dense_state_updates_per_image": 655360.0,
+      "actual_lif_updates_per_image": 591718.9650000001,
+      "sram_reads_per_image": 591718.9650000001,
+      "sram_writes_per_image": 591718.9650000001,
+      "state_update_activity": 0.9028914871215821,
+      "adc_request_activity_input": 0.9028914871215821,
+      "lif_spike_activity_input": 0.04120485534667969,
+      "lazy_lif_enabled": 1,
+      "activity_independent_of_adc_macro_count": 1,
+      "trace_provenance": "derived_from_eval01_requests_and_lif_activity"
+    },
+    {
+      "layer": "conv6",
+      "dense_state_updates_per_image": 655360.0,
+      "actual_lif_updates_per_image": 578820.174,
+      "sram_reads_per_image": 578820.174,
+      "sram_writes_per_image": 578820.174,
+      "state_update_activity": 0.8832094940185546,
+      "adc_request_activity_input": 0.8832094940185546,
+      "lif_spike_activity_input": 0.07836570129394531,
+      "lazy_lif_enabled": 1,
+      "activity_independent_of_adc_macro_count": 1,
+      "trace_provenance": "derived_from_eval01_requests_and_lif_activity"
+    },
+    {
+      "layer": "fc1",
+      "dense_state_updates_per_image": 2560.0,
+      "actual_lif_updates_per_image": 2325.831,
+      "sram_reads_per_image": 2325.831,
+      "sram_writes_per_image": 2325.831,
+      "state_update_activity": 0.908527734375,
+      "adc_request_activity_input": 0.908527734375,
+      "lif_spike_activity_input": 0.227721484375,
+      "lazy_lif_enabled": 1,
+      "activity_independent_of_adc_macro_count": 1,
+      "trace_provenance": "derived_from_eval01_requests_and_lif_activity"
+    }
+  ],
+  "dense_state_updates_per_image": 11799040.0,
+  "actual_lif_updates_per_image": 9074861.553000001,
+  "sram_reads_per_image": 9074861.553000001,
+  "sram_writes_per_image": 9074861.553000001,
+  "state_update_activity": 0.7691186361771806,
+  "lazy_lif_enabled": true,
+  "activity_independent_of_adc_macro_count": true
+}

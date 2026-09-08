@@ -1,0 +1,13 @@
+{
+  "weight_residency_mode": "layer_weight_tile_major",
+  "mrr_reconfiguration_events_per_image": 75,
+  "mrr_reconfiguration_cycles_per_image": 19200.0,
+  "mrr_reconfiguration_time_us_per_image": 19.2,
+  "physical_mrr_elements_configured_per_image": 2380928,
+  "weight_sram_read_bits_per_image": 14285568,
+  "configuration_energy_pj_per_image": 880943.36,
+  "configuration_energy_nj_per_image": 880.94336,
+  "cycles_per_tile_load": 256.0,
+  "mrr_retuned_every_timestep": false,
+  "note": "Weights are configured at layer/weight-tile boundaries and reused across all positions and timesteps."
+}

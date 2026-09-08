@@ -71,21 +71,21 @@ Main modeling assumptions:
 - No timestep-level optical power-gating is hidden in the main result.
 - Continuous per-ring MRR thermal locking is excluded from the main inference-time result and treated as a stress case.
 
-The current balanced paper-facing design point is:
+The corrected publication candidate is:
 
 ```text
-HAPR group size = 16
-ADC macros      = 32
+HAPR group size = 4
+ADC macros      = 8
 ```
 
-The older default point is:
+The superseded exploratory point is:
 
 ```text
 HAPR group size = 8
 ADC macros      = 16
 ```
 
-The default point is conservative but ADC-saturated, so it is not the final balanced design point.
+G4/A8 is the corrected paper-facing point: four physical 64x64 tiles produce 64 post-HAPR lanes, while eight 10 GS/s ADC macros provide an architecture-level 80-sample/ns admission capacity. This is not circuit timing closure.
 
 ## Evaluation stages
 
@@ -250,10 +250,10 @@ Representative design points:
 |---|---:|---:|---|
 | Default | 8 | 16 | Conservative but ADC-saturated |
 | Conservative | 8 | 64 | Lower HAPR risk, more ADCs |
-| Balanced | 16 | 32 | Recommended paper-facing design point |
-| Aggressive | 32 | 16 | Lower energy, higher HAPR analog risk |
+| Corrected candidate | 4 | 8 | Architecture-level G4/A8 admission point |
+| Rejected without temporal storage | 16 | 16 | Not used for the corrected design |
 
-Balanced design point:
+Corrected publication candidate:
 
 | Dataset | Latency | Energy | Power |
 |---|---:|---:|---:|
@@ -403,7 +403,7 @@ A separate `4.6 Discussion and Limitations` section is optional. With a short pa
    HIPSA latency/power/energy are device-calibrated estimates, not silicon measurements.
 
 3. **ADC model**  
-   Activity-scaled ADC power is useful for design exploration but may under-penalize very large ADC pools. Balanced point `HAPR=16 / ADC=32` is the recommended paper-facing point.
+   Activity-scaled ADC power is useful for design exploration but may under-penalize very large ADC pools. Corrected candidate `HAPR=4 / ADC=8` is the paper-facing point; 10 GS/s is a capacity assumption, not circuit timing closure.
 
 4. **MRR locking**  
    Continuous per-ring thermal locking is excluded from the main inference-time power and should only be reported as a stress case.
