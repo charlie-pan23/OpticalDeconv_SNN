@@ -1,10 +1,10 @@
 {
   "eval_name": "eval_104",
-  "command": "eval/eval_07_ablation_v3.py --datasets cifar10dvs dvsgesture --input-root results/eval_v2 --output-root results/eval_v10 --hardware configs/hardware_hipsa_paper.yaml --device-params configs/device_params.yaml --lock-fraction 0.01",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_104.py --datasets cifar10dvs dvsgesture --input-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v2 --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --hardware D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml --device-params D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\device_params.yaml --lock-fraction 0.01",
   "inputs": {
-    "activity_summary": "results\\eval_v2\\dvsgesture\\eval_01\\summary.json",
-    "hardware": "configs/hardware_hipsa_paper.yaml",
-    "device_params": "configs/device_params.yaml"
+    "activity_summary": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v2\\dvsgesture\\eval_01\\summary.json",
+    "hardware": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml",
+    "device_params": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\device_params.yaml"
   },
   "outputs": {
     "summary": "summary.json",

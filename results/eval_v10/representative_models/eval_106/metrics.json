@@ -1,0 +1,463 @@
+{
+  "eval_name": "eval_106",
+  "created_utc": "2026-09-08T14:48:29.402872+00:00",
+  "evidence_level": "mapping_only",
+  "hardware_contract": {
+    "name": "HIPSA_G4_A8",
+    "num_tiles": 4,
+    "array_rows": 64,
+    "array_cols": 64,
+    "hapr_group_size": 4,
+    "post_hapr_lanes": 64,
+    "derived_post_hapr_lanes": 64,
+    "adc_macros": 8,
+    "samples_per_macro_per_cycle": 10.0,
+    "nominal_sample_slots_per_cycle": 80.0,
+    "system_clock_hz": 1000000000.0,
+    "temporal_analog_storage": false,
+    "checks": {
+      "four_tiles": true,
+      "logical_array_64x64": true,
+      "g4": true,
+      "reported_lanes_match_derived": true,
+      "a8": true,
+      "ten_samples_per_macro_per_cycle": true,
+      "one_ghz_architecture_clock": true,
+      "same_window_capacity": true,
+      "no_temporal_analog_storage": true
+    },
+    "valid": true,
+    "failed_checks": [],
+    "claim_boundary": "architecture_level_capacity_analysis_not_circuit_timing_closure"
+  },
+  "summaries": [
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "family": "residual_convolutional_snn",
+      "operator_instances": 29,
+      "optical_static_weight_instances": 21,
+      "electronic_dynamic_operator_instances": 8,
+      "optical_operator_coverage_percent": 72.41379310344827,
+      "logical_weight_tiles": 2734,
+      "physical_load_rounds": 686,
+      "status": "mapping_only_no_accuracy_latency_or_energy_claim",
+      "unsupported_claims": [
+        "accuracy",
+        "latency",
+        "energy",
+        "throughput"
+      ],
+      "physical_tiles": 4,
+      "source_url": "https://papers.nips.cc/paper/2021/file/afe434653a898da20044041262b3ac74-Paper.pdf"
+    },
+    {
+      "workload": "Spike-driven-Transformer-SDSA-2-256",
+      "family": "spike_driven_transformer",
+      "operator_instances": 16,
+      "optical_static_weight_instances": 14,
+      "electronic_dynamic_operator_instances": 2,
+      "optical_operator_coverage_percent": 87.5,
+      "logical_weight_tiles": 420,
+      "physical_load_rounds": 105,
+      "status": "mapping_only_no_accuracy_latency_or_energy_claim",
+      "unsupported_claims": [
+        "accuracy",
+        "latency",
+        "energy",
+        "throughput"
+      ],
+      "physical_tiles": 4,
+      "source_url": "https://openreview.net/forum?id=9FmolyOHi5"
+    },
+    {
+      "workload": "Spikformer-2-256 mapping proxy",
+      "family": "spiking_transformer",
+      "operator_instances": 18,
+      "optical_static_weight_instances": 14,
+      "electronic_dynamic_operator_instances": 4,
+      "optical_operator_coverage_percent": 77.77777777777777,
+      "logical_weight_tiles": 420,
+      "physical_load_rounds": 105,
+      "status": "mapping_only_no_accuracy_latency_or_energy_claim",
+      "unsupported_claims": [
+        "accuracy",
+        "latency",
+        "energy",
+        "throughput"
+      ],
+      "physical_tiles": 4,
+      "source_url": "https://papers.nips.cc/paper_files/paper/2023/file/ca0f5358dbadda74b3049711887e9ead-Paper-Conference.pdf"
+    }
+  ],
+  "operator_mapping": [
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stem_conv",
+      "multiplicity": 1,
+      "matrix_k": 98,
+      "matrix_n": 64,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 2,
+      "four_tile_load_rounds": 1
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage1_conv3x3",
+      "multiplicity": 1,
+      "matrix_k": 576,
+      "matrix_n": 64,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 9,
+      "four_tile_load_rounds": 3
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage1_conv3x3",
+      "multiplicity": 3,
+      "matrix_k": 576,
+      "matrix_n": 64,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 27,
+      "four_tile_load_rounds": 7
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage1_sew_residual",
+      "multiplicity": 2,
+      "matrix_k": 64,
+      "matrix_n": 64,
+      "execution": "electronic_spike_elementwise",
+      "logical_weight_tiles": 0,
+      "four_tile_load_rounds": 0
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage2_conv3x3",
+      "multiplicity": 1,
+      "matrix_k": 576,
+      "matrix_n": 128,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 18,
+      "four_tile_load_rounds": 5
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage2_conv3x3",
+      "multiplicity": 3,
+      "matrix_k": 1152,
+      "matrix_n": 128,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 108,
+      "four_tile_load_rounds": 27
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage2_projection_shortcut",
+      "multiplicity": 1,
+      "matrix_k": 64,
+      "matrix_n": 128,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 2,
+      "four_tile_load_rounds": 1
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage2_sew_residual",
+      "multiplicity": 2,
+      "matrix_k": 128,
+      "matrix_n": 128,
+      "execution": "electronic_spike_elementwise",
+      "logical_weight_tiles": 0,
+      "four_tile_load_rounds": 0
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage3_conv3x3",
+      "multiplicity": 1,
+      "matrix_k": 1152,
+      "matrix_n": 256,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 72,
+      "four_tile_load_rounds": 18
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage3_conv3x3",
+      "multiplicity": 3,
+      "matrix_k": 2304,
+      "matrix_n": 256,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 432,
+      "four_tile_load_rounds": 108
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage3_projection_shortcut",
+      "multiplicity": 1,
+      "matrix_k": 128,
+      "matrix_n": 256,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 8,
+      "four_tile_load_rounds": 2
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage3_sew_residual",
+      "multiplicity": 2,
+      "matrix_k": 256,
+      "matrix_n": 256,
+      "execution": "electronic_spike_elementwise",
+      "logical_weight_tiles": 0,
+      "four_tile_load_rounds": 0
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage4_conv3x3",
+      "multiplicity": 1,
+      "matrix_k": 2304,
+      "matrix_n": 512,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 288,
+      "four_tile_load_rounds": 72
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage4_conv3x3",
+      "multiplicity": 3,
+      "matrix_k": 4608,
+      "matrix_n": 512,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 1728,
+      "four_tile_load_rounds": 432
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage4_projection_shortcut",
+      "multiplicity": 1,
+      "matrix_k": 256,
+      "matrix_n": 512,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 32,
+      "four_tile_load_rounds": 8
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "stage4_sew_residual",
+      "multiplicity": 2,
+      "matrix_k": 512,
+      "matrix_n": 512,
+      "execution": "electronic_spike_elementwise",
+      "logical_weight_tiles": 0,
+      "four_tile_load_rounds": 0
+    },
+    {
+      "workload": "SEW-ResNet-18-DVS128",
+      "operator": "classifier",
+      "multiplicity": 1,
+      "matrix_k": 512,
+      "matrix_n": 11,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 8,
+      "four_tile_load_rounds": 2
+    },
+    {
+      "workload": "Spike-driven-Transformer-SDSA-2-256",
+      "operator": "patch_embedding",
+      "multiplicity": 1,
+      "matrix_k": 512,
+      "matrix_n": 256,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 32,
+      "four_tile_load_rounds": 8
+    },
+    {
+      "workload": "Spike-driven-Transformer-SDSA-2-256",
+      "operator": "qkv_projections",
+      "multiplicity": 6,
+      "matrix_k": 256,
+      "matrix_n": 256,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 96,
+      "four_tile_load_rounds": 24
+    },
+    {
+      "workload": "Spike-driven-Transformer-SDSA-2-256",
+      "operator": "sdsa_mask_add",
+      "multiplicity": 2,
+      "matrix_k": 256,
+      "matrix_n": 256,
+      "execution": "electronic_spike_mask_add",
+      "logical_weight_tiles": 0,
+      "four_tile_load_rounds": 0
+    },
+    {
+      "workload": "Spike-driven-Transformer-SDSA-2-256",
+      "operator": "output_projection",
+      "multiplicity": 2,
+      "matrix_k": 256,
+      "matrix_n": 256,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 32,
+      "four_tile_load_rounds": 8
+    },
+    {
+      "workload": "Spike-driven-Transformer-SDSA-2-256",
+      "operator": "mlp_expand",
+      "multiplicity": 2,
+      "matrix_k": 256,
+      "matrix_n": 1024,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 128,
+      "four_tile_load_rounds": 32
+    },
+    {
+      "workload": "Spike-driven-Transformer-SDSA-2-256",
+      "operator": "mlp_contract",
+      "multiplicity": 2,
+      "matrix_k": 1024,
+      "matrix_n": 256,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 128,
+      "four_tile_load_rounds": 32
+    },
+    {
+      "workload": "Spike-driven-Transformer-SDSA-2-256",
+      "operator": "classifier",
+      "multiplicity": 1,
+      "matrix_k": 256,
+      "matrix_n": 11,
+      "execution": "optical_mrr",
+      "logical_weight_tiles": 4,
+      "four_tile_load_rounds": 1
+    },
+    {
+      "workload": "Spikformer-2-256 mapping proxy",
+      "operator": "patch_embedding",
+      "execution": "optical_mrr",
+      "multiplicity": 1,
+      "matrix_k": 512,
+      "matrix_n": 256,
+      "row_tiles_per_instance": 8,
+      "col_tiles_per_instance": 4,
+      "logical_weight_tiles": 32,
+      "physical_load_rounds": 8,
+      "logical_parameters": 131072,
+      "dynamic_operand": 0
+    },
+    {
+      "workload": "Spikformer-2-256 mapping proxy",
+      "operator": "qkv_projections",
+      "execution": "optical_mrr",
+      "multiplicity": 6,
+      "matrix_k": 256,
+      "matrix_n": 256,
+      "row_tiles_per_instance": 4,
+      "col_tiles_per_instance": 4,
+      "logical_weight_tiles": 96,
+      "physical_load_rounds": 24,
+      "logical_parameters": 393216,
+      "dynamic_operand": 0
+    },
+    {
+      "workload": "Spikformer-2-256 mapping proxy",
+      "operator": "attention_qk",
+      "execution": "electronic_exact_fallback",
+      "multiplicity": 2,
+      "matrix_k": 256,
+      "matrix_n": 256,
+      "row_tiles_per_instance": 4,
+      "col_tiles_per_instance": 4,
+      "logical_weight_tiles": 0,
+      "physical_load_rounds": 0,
+      "logical_parameters": 0,
+      "dynamic_operand": 1
+    },
+    {
+      "workload": "Spikformer-2-256 mapping proxy",
+      "operator": "attention_av",
+      "execution": "electronic_exact_fallback",
+      "multiplicity": 2,
+      "matrix_k": 256,
+      "matrix_n": 256,
+      "row_tiles_per_instance": 4,
+      "col_tiles_per_instance": 4,
+      "logical_weight_tiles": 0,
+      "physical_load_rounds": 0,
+      "logical_parameters": 0,
+      "dynamic_operand": 1
+    },
+    {
+      "workload": "Spikformer-2-256 mapping proxy",
+      "operator": "attention_output_projection",
+      "execution": "optical_mrr",
+      "multiplicity": 2,
+      "matrix_k": 256,
+      "matrix_n": 256,
+      "row_tiles_per_instance": 4,
+      "col_tiles_per_instance": 4,
+      "logical_weight_tiles": 32,
+      "physical_load_rounds": 8,
+      "logical_parameters": 131072,
+      "dynamic_operand": 0
+    },
+    {
+      "workload": "Spikformer-2-256 mapping proxy",
+      "operator": "mlp_expand",
+      "execution": "optical_mrr",
+      "multiplicity": 2,
+      "matrix_k": 256,
+      "matrix_n": 1024,
+      "row_tiles_per_instance": 4,
+      "col_tiles_per_instance": 16,
+      "logical_weight_tiles": 128,
+      "physical_load_rounds": 32,
+      "logical_parameters": 524288,
+      "dynamic_operand": 0
+    },
+    {
+      "workload": "Spikformer-2-256 mapping proxy",
+      "operator": "mlp_contract",
+      "execution": "optical_mrr",
+      "multiplicity": 2,
+      "matrix_k": 1024,
+      "matrix_n": 256,
+      "row_tiles_per_instance": 16,
+      "col_tiles_per_instance": 4,
+      "logical_weight_tiles": 128,
+      "physical_load_rounds": 32,
+      "logical_parameters": 524288,
+      "dynamic_operand": 0
+    },
+    {
+      "workload": "Spikformer-2-256 mapping proxy",
+      "operator": "classifier",
+      "execution": "optical_mrr",
+      "multiplicity": 1,
+      "matrix_k": 256,
+      "matrix_n": 10,
+      "row_tiles_per_instance": 4,
+      "col_tiles_per_instance": 1,
+      "logical_weight_tiles": 4,
+      "physical_load_rounds": 1,
+      "logical_parameters": 2560,
+      "dynamic_operand": 0
+    }
+  ],
+  "scope": {
+    "optical_components": [
+      "static weighted MVM projections",
+      "HAPR/ADC eligibility by shared substrate"
+    ],
+    "electronic_components": [
+      "dynamic attention/mask/add",
+      "residual elementwise operations",
+      "state update"
+    ],
+    "requires_for_end_to_end_claim": [
+      "trained checkpoint",
+      "per-layer activity trace",
+      "same eval_105 replay and state contract"
+    ]
+  },
+  "claim_boundary": "representative workload mapping; not end-to-end model replay or measured hardware result"
+}

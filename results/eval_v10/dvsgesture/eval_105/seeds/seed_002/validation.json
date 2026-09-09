@@ -1,0 +1,43 @@
+{
+  "valid": true,
+  "status": "verified_eval_105_publication_replay",
+  "reasons": [],
+  "photonic_mvm_layer_names": [
+    "conv1",
+    "conv2",
+    "conv3",
+    "conv4",
+    "conv5",
+    "fc1"
+  ],
+  "num_samples_replayed": 288,
+  "num_samples_expected": 288,
+  "runtime_provenance": {
+    "python_version": "3.10.20",
+    "torch_version": "2.5.1",
+    "cuda_runtime_version": "12.1",
+    "cudnn_version": 90100,
+    "cuda_available": true,
+    "device_requested": "cuda",
+    "device_resolved": "cuda",
+    "gpu_name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "gpu_compute_capability": [
+      8,
+      9
+    ],
+    "batch_size_requested": 128,
+    "batch_size_actual": 128,
+    "num_workers": 0,
+    "seed": 2,
+    "seed_type": "paired_replay_perturbation_seed",
+    "seed_output_mode": "seed_indexed",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_enabled": true,
+    "cudnn_deterministic": true,
+    "cudnn_benchmark": false,
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": true,
+    "full_replay_requested": true,
+    "publication_replay_ready": true
+  }
+}

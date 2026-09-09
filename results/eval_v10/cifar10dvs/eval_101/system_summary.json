@@ -3,7 +3,7 @@
   "selected_operating_point": {
     "eval_name": "eval_101",
     "purpose": "unique_selected_mapping_transaction_queue_operating_point",
-    "created_utc": "2026-09-08T06:38:55.938087+00:00",
+    "created_utc": "2026-09-08T13:15:54.826298+00:00",
     "dataset": "cifar10dvs",
     "g4_a8_contract": {
       "name": "HIPSA_G4_A8",
@@ -37,7 +37,7 @@
     "quantized_clean_accuracy_percent": 70.7,
     "hardware_aware_accuracy_percent": 72.1,
     "hardware_aware_accuracy_status": "verified_eval_105_publication_replay",
-    "eval_105_summary": "results\\eval_v10\\cifar10dvs\\eval_105\\summary.json",
+    "eval_105_summary": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\cifar10dvs\\eval_105\\summary.json",
     "eval_105_summary_sha256": "1d8e54694ae77314af2a944e58214de1760f2832f8a899328d2d42d5df8f2ba7",
     "eval_105_validation": {
       "valid": true,

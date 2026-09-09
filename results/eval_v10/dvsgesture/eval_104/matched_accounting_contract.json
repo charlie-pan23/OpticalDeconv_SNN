@@ -1,0 +1,18 @@
+{
+  "baseline_id": "matched_four_tile_w6_adc6_vm16_lock_and_configuration_accounting",
+  "comparison_scope": "architecture_level_system_accounting",
+  "same_four_photonic_tiles": true,
+  "same_array_shape": "64x64_per_tile",
+  "same_laser_and_link_budget": true,
+  "same_precision": "W6/ADC6/Vm16",
+  "same_timestep_count": true,
+  "same_input_activity_trace": true,
+  "same_static_power_terms": true,
+  "same_non_mvm_accounting": true,
+  "same_mrr_lock_fraction": 0.01,
+  "same_tile_load_cycles_per_tile": 256,
+  "same_configuration_protocol": "layer_weight_tile_boundary; amortized across timesteps",
+  "accuracy_policy": "only dedicated eval_105 replay may provide accuracy; architecture counters never infer variant accuracy",
+  "external_software_speedup_comparison": false,
+  "evidence_class": "architecture_level_matched_scope_contract"
+}

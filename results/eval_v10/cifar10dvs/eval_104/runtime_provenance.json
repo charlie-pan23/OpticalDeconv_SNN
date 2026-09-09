@@ -1,0 +1,35 @@
+{
+  "eval_name": "eval_104",
+  "generated_utc": "2026-09-08T14:48:52.468641+00:00",
+  "python_version": "3.12.9",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "evidence_class": "architecture_level_orthogonal_ablation",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_104.py --datasets cifar10dvs dvsgesture --input-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v2 --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --hardware D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml --device-params D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\device_params.yaml --lock-fraction 0.01",
+  "source_files": {
+    "hardware": "configs/hardware_hipsa_paper.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "source_sha256": {
+    "hardware": "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066",
+    "device_params": "fcd2cd58acff908d2773df8b6f51c2ecb6fcd84397a9bbc3ab3cfccc0624b8c5"
+  },
+  "matched_accounting_contract": {
+    "baseline_id": "matched_four_tile_w6_adc6_vm16_lock_and_configuration_accounting",
+    "comparison_scope": "architecture_level_system_accounting",
+    "same_four_photonic_tiles": true,
+    "same_array_shape": "64x64_per_tile",
+    "same_laser_and_link_budget": true,
+    "same_precision": "W6/ADC6/Vm16",
+    "same_timestep_count": true,
+    "same_input_activity_trace": true,
+    "same_static_power_terms": true,
+    "same_non_mvm_accounting": true,
+    "same_mrr_lock_fraction": 0.01,
+    "same_tile_load_cycles_per_tile": 256,
+    "same_configuration_protocol": "layer_weight_tile_boundary; amortized across timesteps",
+    "accuracy_policy": "only dedicated eval_105 replay may provide accuracy; architecture counters never infer variant accuracy",
+    "external_software_speedup_comparison": false,
+    "evidence_class": "architecture_level_matched_scope_contract"
+  },
+  "configuration_sensitivity_status": "not_run_in_eval_104"
+}

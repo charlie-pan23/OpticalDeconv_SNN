@@ -1,0 +1,19 @@
+{
+  "eval_name": "eval_108",
+  "passed": true,
+  "release_status": "GO",
+  "checks": {
+    "contract_valid": true,
+    "all_eval101_sensitivity_audits_pass": true,
+    "all_eval104_matched_baseline_audits_pass": true,
+    "lock_rows_present": true,
+    "configuration_rows_present": true,
+    "all_required_orthogonal_variants_present": true,
+    "all_datasets_have_minimum_replay_seeds": true,
+    "replay_statistics_are_not_training_seed_claims": true
+  },
+  "reasons": [],
+  "minimum_replay_seeds": 5,
+  "evidence_scope": "architecture_level_system_accounting",
+  "claim_boundary": "architecture-level system accounting plus frozen-checkpoint paired replay perturbation statistics; not silicon measurement, P&R validation, or independent-training statistics"
+}

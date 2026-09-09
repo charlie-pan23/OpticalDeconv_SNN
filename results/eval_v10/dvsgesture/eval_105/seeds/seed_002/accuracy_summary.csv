@@ -1,0 +1,4 @@
+dataset,condition,seed,split,num_samples,accuracy_percent,loss,paired_accuracy_delta_percent_vs_clean,paired_net_correct_change_vs_clean,weight_bits,adc_bits,membrane_bits,evidence_class
+dvsgesture,clean,2,test,288,88.54166666666667,0.411061618063185,0.0,0,,,,software_checkpoint_evaluation
+dvsgesture,quantized_clean,2,test,288,83.33333333333333,0.5038291679488288,-5.208333333333343,-15,6,6,16,hardware_aware_software_proxy_replay
+dvsgesture,combined,2,test,288,81.94444444444444,0.5354714923434787,-6.5972222222222285,-19,6,6,16,hardware_aware_software_proxy_replay

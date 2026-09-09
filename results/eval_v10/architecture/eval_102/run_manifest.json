@@ -1,0 +1,16 @@
+{
+  "eval_name": "eval_102",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_102.py --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --hardware D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml --device-params D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\device_params.yaml",
+  "inputs": {
+    "hardware": "configs/hardware_hipsa_paper.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "outputs": {
+    "metrics": "metrics.json",
+    "validation": "validation.json",
+    "config_snapshot": "config_snapshot.yaml",
+    "hapr_matrix": "hapr_legality_matrix.csv",
+    "capacity_sensitivity": "adc_capacity_sensitivity.csv"
+  },
+  "extra": {}
+}

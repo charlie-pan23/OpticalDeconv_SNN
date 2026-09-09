@@ -1,0 +1,240 @@
+# ==============================================================================
+# HIPSA adopted device / primitive parameters
+# These are adopted component parameters for architecture-level estimation, not
+# fabricated HIPSA silicon measurements.
+# ==============================================================================
+
+metadata:
+  unit_policy:
+    power: "mW unless otherwise stated"
+    area: "um2 unless otherwise stated"
+    energy: "pJ unless otherwise stated"
+  reporting_rule: "derive system power from device parameter x HIPSA count x activity factor"
+  no_fixed_total_system_power: true
+  hybrid_revision:
+    device_values_and_citations: "A"
+    circuit_system_model: "v3"
+    paper_facing_path: "eval/eval_06_selected_point.py"
+    legacy_path: "eval/eval_02.py and eval/eval_04.py"
+
+optical_source:
+  cw_laser:
+    power_mw_main_case: 1473.0
+    area_um2: 120000.0
+    mode: "continuous_wave"
+    timestep_gated: false
+    notes: "Use link-budget-derived laser power in the main case; do not timestep-gate optical carrier."
+
+modulation:
+  binary_modulator_driver:
+    power_per_active_lane_mw: 2.25
+    area_per_lane_um2: 5200.0
+    activity_source: "input spike activity trace"
+    precision_bits: 1
+    full_multibit_dac_instantiated: false
+
+photodetection_frontend:
+  photodiode:
+    power_per_output_mw: 1.1
+    area_per_output_um2: 40.0
+  tia:
+    power_per_hapr_lane_mw: 3.0
+    area_per_lane_um2: 50.0
+  comparator:
+    power_per_hapr_lane_mw: 2.2
+    area_per_hapr_lane_um2: 78.0
+  hapr_selection_proxy:
+    power_per_hapr_lane_mw: 0.1
+    notes: "Proxy for local selection/request control overhead."
+
+adc:
+  conventional_adc_macro:
+    resolution_bits_reference: 8 # Reference macro resolution for power/area modeling, not necessarily the functional ADC precision.
+    power_per_macro_mw: 14.8
+    sample_rate_gsps: 10
+    area_per_macro_um2: 2850
+    macros_main_case: 8
+    idle_bias_fraction: 0.20
+    activity_source: "comparator request trace"
+    notes: "Conservative conventional ADC macro for request-driven pooling; 20% of rated power is charged as always-on bias/clock power and 80% scales with serviced-sample utilization. The split is an explicit sensitivity assumption, not a circuit measurement."
+
+memory_digital:
+  sram_area_budget_mm2: 0.0573
+  sram_area_budget_note: "Architecture-level SRAM/register-file estimate; no compiled SRAM macro is included."
+  synthesized_control:
+    area_mm2: 0.007508648
+    standard_cells: 3930
+    flip_flops: 718
+    nand2_equivalent: 9409.33
+    library_leakage_mw: 0.144077425
+    abc_pre_layout_worst_combinational_delay_ps: 939.73
+    abc_pre_layout_frequency_proxy_mhz: 1064.14
+    abc_constraints: "INV_X1 input driver; 0.01 pF output load; no wire load"
+    technology_anchor: "NangateOpenCellLibrary 45 nm"
+    evidence: null
+    status: "Imported mapped-logic estimate; the originating PPA artifact is not packaged in the formal repository, so this value is unverified and must not be reported as local evidence."
+  sram_register_files:
+    reference_power_mw: 243.25
+    activity_source: "membrane/SRAM update count"
+  noc_bus_controller_clock:
+    reference_power_mw: 77.84
+    activity_source: "request/output traffic trace"
+  digital_lif_update:
+    reference_power_mw: 2.43
+    activity_source: "LIF update count"
+  leakage_misc_io:
+    reference_power_mw: 90.0
+    activity_source: "static"
+
+mrr_stabilization:
+  main_case_power_mw: 0.0
+  included_in_main_case: false
+  notes: "Continuous lock power is not measured for HIPSA and is excluded from the nominal headline. Architecture-native sensitivity scales the 32,768 physical signed-weight rings by a cited 1.2 mW/ring locking anchor and explicit simultaneously-locked fractions."
+  stress_locked_fractions: [0.0, 0.01, 0.05, 0.10, 1.0]
+  literature_anchor:
+    source: "Zhu et al., Lightening-Transformer, HPCA 2024, Table III"
+    url: "https://scopex-asu.github.io/files/publications/ONN_HPCA2024_Gu.pdf"
+    locking_power_mw_per_ring: 1.2
+    locking_range_fsr: 0.5
+    tuning_power_mw_per_ring: 0.21
+    ring_footprint_um: [9.66, 9.66]
+    process_note: "Architecture-level photonic device anchor adopted from a strongly related HPCA accelerator; not a HIPSA measurement."
+    mapping_note: "Applied only to HIPSA's own four 64x64 signed-differential tiles (32,768 physical rings)."
+    layout_asset: "docs/figures/mrr_array_9x1_layout.png"
+    layout_status: "independent user hardware-layout proof-of-concept only; never used to scale HIPSA topology, area, or power"
+  reference_budget_audit:
+    physical_ring_count: 32768
+    representative_nonzero_lock_budget_mw: 0.0
+    formula: "P_lock(f) = 32768 physical rings * f_locked * 1.2 mW/ring"
+    status: "architecture_native_fractional_lock_sensitivity_not_measured"
+    note: "No arbitrary lock budget is selected as the headline. The sensitivity exposes 0/1/5/10/100% simultaneously locked fractions; a real controller and thermal-domain extraction are still required."
+
+# One-shot weight programming is kept separate from continuous MRR thermal
+# stabilization.  These values are architecture-model assumptions; the
+# literature-backed heater envelope above is the only MRR power anchor used for
+# the stabilization audit.
+mrr_configuration:
+  energy_per_physical_ring_pj: 0.25
+  sram_read_energy_pj_per_bit: 0.02
+  area_per_physical_ring_um2: 93.3156
+  area_source: "Zhu et al., HPCA 2024, Table III: 9.66 um x 9.66 um MRR"
+  assumption_note: "Ring active-device footprint is a cited architecture anchor; it excludes waveguide routing, heater keep-out, monitors, pads, and thermal spacing. Configuration energy remains an explicit model assumption."
+
+# ------------------------------------------------------------------------------
+# Analytical HAPR/TIA feasibility screen.
+# These values are explicit architecture-model assumptions, not HIPSA silicon
+# measurements.  Replace them with a link-budget/circuit-simulation table before
+# presenting the resulting pass/fail labels as device evidence.
+# ------------------------------------------------------------------------------
+analog_validation:
+  assumption_level: "architecture_model_assumption_replace_before_publication"
+  photodiode_responsivity_a_per_w: 0.45
+  optical_power_per_pd_mw: 0.25
+  tia_transimpedance_ohm: 200.0
+  tia_linear_output_v: 0.80
+  adc_full_scale_v: 0.80
+  effective_noise_bandwidth_hz: 5000000000.0
+  tia_current_noise_density_pa_per_sqrt_hz: 18.8
+  photodiode_dark_current_ua: 0.20
+  target_enob_bits: 6.0
+  min_saturation_margin_db: 1.0
+  min_snr_margin_db: 3.0
+  settling_time_ns: 0.35
+  settling_time_limit_ns: 0.80
+  pd_capacitance_pf: 0.02
+  wire_capacitance_pf: 0.40
+  tia_input_capacitance_pf: 0.20
+  tia_bandwidth_floor_hz: 100000000.0
+  worst_case_laser_error: 0.03
+  worst_case_pd_error: 0.03
+  worst_case_mrr_error: 0.03
+  differential_branch_factor: 2.0
+  apply_device_error_bounds: true
+  literature_evidence:
+    photodiode:
+      source: "Lischke et al., Ultra-fast germanium photodiode with 3-dB bandwidth of 265 GHz, Nature Photonics 15, 925-931 (2021)"
+      doi: "10.1038/s41566-021-00893-w"
+      url: "https://doi.org/10.1038/s41566-021-00893-w"
+      material: "waveguide-coupled epitaxial Ge p-i-n on silicon"
+      reported_internal_responsivity_a_per_w: [0.30, 0.45]
+      reported_room_temperature_dark_current_max_ua: 0.20
+      reported_bandwidth_ghz: [240.0, 265.0]
+      adoption_note: "The analytical screen uses the reported 0.45 A/W upper representative responsivity and 0.20 uA dark-current bound; the 5 GHz analysis bandwidth is an architecture-level operating choice below the demonstrated detector bandwidth."
+    tia:
+      source: "Declercq et al., A 64-GHz Optical Receiver for 128-GBd Links Using a 55-nm SiGe BiCMOS Traveling-Wave Linear TIA, Journal of Lightwave Technology 43, 4139-4148 (2025)"
+      doi: "10.1109/JLT.2025.3533200"
+      url: "https://doi.org/10.1109/JLT.2025.3533200"
+      reported_input_referred_noise_density_pa_per_sqrt_hz: 18.8
+      reported_bandwidth_ghz: 64.0
+      reported_peak_transimpedance_db_ohm: 77.0
+      adoption_note: "The 18.8 pA/sqrt(Hz) value anchors the TIA noise density. HIPSA's 200 ohm value is a low-gain aggregate-current operating point selected to keep the official G=4 operating point within the 0.8 V analog/ADC range; it is not claimed as the cited receiver's gain."
+    mrr_weight_bank:
+      source: "Zhu et al., Lightening-Transformer, HPCA 2024, Table III"
+      url: "https://scopex-asu.github.io/files/publications/ONN_HPCA2024_Gu.pdf"
+      ring_area_um2: 93.3156
+      tuning_power_mw: 0.21
+      locking_power_mw_per_0_5_fsr: 1.2
+      insertion_loss_db: 0.95
+      adoption_note: "Strongly related architecture-level MRR anchor. HIPSA topology remains its own four 64x64 signed-differential tiles."
+  link_budget:
+    enabled: true
+    laser_electrical_power_mw: 1473.0
+    laser_wall_plug_efficiency: 0.20
+    optical_lanes_total: 256
+    loss_terms_db:
+      splitter_fanout: 2.0
+      modulator_insertion: 1.2
+      waveguide_routing: 1.5
+      mrr_weight_bank: 1.4
+      photodiode_coupling: 0.5
+    target_power_per_pd_mw: 0.25
+    target_tolerance_db: 0.5
+    note: "Equal per-lane WDM allocation; loss terms are explicit architecture assumptions and must be replaced by measured/circuit link-budget values before publication."
+  corner_cases:
+    - name: nominal
+      multipliers: {}
+    - name: optical_high
+      multipliers:
+        optical_power: 1.10
+    - name: responsivity_high
+      multipliers:
+        responsivity: 1.10
+    - name: tia_gain_high
+      multipliers:
+        tia_transimpedance: 1.10
+    - name: noise_high
+      multipliers:
+        tia_noise_density: 1.50
+        noise_bandwidth: 1.20
+        dark_current: 2.0
+    - name: settling_slow
+      multipliers:
+        settling_time: 1.25
+    - name: combined_worst_case
+      multipliers:
+        optical_power: 1.10
+        responsivity: 1.10
+        tia_transimpedance: 1.10
+        tia_noise_density: 1.50
+        noise_bandwidth: 1.20
+        dark_current: 2.0
+        settling_time: 1.25
+
+power_model_policy:
+  static_components:
+    - "cw_laser"
+    - "leakage_misc_io"
+  activity_scaled_components:
+    modulator_driver: "input_spike_activity"
+    pd_tia_comparator: "hapr_lane_count_and_frontend_policy"
+    adc_pool: "adc_request_activity"
+    sram: "membrane_update_activity"
+    noc: "traffic_activity"
+    digital_lif: "lif_update_activity"
+  output_fields:
+    - "component_power_mw"
+    - "total_power_w"
+    - "energy_uJ_per_image"
+    - "throughput_images_per_s"
+    - "efficiency_GOPS_per_W"
+

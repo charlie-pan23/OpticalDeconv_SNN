@@ -1,0 +1,259 @@
+{
+  "eval_name": "eval_105",
+  "purpose": "paired_publication_replay",
+  "created_utc": "2026-09-08T16:32:53.566856+00:00",
+  "dataset": "dvsgesture",
+  "split": "test",
+  "seed": 2,
+  "seed_type": "paired_replay_perturbation_seed",
+  "seed_output_mode": "seed_indexed",
+  "num_samples": 288,
+  "clean_accuracy_percent": 88.54166666666667,
+  "quantized_clean_accuracy_percent": 83.33333333333333,
+  "combined_condition_accuracy_percent": 81.94444444444444,
+  "hardware_aware_accuracy_percent": 81.94444444444444,
+  "hardware_aware_accuracy_status": "software_proxy_replay_not_silicon_measurement",
+  "precision_contract": {
+    "weight_bits": 6,
+    "adc_bits": 6,
+    "membrane_bits": 16
+  },
+  "g4_a8_contract": {
+    "name": "HIPSA_G4_A8",
+    "num_tiles": 4,
+    "array_rows": 64,
+    "array_cols": 64,
+    "hapr_group_size": 4,
+    "post_hapr_lanes": 64,
+    "derived_post_hapr_lanes": 64,
+    "adc_macros": 8,
+    "samples_per_macro_per_cycle": 10.0,
+    "nominal_sample_slots_per_cycle": 80.0,
+    "system_clock_hz": 1000000000.0,
+    "temporal_analog_storage": false,
+    "checks": {
+      "four_tiles": true,
+      "logical_array_64x64": true,
+      "g4": true,
+      "reported_lanes_match_derived": true,
+      "a8": true,
+      "ten_samples_per_macro_per_cycle": true,
+      "one_ghz_architecture_clock": true,
+      "same_window_capacity": true,
+      "no_temporal_analog_storage": true
+    },
+    "valid": true,
+    "failed_checks": [],
+    "claim_boundary": "architecture_level_capacity_analysis_not_circuit_timing_closure"
+  },
+  "replay_scope": {
+    "target_policy": "model_photonic_mvm_layer_names_with_safe_fallback",
+    "photonic_mvm_layer_names": [
+      "conv1",
+      "conv2",
+      "conv3",
+      "conv4",
+      "conv5",
+      "fc1"
+    ],
+    "include_final_classifier": false,
+    "electronic_linear_layers": [
+      "fc2"
+    ],
+    "final_classifier_present": true,
+    "final_classifier_excluded": true,
+    "status": "verified_photonic_only"
+  },
+  "conditions": [
+    {
+      "dataset": "dvsgesture",
+      "condition": "clean",
+      "seed": 2,
+      "split": "test",
+      "num_samples": 288,
+      "accuracy_percent": 88.54166666666667,
+      "loss": 0.411061618063185,
+      "paired_accuracy_delta_percent_vs_clean": 0.0,
+      "paired_net_correct_change_vs_clean": 0,
+      "weight_bits": null,
+      "adc_bits": null,
+      "membrane_bits": null,
+      "evidence_class": "software_checkpoint_evaluation"
+    },
+    {
+      "dataset": "dvsgesture",
+      "condition": "quantized_clean",
+      "seed": 2,
+      "split": "test",
+      "num_samples": 288,
+      "accuracy_percent": 83.33333333333333,
+      "loss": 0.5038291679488288,
+      "paired_accuracy_delta_percent_vs_clean": -5.208333333333343,
+      "paired_net_correct_change_vs_clean": -15,
+      "weight_bits": 6,
+      "adc_bits": 6,
+      "membrane_bits": 16,
+      "evidence_class": "hardware_aware_software_proxy_replay"
+    },
+    {
+      "dataset": "dvsgesture",
+      "condition": "combined",
+      "seed": 2,
+      "split": "test",
+      "num_samples": 288,
+      "accuracy_percent": 81.94444444444444,
+      "loss": 0.5354714923434787,
+      "paired_accuracy_delta_percent_vs_clean": -6.5972222222222285,
+      "paired_net_correct_change_vs_clean": -19,
+      "weight_bits": 6,
+      "adc_bits": 6,
+      "membrane_bits": 16,
+      "evidence_class": "hardware_aware_software_proxy_replay"
+    }
+  ],
+  "adc_calibration": {
+    "method": "frozen_per_layer_absmax",
+    "calibration_split": "val",
+    "reporting_split": "test",
+    "calibration_batches_requested": null,
+    "calibration_batches_used": 1,
+    "calibration_samples_expected": 120,
+    "calibration_samples_used": 120,
+    "full_calibration_split_used": true,
+    "status": "verified_full_calibration_split",
+    "batch_size_actual": 128,
+    "weight_bits_during_calibration": 6,
+    "adc_bits": 6,
+    "full_scales": {
+      "conv1": 1.9927523136138916,
+      "conv2": 3.4669189453125,
+      "conv3": 5.234821319580078,
+      "conv4": 7.1833295822143555,
+      "conv5": 3.7887439727783203,
+      "fc1": 9.153241157531738
+    },
+    "photonic_mvm_layer_names": [
+      "conv1",
+      "conv2",
+      "conv3",
+      "conv4",
+      "conv5",
+      "fc1"
+    ],
+    "include_final_classifier": false,
+    "replay_scope": {
+      "target_policy": "model_photonic_mvm_layer_names_with_safe_fallback",
+      "photonic_mvm_layer_names": [
+        "conv1",
+        "conv2",
+        "conv3",
+        "conv4",
+        "conv5",
+        "fc1"
+      ],
+      "include_final_classifier": false,
+      "electronic_linear_layers": [
+        "fc2"
+      ],
+      "final_classifier_present": true,
+      "final_classifier_excluded": true,
+      "status": "verified_photonic_only"
+    },
+    "split_file": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\datasets\\DVSGesture\\splits\\dvsgesture_T10_seed42_split.pth",
+    "split_file_sha256": "dce783e269efad48e050ba2da8de9f6ad4e227e51b7d5cad209c057ee492e524",
+    "test_data_used_for_calibration": false,
+    "claim_boundary": "software activation-range calibration; fixed for all reporting batches and perturbation conditions"
+  },
+  "split_manifest": {
+    "dataset": "dvsgesture",
+    "split": "test",
+    "split_file": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\datasets\\DVSGesture\\splits\\dvsgesture_T10_seed42_split.pth",
+    "split_file_sha256": "dce783e269efad48e050ba2da8de9f6ad4e227e51b7d5cad209c057ee492e524",
+    "split_order_hash": "7b485d49121468ef66f21bff0ab877130f1d8a34c341163996de4e3227d2bbb5",
+    "num_samples_expected": 288,
+    "num_samples_replayed": 288,
+    "full_split_replayed": true,
+    "max_batches": null,
+    "allow_no_split": false,
+    "status": "verified_full_split_replay"
+  },
+  "runtime_provenance": {
+    "python_version": "3.10.20",
+    "torch_version": "2.5.1",
+    "cuda_runtime_version": "12.1",
+    "cudnn_version": 90100,
+    "cuda_available": true,
+    "device_requested": "cuda",
+    "device_resolved": "cuda",
+    "gpu_name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "gpu_compute_capability": [
+      8,
+      9
+    ],
+    "batch_size_requested": 128,
+    "batch_size_actual": 128,
+    "num_workers": 0,
+    "seed": 2,
+    "seed_type": "paired_replay_perturbation_seed",
+    "seed_output_mode": "seed_indexed",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_enabled": true,
+    "cudnn_deterministic": true,
+    "cudnn_benchmark": false,
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": true,
+    "full_replay_requested": true,
+    "publication_replay_ready": true
+  },
+  "hashes": {
+    "config_sha256": "89dd389c2a856b2da1813d120151a24e457b1e26fdba297f714eb016e60f294e",
+    "checkpoint_sha256": "b2e6600d341fb5851f0fd047c2621dd4437b604dd83dd015fd6241bbb29369da",
+    "hardware_config_sha256": "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066",
+    "device_params_sha256": "fcd2cd58acff908d2773df8b6f51c2ecb6fcd84397a9bbc3ab3cfccc0624b8c5"
+  },
+  "checkpoint_summary": {
+    "path": "results/dvsgesture/best_dvsgesture_acc88p54.pth",
+    "type": "dict",
+    "keys": [
+      "config",
+      "epoch",
+      "metrics",
+      "optimizer",
+      "scheduler",
+      "state_dict"
+    ],
+    "epoch": 46,
+    "metrics": {
+      "train": {
+        "loss": 0.18827191786840558,
+        "acc": 97.94921875,
+        "total": 1024.0
+      },
+      "val": {
+        "loss": 0.3133459687232971,
+        "acc": 91.66666666666667,
+        "total": 120.0
+      }
+    },
+    "num_tensors": 32,
+    "num_parameters": 605893,
+    "first_keys": [
+      "conv1.weight",
+      "bn1.weight",
+      "bn1.bias",
+      "bn1.running_mean",
+      "bn1.running_var",
+      "bn1.num_batches_tracked",
+      "conv2.weight",
+      "bn2.weight",
+      "bn2.bias",
+      "bn2.running_mean"
+    ]
+  },
+  "claim_boundary": {
+    "accuracy": "checkpoint-and-split software replay",
+    "combined": "declared perturbation proxy with validation-calibrated fixed ADC ranges; not silicon measurement",
+    "adc_calibration": "non-test split, frozen per-layer absmax; no reporting-batch oracle scaling",
+    "architecture_performance": "not computed by eval_105; join with eval_101 by matching config hashes"
+  }
+}

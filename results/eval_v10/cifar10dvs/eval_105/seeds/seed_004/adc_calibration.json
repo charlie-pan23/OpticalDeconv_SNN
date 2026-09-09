@@ -1,0 +1,56 @@
+{
+  "method": "frozen_per_layer_absmax",
+  "calibration_split": "val",
+  "reporting_split": "test",
+  "calibration_batches_requested": null,
+  "calibration_batches_used": 4,
+  "calibration_samples_expected": 1000,
+  "calibration_samples_used": 1000,
+  "full_calibration_split_used": true,
+  "status": "verified_full_calibration_split",
+  "batch_size_actual": 256,
+  "weight_bits_during_calibration": 6,
+  "adc_bits": 6,
+  "full_scales": {
+    "conv1": 2.1519265174865723,
+    "conv2": 5.867160797119141,
+    "conv3": 11.07345962524414,
+    "conv4": 12.588005065917969,
+    "conv5": 12.011619567871094,
+    "conv6": 7.449089050292969,
+    "fc1": 10.437068939208984
+  },
+  "photonic_mvm_layer_names": [
+    "conv1",
+    "conv2",
+    "conv3",
+    "conv4",
+    "conv5",
+    "conv6",
+    "fc1"
+  ],
+  "include_final_classifier": false,
+  "replay_scope": {
+    "target_policy": "model_photonic_mvm_layer_names_with_safe_fallback",
+    "photonic_mvm_layer_names": [
+      "conv1",
+      "conv2",
+      "conv3",
+      "conv4",
+      "conv5",
+      "conv6",
+      "fc1"
+    ],
+    "include_final_classifier": false,
+    "electronic_linear_layers": [
+      "fc2"
+    ],
+    "final_classifier_present": true,
+    "final_classifier_excluded": true,
+    "status": "verified_photonic_only"
+  },
+  "split_file": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\datasets\\CIFAR10DVS\\splits\\cifar10dvs_T10_seed42_split.pth",
+  "split_file_sha256": "624a76f8fc268d4cb80812fc0ea5bd9f3f41495356e484a35605d57f7f0ff09d",
+  "test_data_used_for_calibration": false,
+  "claim_boundary": "software activation-range calibration; fixed for all reporting batches and perturbation conditions"
+}

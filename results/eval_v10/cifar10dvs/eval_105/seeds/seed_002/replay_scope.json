@@ -1,0 +1,19 @@
+{
+  "target_policy": "model_photonic_mvm_layer_names_with_safe_fallback",
+  "photonic_mvm_layer_names": [
+    "conv1",
+    "conv2",
+    "conv3",
+    "conv4",
+    "conv5",
+    "conv6",
+    "fc1"
+  ],
+  "include_final_classifier": false,
+  "electronic_linear_layers": [
+    "fc2"
+  ],
+  "final_classifier_present": true,
+  "final_classifier_excluded": true,
+  "status": "verified_photonic_only"
+}

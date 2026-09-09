@@ -1,0 +1,33 @@
+workload,operator,multiplicity,matrix_k,matrix_n,execution,logical_weight_tiles,four_tile_load_rounds,row_tiles_per_instance,col_tiles_per_instance,physical_load_rounds,logical_parameters,dynamic_operand
+SEW-ResNet-18-DVS128,stem_conv,1,98,64,optical_mrr,2,1,,,,,
+SEW-ResNet-18-DVS128,stage1_conv3x3,1,576,64,optical_mrr,9,3,,,,,
+SEW-ResNet-18-DVS128,stage1_conv3x3,3,576,64,optical_mrr,27,7,,,,,
+SEW-ResNet-18-DVS128,stage1_sew_residual,2,64,64,electronic_spike_elementwise,0,0,,,,,
+SEW-ResNet-18-DVS128,stage2_conv3x3,1,576,128,optical_mrr,18,5,,,,,
+SEW-ResNet-18-DVS128,stage2_conv3x3,3,1152,128,optical_mrr,108,27,,,,,
+SEW-ResNet-18-DVS128,stage2_projection_shortcut,1,64,128,optical_mrr,2,1,,,,,
+SEW-ResNet-18-DVS128,stage2_sew_residual,2,128,128,electronic_spike_elementwise,0,0,,,,,
+SEW-ResNet-18-DVS128,stage3_conv3x3,1,1152,256,optical_mrr,72,18,,,,,
+SEW-ResNet-18-DVS128,stage3_conv3x3,3,2304,256,optical_mrr,432,108,,,,,
+SEW-ResNet-18-DVS128,stage3_projection_shortcut,1,128,256,optical_mrr,8,2,,,,,
+SEW-ResNet-18-DVS128,stage3_sew_residual,2,256,256,electronic_spike_elementwise,0,0,,,,,
+SEW-ResNet-18-DVS128,stage4_conv3x3,1,2304,512,optical_mrr,288,72,,,,,
+SEW-ResNet-18-DVS128,stage4_conv3x3,3,4608,512,optical_mrr,1728,432,,,,,
+SEW-ResNet-18-DVS128,stage4_projection_shortcut,1,256,512,optical_mrr,32,8,,,,,
+SEW-ResNet-18-DVS128,stage4_sew_residual,2,512,512,electronic_spike_elementwise,0,0,,,,,
+SEW-ResNet-18-DVS128,classifier,1,512,11,optical_mrr,8,2,,,,,
+Spike-driven-Transformer-SDSA-2-256,patch_embedding,1,512,256,optical_mrr,32,8,,,,,
+Spike-driven-Transformer-SDSA-2-256,qkv_projections,6,256,256,optical_mrr,96,24,,,,,
+Spike-driven-Transformer-SDSA-2-256,sdsa_mask_add,2,256,256,electronic_spike_mask_add,0,0,,,,,
+Spike-driven-Transformer-SDSA-2-256,output_projection,2,256,256,optical_mrr,32,8,,,,,
+Spike-driven-Transformer-SDSA-2-256,mlp_expand,2,256,1024,optical_mrr,128,32,,,,,
+Spike-driven-Transformer-SDSA-2-256,mlp_contract,2,1024,256,optical_mrr,128,32,,,,,
+Spike-driven-Transformer-SDSA-2-256,classifier,1,256,11,optical_mrr,4,1,,,,,
+Spikformer-2-256 mapping proxy,patch_embedding,1,512,256,optical_mrr,32,,8,4,8,131072,0
+Spikformer-2-256 mapping proxy,qkv_projections,6,256,256,optical_mrr,96,,4,4,24,393216,0
+Spikformer-2-256 mapping proxy,attention_qk,2,256,256,electronic_exact_fallback,0,,4,4,0,0,1
+Spikformer-2-256 mapping proxy,attention_av,2,256,256,electronic_exact_fallback,0,,4,4,0,0,1
+Spikformer-2-256 mapping proxy,attention_output_projection,2,256,256,optical_mrr,32,,4,4,8,131072,0
+Spikformer-2-256 mapping proxy,mlp_expand,2,256,1024,optical_mrr,128,,4,16,32,524288,0
+Spikformer-2-256 mapping proxy,mlp_contract,2,1024,256,optical_mrr,128,,16,4,32,524288,0
+Spikformer-2-256 mapping proxy,classifier,1,256,10,optical_mrr,4,,4,1,1,2560,0

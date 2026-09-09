@@ -1,0 +1,7 @@
+dataset,condition,seed_count,accuracy_mean_percent,accuracy_std_percent,accuracy_min_percent,accuracy_max_percent,accuracy_ci95_half_width_percent,paired_delta_mean_percent_vs_clean,paired_delta_std_percent_vs_clean,paired_delta_ci95_half_width_percent,statistics_status,evidence_class
+cifar10dvs,clean,5,76.2,0.0,76.2,76.2,0.0,0.0,0.0,0.0,complete,paired_replay_perturbation_statistics
+cifar10dvs,combined,5,72.66,0.8848728722251579,71.5,73.8,1.098538648204969,-3.5400000000000036,0.8848728722251579,1.098538648204969,complete,paired_replay_perturbation_statistics
+cifar10dvs,quantized_clean,5,70.7,0.0,70.7,70.7,0.0,-5.5,0.0,0.0,complete,paired_replay_perturbation_statistics
+dvsgesture,clean,5,88.54166666666667,0.0,88.54166666666667,88.54166666666667,0.0,0.0,0.0,0.0,complete,paired_replay_perturbation_statistics
+dvsgesture,combined,5,80.76388888888889,0.8362218457494642,79.86111111111111,81.94444444444444,1.038140104486484,-7.777777777777783,0.8362218457494642,1.038140104486484,complete,paired_replay_perturbation_statistics
+dvsgesture,quantized_clean,5,83.33333333333333,0.0,83.33333333333333,83.33333333333333,0.0,-5.208333333333343,0.0,0.0,complete,paired_replay_perturbation_statistics

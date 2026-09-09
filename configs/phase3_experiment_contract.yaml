@@ -1,0 +1,52 @@
+phase: 3
+name: HIPSA_DATE_PHASE3_SYSTEM_EVIDENCE
+evidence_scope: architecture_level_system_accounting
+claim_boundary: >-
+  Phase 3 aggregates architecture-level accounting, software replay, paired
+  replay perturbation statistics, and parameterized sensitivity; it is not
+  silicon measurement, transistor-level timing closure, or P&R validation.
+datasets:
+  - cifar10dvs
+  - dvsgesture
+hardware:
+  photonic_tiles: 4
+  array_shape: [64, 64]
+  hapr_group: 4
+  post_hapr_lanes: 64
+  adc_macros: 8
+  adc_samples_per_macro_per_cycle: 10
+  architecture_clock_hz: 1000000000
+  temporal_analog_storage: false
+precision:
+  weight_bits: 6
+  adc_bits: 6
+  membrane_bits: 16
+sensitivity:
+  lock_fractions: [0.0, 0.01, 0.05, 0.10]
+  tile_load_cycles: [256, 1000, 10000, 100000]
+matched_scope:
+  same_four_photonic_tiles: true
+  same_array_shape: 64x64_per_tile
+  same_precision: W6/ADC6/Vm16
+  same_timestep_count: true
+  same_input_activity_trace: true
+  same_static_power_terms: true
+  same_non_mvm_accounting: true
+  same_configuration_protocol: "layer_weight_tile_boundary; amortized across timesteps"
+  external_software_speedup_comparison: false
+orthogonal_ablation:
+  required_variants:
+    - adc_pooling_without_hapr
+    - hapr_with_64_adcs
+    - lazy_lif_without_hapr
+    - hapr_a8_without_lazy_lif
+    - full_hipsa
+accuracy:
+  minimum_replay_seeds: 5
+  preferred_replay_seeds: 10
+  seed_type: paired_replay_perturbation_seed
+  independent_training_seed_claim_allowed: false
+outputs:
+  root: results/eval_v10
+  summary: combined/eval_108
+

@@ -1,0 +1,228 @@
+{
+  "eval_name": "eval_108",
+  "purpose": "phase3_system_evidence_summary",
+  "created_utc": "2026-09-08T17:02:42.771457+00:00",
+  "datasets": [
+    "cifar10dvs",
+    "dvsgesture"
+  ],
+  "contract": {
+    "phase": 3,
+    "name": "HIPSA_DATE_PHASE3_SYSTEM_EVIDENCE",
+    "evidence_scope": "architecture_level_system_accounting",
+    "claim_boundary": "Phase 3 aggregates architecture-level accounting, software replay, paired replay perturbation statistics, and parameterized sensitivity; it is not silicon measurement, transistor-level timing closure, or P&R validation.",
+    "datasets": [
+      "cifar10dvs",
+      "dvsgesture"
+    ],
+    "hardware": {
+      "photonic_tiles": 4,
+      "array_shape": [
+        64,
+        64
+      ],
+      "hapr_group": 4,
+      "post_hapr_lanes": 64,
+      "adc_macros": 8,
+      "adc_samples_per_macro_per_cycle": 10,
+      "architecture_clock_hz": 1000000000,
+      "temporal_analog_storage": false
+    },
+    "precision": {
+      "weight_bits": 6,
+      "adc_bits": 6,
+      "membrane_bits": 16
+    },
+    "sensitivity": {
+      "lock_fractions": [
+        0.0,
+        0.01,
+        0.05,
+        0.1
+      ],
+      "tile_load_cycles": [
+        256,
+        1000,
+        10000,
+        100000
+      ]
+    },
+    "matched_scope": {
+      "same_four_photonic_tiles": true,
+      "same_array_shape": "64x64_per_tile",
+      "same_precision": "W6/ADC6/Vm16",
+      "same_timestep_count": true,
+      "same_input_activity_trace": true,
+      "same_static_power_terms": true,
+      "same_non_mvm_accounting": true,
+      "same_configuration_protocol": "layer_weight_tile_boundary; amortized across timesteps",
+      "external_software_speedup_comparison": false
+    },
+    "orthogonal_ablation": {
+      "required_variants": [
+        "adc_pooling_without_hapr",
+        "hapr_with_64_adcs",
+        "lazy_lif_without_hapr",
+        "hapr_a8_without_lazy_lif",
+        "full_hipsa"
+      ]
+    },
+    "accuracy": {
+      "minimum_replay_seeds": 5,
+      "preferred_replay_seeds": 10,
+      "seed_type": "paired_replay_perturbation_seed",
+      "independent_training_seed_claim_allowed": false
+    },
+    "outputs": {
+      "root": "results/eval_v10",
+      "summary": "combined/eval_108"
+    }
+  },
+  "contract_validation": {
+    "valid": true,
+    "checks": {
+      "phase_is_3": true,
+      "architecture_evidence_scope": true,
+      "four_photonic_tiles": true,
+      "array_is_64x64": true,
+      "g4": true,
+      "post_hapr_lanes_64": true,
+      "a8": true,
+      "ten_samples_per_macro": true,
+      "one_ghz_clock": true,
+      "no_temporal_analog_storage": true,
+      "w6_adc6_vm16": true,
+      "lock_sensitivity_complete": true,
+      "configuration_sensitivity_complete": true,
+      "minimum_replay_seeds_at_least_5": true,
+      "training_seed_claim_disabled": true
+    },
+    "reasons": [],
+    "evidence_scope": "architecture_level_system_accounting"
+  },
+  "eval101_audits": {
+    "cifar10dvs": {
+      "path": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\cifar10dvs\\eval_101",
+      "passed": true,
+      "reasons": [],
+      "tile_load_rows": 4,
+      "lock_rows": 4,
+      "observed_tile_load_cycles": [
+        "1000",
+        "10000",
+        "100000",
+        "256"
+      ],
+      "observed_lock_fractions": [
+        "0",
+        "0.01",
+        "0.05",
+        "0.1"
+      ]
+    },
+    "dvsgesture": {
+      "path": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\dvsgesture\\eval_101",
+      "passed": true,
+      "reasons": [],
+      "tile_load_rows": 4,
+      "lock_rows": 4,
+      "observed_tile_load_cycles": [
+        "1000",
+        "10000",
+        "100000",
+        "256"
+      ],
+      "observed_lock_fractions": [
+        "0",
+        "0.01",
+        "0.05",
+        "0.1"
+      ]
+    }
+  },
+  "eval104_audits": {
+    "cifar10dvs": {
+      "path": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\cifar10dvs\\eval_104",
+      "passed": true,
+      "reasons": [],
+      "variant_count": 5,
+      "variants": [
+        "adc_pooling_without_hapr",
+        "full_hipsa",
+        "hapr_a8_without_lazy_lif",
+        "hapr_with_64_adcs",
+        "lazy_lif_without_hapr"
+      ],
+      "contract_checks": {
+        "same_four_photonic_tiles": true,
+        "same_array_shape": true,
+        "same_precision": true,
+        "same_input_activity_trace": true,
+        "same_static_power_terms": true,
+        "same_non_mvm_accounting": true,
+        "same_configuration_protocol": true
+      }
+    },
+    "dvsgesture": {
+      "path": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\dvsgesture\\eval_104",
+      "passed": true,
+      "reasons": [],
+      "variant_count": 5,
+      "variants": [
+        "adc_pooling_without_hapr",
+        "full_hipsa",
+        "hapr_a8_without_lazy_lif",
+        "hapr_with_64_adcs",
+        "lazy_lif_without_hapr"
+      ],
+      "contract_checks": {
+        "same_four_photonic_tiles": true,
+        "same_array_shape": true,
+        "same_precision": true,
+        "same_input_activity_trace": true,
+        "same_static_power_terms": true,
+        "same_non_mvm_accounting": true,
+        "same_configuration_protocol": true
+      }
+    }
+  },
+  "accuracy_aggregation": {
+    "cifar10dvs": {
+      "seed_count": 5,
+      "minimum_seeds": 5,
+      "sufficient_seed_count": true,
+      "seed_type": [
+        "paired_replay_perturbation_seed"
+      ],
+      "seed_scope": "paired_replay_perturbation_seed_not_independent_training_seed",
+      "claim_boundary": "mean/std/CI summarize frozen-checkpoint replay perturbations; they are not independent-training statistics",
+      "summary_paths": [
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\cifar10dvs\\eval_105\\summary.json",
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\cifar10dvs\\eval_105\\seeds\\seed_001\\summary.json",
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\cifar10dvs\\eval_105\\seeds\\seed_002\\summary.json",
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\cifar10dvs\\eval_105\\seeds\\seed_003\\summary.json",
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\cifar10dvs\\eval_105\\seeds\\seed_004\\summary.json"
+      ],
+      "seed_indexed_artifacts": 4
+    },
+    "dvsgesture": {
+      "seed_count": 5,
+      "minimum_seeds": 5,
+      "sufficient_seed_count": true,
+      "seed_type": [
+        "paired_replay_perturbation_seed"
+      ],
+      "seed_scope": "paired_replay_perturbation_seed_not_independent_training_seed",
+      "claim_boundary": "mean/std/CI summarize frozen-checkpoint replay perturbations; they are not independent-training statistics",
+      "summary_paths": [
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\dvsgesture\\eval_105\\summary.json",
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\dvsgesture\\eval_105\\seeds\\seed_001\\summary.json",
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\dvsgesture\\eval_105\\seeds\\seed_002\\summary.json",
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\dvsgesture\\eval_105\\seeds\\seed_003\\summary.json",
+        "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\dvsgesture\\eval_105\\seeds\\seed_004\\summary.json"
+      ],
+      "seed_indexed_artifacts": 4
+    }
+  },
+  "claim_boundary": "architecture-level system accounting plus frozen-checkpoint paired replay perturbation statistics; not silicon measurement, P&R validation, or independent-training statistics"
+}

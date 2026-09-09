@@ -1,0 +1,17 @@
+{
+  "eval_name": "eval_106",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_106.py --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --hardware D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml --spec D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\advanced_snn_workloads.yaml --transformer-spec D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\spiking_transformer_mapping.yaml",
+  "inputs": {
+    "spec": "configs/advanced_snn_workloads.yaml",
+    "transformer_spec": "configs/spiking_transformer_mapping.yaml",
+    "hardware": "configs/hardware_hipsa_paper.yaml"
+  },
+  "outputs": {
+    "metrics": "metrics.json",
+    "validation": "validation.json",
+    "config_snapshot": "config_snapshot.yaml",
+    "workload_summary": "workload_summary.csv",
+    "operator_mapping": "operator_mapping.csv"
+  },
+  "extra": {}
+}

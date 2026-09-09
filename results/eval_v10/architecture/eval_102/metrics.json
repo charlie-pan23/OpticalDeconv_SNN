@@ -1,0 +1,505 @@
+{
+  "eval_name": "eval_102",
+  "created_utc": "2026-09-08T14:48:30.301204+00:00",
+  "selected_point": {
+    "name": "G4_A8",
+    "contract": {
+      "name": "HIPSA_G4_A8",
+      "num_tiles": 4,
+      "array_rows": 64,
+      "array_cols": 64,
+      "hapr_group_size": 4,
+      "post_hapr_lanes": 64,
+      "derived_post_hapr_lanes": 64,
+      "adc_macros": 8,
+      "samples_per_macro_per_cycle": 10.0,
+      "nominal_sample_slots_per_cycle": 80.0,
+      "system_clock_hz": 1000000000.0,
+      "temporal_analog_storage": false,
+      "checks": {
+        "four_tiles": true,
+        "logical_array_64x64": true,
+        "g4": true,
+        "reported_lanes_match_derived": true,
+        "a8": true,
+        "ten_samples_per_macro_per_cycle": true,
+        "one_ghz_architecture_clock": true,
+        "same_window_capacity": true,
+        "no_temporal_analog_storage": true
+      },
+      "valid": true,
+      "failed_checks": [],
+      "claim_boundary": "architecture_level_capacity_analysis_not_circuit_timing_closure"
+    },
+    "capacity": 80,
+    "capacity_margin_slots": 16,
+    "hapr_selected_status": {
+      "group_size": 4,
+      "input_dim": 256,
+      "output_dim": 64,
+      "row_tiles": 4,
+      "output_tiles": 1,
+      "output_active_lanes": 64,
+      "output_allocated_lanes": 64,
+      "output_tail_lanes": 0,
+      "row_tile_tail": false,
+      "row_tile_tail_fanin": 0,
+      "groups_per_row_batch": 1,
+      "physical_fanin_limit": 4,
+      "status": "formal_selected_point",
+      "legal": true,
+      "same_neuron_grouping": true,
+      "partition_contract_valid": true,
+      "runtime_trace_guard_valid": false,
+      "reasons": [],
+      "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure"
+    },
+    "evidence_class": "architecture_level_capacity_admission_and_legality",
+    "claim_boundary": "mux_settling_adc_aperture_tia_recovery_and_operating_mode_power_are_not_closed"
+  },
+  "contract": {
+    "name": "HIPSA_G4_A8",
+    "num_tiles": 4,
+    "array_rows": 64,
+    "array_cols": 64,
+    "hapr_group_size": 4,
+    "post_hapr_lanes": 64,
+    "derived_post_hapr_lanes": 64,
+    "adc_macros": 8,
+    "samples_per_macro_per_cycle": 10.0,
+    "nominal_sample_slots_per_cycle": 80.0,
+    "system_clock_hz": 1000000000.0,
+    "temporal_analog_storage": false,
+    "checks": {
+      "four_tiles": true,
+      "logical_array_64x64": true,
+      "g4": true,
+      "reported_lanes_match_derived": true,
+      "a8": true,
+      "ten_samples_per_macro_per_cycle": true,
+      "one_ghz_architecture_clock": true,
+      "same_window_capacity": true,
+      "no_temporal_analog_storage": true
+    },
+    "valid": true,
+    "failed_checks": [],
+    "claim_boundary": "architecture_level_capacity_analysis_not_circuit_timing_closure"
+  },
+  "hapr_legality": {
+    "config": {
+      "physical_tiles": 4,
+      "outputs_per_tile": 64,
+      "post_hapr_lanes": 64,
+      "adc_service_capacity": 80,
+      "temporal_analog_storage": false,
+      "supported_group_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ]
+    },
+    "nominal_matrix": [
+      {
+        "group_size": 1,
+        "input_dim": 256,
+        "output_dim": 64,
+        "row_tiles": 4,
+        "output_tiles": 1,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_tail_lanes": 0,
+        "row_tile_tail": false,
+        "row_tile_tail_fanin": 0,
+        "groups_per_row_batch": 4,
+        "physical_fanin_limit": 4,
+        "status": "supported_baseline",
+        "legal": true,
+        "same_neuron_grouping": true,
+        "partition_contract_valid": true,
+        "runtime_trace_guard_valid": false,
+        "reasons": [],
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure"
+      },
+      {
+        "group_size": 2,
+        "input_dim": 256,
+        "output_dim": 64,
+        "row_tiles": 4,
+        "output_tiles": 1,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_tail_lanes": 0,
+        "row_tile_tail": false,
+        "row_tile_tail_fanin": 0,
+        "groups_per_row_batch": 2,
+        "physical_fanin_limit": 4,
+        "status": "supported_candidate",
+        "legal": true,
+        "same_neuron_grouping": true,
+        "partition_contract_valid": true,
+        "runtime_trace_guard_valid": false,
+        "reasons": [],
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure"
+      },
+      {
+        "group_size": 4,
+        "input_dim": 256,
+        "output_dim": 64,
+        "row_tiles": 4,
+        "output_tiles": 1,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_tail_lanes": 0,
+        "row_tile_tail": false,
+        "row_tile_tail_fanin": 0,
+        "groups_per_row_batch": 1,
+        "physical_fanin_limit": 4,
+        "status": "formal_selected_point",
+        "legal": true,
+        "same_neuron_grouping": true,
+        "partition_contract_valid": true,
+        "runtime_trace_guard_valid": false,
+        "reasons": [],
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure"
+      },
+      {
+        "group_size": 8,
+        "input_dim": 256,
+        "output_dim": 64,
+        "row_tiles": 4,
+        "output_tiles": 1,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_tail_lanes": 0,
+        "row_tile_tail": true,
+        "row_tile_tail_fanin": 4,
+        "groups_per_row_batch": 1,
+        "physical_fanin_limit": 4,
+        "status": "rejected_by_explicit_constraint",
+        "legal": false,
+        "same_neuron_grouping": true,
+        "partition_contract_valid": true,
+        "runtime_trace_guard_valid": false,
+        "reasons": [
+          "group_size_8_exceeds_or_does_not_divide_4_physical_tiles",
+          "row_tile_tail_partial_fanin_4_of_8"
+        ],
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure"
+      },
+      {
+        "group_size": 16,
+        "input_dim": 256,
+        "output_dim": 64,
+        "row_tiles": 4,
+        "output_tiles": 1,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_tail_lanes": 0,
+        "row_tile_tail": true,
+        "row_tile_tail_fanin": 4,
+        "groups_per_row_batch": 1,
+        "physical_fanin_limit": 4,
+        "status": "rejected_by_explicit_constraint",
+        "legal": false,
+        "same_neuron_grouping": true,
+        "partition_contract_valid": true,
+        "runtime_trace_guard_valid": false,
+        "reasons": [
+          "group_size_16_exceeds_or_does_not_divide_4_physical_tiles",
+          "row_tile_tail_partial_fanin_4_of_16"
+        ],
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure"
+      }
+    ],
+    "edge_cases": [
+      {
+        "group_size": 4,
+        "input_dim": 256,
+        "output_dim": 65,
+        "row_tiles": 4,
+        "output_tiles": 2,
+        "output_active_lanes": 65,
+        "output_allocated_lanes": 128,
+        "output_tail_lanes": 63,
+        "row_tile_tail": false,
+        "row_tile_tail_fanin": 0,
+        "groups_per_row_batch": 1,
+        "physical_fanin_limit": 4,
+        "status": "formal_selected_point",
+        "legal": true,
+        "same_neuron_grouping": true,
+        "partition_contract_valid": true,
+        "runtime_trace_guard_valid": false,
+        "reasons": [
+          "output_dimension_tail_63_inactive_lanes"
+        ],
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure"
+      },
+      {
+        "group_size": 4,
+        "input_dim": 130,
+        "output_dim": 64,
+        "row_tiles": 3,
+        "output_tiles": 1,
+        "output_active_lanes": 64,
+        "output_allocated_lanes": 64,
+        "output_tail_lanes": 0,
+        "row_tile_tail": true,
+        "row_tile_tail_fanin": 3,
+        "groups_per_row_batch": 1,
+        "physical_fanin_limit": 4,
+        "status": "formal_selected_point",
+        "legal": true,
+        "same_neuron_grouping": true,
+        "partition_contract_valid": true,
+        "runtime_trace_guard_valid": false,
+        "reasons": [
+          "row_tile_tail_partial_fanin_3_of_4"
+        ],
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure"
+      },
+      {
+        "group_size": 4,
+        "input_dim": 65,
+        "output_dim": 127,
+        "row_tiles": 2,
+        "output_tiles": 2,
+        "output_active_lanes": 127,
+        "output_allocated_lanes": 128,
+        "output_tail_lanes": 1,
+        "row_tile_tail": true,
+        "row_tile_tail_fanin": 2,
+        "groups_per_row_batch": 1,
+        "physical_fanin_limit": 4,
+        "status": "formal_selected_point",
+        "legal": true,
+        "same_neuron_grouping": true,
+        "partition_contract_valid": true,
+        "runtime_trace_guard_valid": false,
+        "reasons": [
+          "output_dimension_tail_1_inactive_lanes",
+          "row_tile_tail_partial_fanin_2_of_4",
+          "active_output_lanes_127_require_multi_window_admission"
+        ],
+        "claim_boundary": "architecture_level_mapping_legality_and_admission_constraints; not_mux_tia_aperture_or_circuit_timing_closure"
+      }
+    ],
+    "matrix_checks": {
+      "g1_supported_baseline": true,
+      "g2_supported_candidate": true,
+      "g4_formal_selected_point": true,
+      "g8_rejected_by_four_tile_fanin": true,
+      "g16_rejected_by_four_tile_fanin": true,
+      "non_multiple_output_dimension_is_explicit_tail": true,
+      "row_tile_tail_is_explicit": true,
+      "small_row_tile_tail_is_explicit": true
+    },
+    "matrix_passed": true,
+    "claim_boundary": "architecture_level_HAPR_mapping_legality_and_edge_case_analysis; not_analog_settling_aperture_or_circuit_timing_closure"
+  },
+  "adc_evidence": {
+    "config": {
+      "adc_macros": 8,
+      "samples_per_macro_per_cycle": 10,
+      "post_hapr_lanes": 64,
+      "architecture_clock_ghz": 1.0,
+      "adc_power_mw_per_macro": 14.8,
+      "temporal_analog_storage": false,
+      "mux_ratio": "64:8"
+    },
+    "nominal_slots_per_window": 80,
+    "capacity_margin_slots": 16,
+    "items": [
+      {
+        "name": "post_hapr_lane_count",
+        "status": "modeled_architecture_capacity",
+        "modeled": true,
+        "affects_admission_capacity": true,
+        "affects_physical_timing": false,
+        "affects_power_applicability": false,
+        "declared_input": "64 post-HAPR lanes",
+        "model_treatment": "Used as the number of analog requests that must be admitted per service window.",
+        "required_evidence_to_close": "None for the logical count; provenance of HAPR mapping must remain explicit.",
+        "safe_claim": "architecture-level lane/admission accounting"
+      },
+      {
+        "name": "input_multiplexing_64_to_8",
+        "status": "capacity_assumption_only",
+        "modeled": false,
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": true,
+        "declared_input": "64:8",
+        "model_treatment": "The queue uses the resulting nominal ADC slot capacity; mux fan-in, switching, and settling are not simulated.",
+        "required_evidence_to_close": "Transient mux/TIA simulation or measured settling and recovery under the declared 1 ns window.",
+        "safe_claim": "capacity assumption; not mux timing closure"
+      },
+      {
+        "name": "mux_switching_settling",
+        "status": "not_modeled",
+        "modeled": false,
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": false,
+        "declared_input": "not supplied",
+        "model_treatment": "No settling penalty or usable-aperture reduction is applied.",
+        "required_evidence_to_close": "Circuit-level settling characterization with worst-case load and multiplexing schedule.",
+        "safe_claim": "not demonstrated"
+      },
+      {
+        "name": "adc_aperture",
+        "status": "not_modeled",
+        "modeled": false,
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": false,
+        "declared_input": "not supplied",
+        "model_treatment": "Conversion latency is modeled as a pipeline completion delay, not as an aperture/track-and-hold waveform.",
+        "required_evidence_to_close": "ADC sampling aperture and track/hold timing under the muxed input waveform.",
+        "safe_claim": "not demonstrated"
+      },
+      {
+        "name": "tia_output_recovery",
+        "status": "not_modeled",
+        "modeled": false,
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": false,
+        "declared_input": "not supplied",
+        "model_treatment": "No TIA recovery or inter-request interference penalty is included.",
+        "required_evidence_to_close": "TIA transient/recovery simulation or measurement at the declared request rate.",
+        "safe_claim": "not demonstrated"
+      },
+      {
+        "name": "hapr_analog_hold_behavior",
+        "status": "no_temporal_storage_selected_point",
+        "modeled": true,
+        "affects_admission_capacity": true,
+        "affects_physical_timing": true,
+        "affects_power_applicability": false,
+        "declared_input": "temporal_analog_storage=false",
+        "model_treatment": "Requests that cannot start conversion in the arrival window are rejected; a digital FIFO does not rescue the analog sample.",
+        "required_evidence_to_close": "Front-end hold/settling evidence if the claim is strengthened beyond architecture-level admission.",
+        "safe_claim": "no temporal analog storage in the selected-point model"
+      },
+      {
+        "name": "conversion_latency",
+        "status": "modeled_pipeline_semantics",
+        "modeled": true,
+        "affects_admission_capacity": true,
+        "affects_physical_timing": false,
+        "affects_power_applicability": false,
+        "declared_input": "per-request/default conversion latency cycles",
+        "model_treatment": "Latency delays completion while declared pipelined issue capacity remains unchanged.",
+        "required_evidence_to_close": "ADC pipeline implementation or a measured latency/throughput pair if making silicon claims.",
+        "safe_claim": "architecture-level pipelined conversion semantics"
+      },
+      {
+        "name": "adc_power_14_8_mw_per_macro",
+        "status": "conditional_parameter_anchor",
+        "modeled": true,
+        "affects_admission_capacity": false,
+        "affects_physical_timing": false,
+        "affects_power_applicability": true,
+        "declared_input": "14.8 mW per ADC macro",
+        "model_treatment": "Available as a declared power parameter; applicability to the exact muxed operating mode is not established by this model.",
+        "required_evidence_to_close": "Operating-mode-matched ADC power data including muxing, aperture, and throughput conditions.",
+        "safe_claim": "parameterized power anchor, not demonstrated operating-mode measurement"
+      }
+    ],
+    "model_scope": "architecture_level_capacity_admission_and_transaction_semantics",
+    "timing_closure": false,
+    "physically_closed": false,
+    "silicon_validated": false,
+    "safe_claim": "architecture-level capacity/admission analysis",
+    "forbidden_claims": [
+      "timing closure",
+      "physically closed",
+      "silicon validated"
+    ],
+    "sensitivity_axes": {
+      "adc_macros": [
+        6,
+        8
+      ],
+      "samples_per_macro_per_cycle": [
+        8,
+        10,
+        12
+      ],
+      "post_hapr_lanes": [
+        64
+      ],
+      "adc_power_mw_per_macro": [
+        14.8
+      ]
+    },
+    "claim_boundary": "mux_settling_adc_aperture_tia_recovery_and_operating_mode_power_are_not_closed"
+  },
+  "capacity_sensitivity": [
+    {
+      "adc_macros": 6,
+      "samples_per_macro_per_cycle": 8,
+      "post_hapr_lanes": 64,
+      "nominal_slots_per_window": 48,
+      "capacity_margin_slots": -16,
+      "same_window_admission_feasible": false,
+      "evidence_class": "architecture_level_capacity_only"
+    },
+    {
+      "adc_macros": 6,
+      "samples_per_macro_per_cycle": 10,
+      "post_hapr_lanes": 64,
+      "nominal_slots_per_window": 60,
+      "capacity_margin_slots": -4,
+      "same_window_admission_feasible": false,
+      "evidence_class": "architecture_level_capacity_only"
+    },
+    {
+      "adc_macros": 6,
+      "samples_per_macro_per_cycle": 12,
+      "post_hapr_lanes": 64,
+      "nominal_slots_per_window": 72,
+      "capacity_margin_slots": 8,
+      "same_window_admission_feasible": true,
+      "evidence_class": "architecture_level_capacity_only"
+    },
+    {
+      "adc_macros": 8,
+      "samples_per_macro_per_cycle": 8,
+      "post_hapr_lanes": 64,
+      "nominal_slots_per_window": 64,
+      "capacity_margin_slots": 0,
+      "same_window_admission_feasible": true,
+      "evidence_class": "architecture_level_capacity_only"
+    },
+    {
+      "adc_macros": 8,
+      "samples_per_macro_per_cycle": 10,
+      "post_hapr_lanes": 64,
+      "nominal_slots_per_window": 80,
+      "capacity_margin_slots": 16,
+      "same_window_admission_feasible": true,
+      "evidence_class": "architecture_level_capacity_only"
+    },
+    {
+      "adc_macros": 8,
+      "samples_per_macro_per_cycle": 12,
+      "post_hapr_lanes": 64,
+      "nominal_slots_per_window": 96,
+      "capacity_margin_slots": 32,
+      "same_window_admission_feasible": true,
+      "evidence_class": "architecture_level_capacity_only"
+    }
+  ],
+  "validation": {
+    "g4_a8_contract_valid": true,
+    "hapr_matrix_passed": true,
+    "timing_closure": false,
+    "physically_closed": false,
+    "silicon_validated": false,
+    "claim_boundary": "architecture-level capacity/admission analysis; mux settling, ADC aperture and TIA recovery are not circuit-closed"
+  }
+}

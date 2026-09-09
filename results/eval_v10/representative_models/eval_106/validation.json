@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "evidence_level": "mapping_only",
+  "unsupported_claims": [
+    "accuracy",
+    "latency",
+    "energy",
+    "throughput"
+  ],
+  "claim_boundary": "representative workload mapping; not end-to-end model replay or measured hardware result"
+}

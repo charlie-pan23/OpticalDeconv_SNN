@@ -1,0 +1,69 @@
+{
+  "eval_name": "eval_105",
+  "command": "eval/eval_105.py --dataset dvsgesture --config configs/config_dvsgesture.yaml --checkpoint results/dvsgesture/best_dvsgesture_acc88p54.pth --hardware configs/hardware_hipsa_paper.yaml --device-params configs/device_params.yaml --output-root results/eval_v10 --split test --calibration-split val --conditions clean quantized_clean combined --batch-size 128 --num-workers 0 --device cuda --seed-indexed-output --seed 4",
+  "inputs": {
+    "config": "configs/config_dvsgesture.yaml",
+    "checkpoint": "results/dvsgesture/best_dvsgesture_acc88p54.pth",
+    "hardware": "configs/hardware_hipsa_paper.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "outputs": {
+    "summary": "summary.json",
+    "metrics": "metrics.json",
+    "validation": "validation.json",
+    "accuracy_summary": "accuracy_summary.csv",
+    "predictions": "predictions.csv",
+    "split_manifest": "split_manifest.json",
+    "runtime_provenance": "runtime_provenance.json",
+    "replay_scope": "replay_scope.json",
+    "adc_calibration": "adc_calibration.json",
+    "config_snapshot": "config_snapshot.yaml"
+  },
+  "extra": {
+    "dataset": "dvsgesture",
+    "split": "test",
+    "calibration_split": "val",
+    "calibration_batches": null,
+    "max_batches": null,
+    "seed": 4,
+    "seed_type": "paired_replay_perturbation_seed",
+    "seed_indexed_output": true,
+    "conditions": [
+      "clean",
+      "quantized_clean",
+      "combined"
+    ],
+    "runtime_provenance": {
+      "python_version": "3.10.20",
+      "torch_version": "2.5.1",
+      "cuda_runtime_version": "12.1",
+      "cudnn_version": 90100,
+      "cuda_available": true,
+      "device_requested": "cuda",
+      "device_resolved": "cuda",
+      "gpu_name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+      "gpu_compute_capability": [
+        8,
+        9
+      ],
+      "batch_size_requested": 128,
+      "batch_size_actual": 128,
+      "num_workers": 0,
+      "seed": 4,
+      "seed_type": "paired_replay_perturbation_seed",
+      "seed_output_mode": "seed_indexed",
+      "cublas_workspace_config": ":4096:8",
+      "deterministic_algorithms_enabled": true,
+      "cudnn_deterministic": true,
+      "cudnn_benchmark": false,
+      "cuda_matmul_allow_tf32": false,
+      "cudnn_allow_tf32": true,
+      "full_replay_requested": true,
+      "publication_replay_ready": true
+    },
+    "config_sha256": "89dd389c2a856b2da1813d120151a24e457b1e26fdba297f714eb016e60f294e",
+    "checkpoint_sha256": "b2e6600d341fb5851f0fd047c2621dd4437b604dd83dd015fd6241bbb29369da",
+    "hardware_config_sha256": "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066",
+    "device_params_sha256": "fcd2cd58acff908d2773df8b6f51c2ecb6fcd84397a9bbc3ab3cfccc0624b8c5"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "g4_a8_contract": {
+    "name": "HIPSA_G4_A8",
+    "num_tiles": 4,
+    "array_rows": 64,
+    "array_cols": 64,
+    "hapr_group_size": 4,
+    "post_hapr_lanes": 64,
+    "derived_post_hapr_lanes": 64,
+    "adc_macros": 8,
+    "samples_per_macro_per_cycle": 10.0,
+    "nominal_sample_slots_per_cycle": 80.0,
+    "system_clock_hz": 1000000000.0,
+    "temporal_analog_storage": false,
+    "checks": {
+      "four_tiles": true,
+      "logical_array_64x64": true,
+      "g4": true,
+      "reported_lanes_match_derived": true,
+      "a8": true,
+      "ten_samples_per_macro_per_cycle": true,
+      "one_ghz_architecture_clock": true,
+      "same_window_capacity": true,
+      "no_temporal_analog_storage": true
+    },
+    "valid": true,
+    "failed_checks": [],
+    "claim_boundary": "architecture_level_capacity_analysis_not_circuit_timing_closure"
+  },
+  "selected_point": "G4/A8",
+  "matched_accounting_present": true,
+  "sensitivity_artifacts_present": true,
+  "claim_boundary": "selected-point architecture-level accounting; not timing closure or silicon measurement"
+}

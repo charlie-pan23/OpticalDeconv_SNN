@@ -1,0 +1,16 @@
+{
+  "eval_name": "eval_107",
+  "command": "eval/eval_107.py",
+  "inputs": {
+    "output_root": "results/eval_v10",
+    "datasets": [
+      "cifar10dvs",
+      "dvsgesture"
+    ]
+  },
+  "outputs": {
+    "metrics": "metrics.json",
+    "validation": "validation.json"
+  },
+  "extra": {}
+}

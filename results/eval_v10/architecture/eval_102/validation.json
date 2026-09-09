@@ -1,0 +1,8 @@
+{
+  "g4_a8_contract_valid": true,
+  "hapr_matrix_passed": true,
+  "timing_closure": false,
+  "physically_closed": false,
+  "silicon_validated": false,
+  "claim_boundary": "architecture-level capacity/admission analysis; mux settling, ADC aperture and TIA recovery are not circuit-closed"
+}

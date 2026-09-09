@@ -1,10 +1,10 @@
 {
   "eval_name": "eval_101",
-  "command": "eval/eval_06_selected_point.py --datasets cifar10dvs dvsgesture --input-root results/eval_v2 --output-root results/eval_v10 --hardware configs/hardware_hipsa_paper.yaml --device-params configs/device_params.yaml",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_101.py --datasets cifar10dvs dvsgesture --input-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v2 --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --hardware D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml --device-params D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\device_params.yaml",
   "inputs": {
-    "eval01_summary": "results\\eval_v2\\dvsgesture\\eval_01\\summary.json",
-    "hardware": "configs/hardware_hipsa_paper.yaml",
-    "device_params": "configs/device_params.yaml"
+    "eval01_summary": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v2\\dvsgesture\\eval_01\\summary.json",
+    "hardware": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml",
+    "device_params": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\device_params.yaml"
   },
   "outputs": {
     "selected_operating_point": "selected_operating_point.json",
@@ -38,11 +38,11 @@
       "effective_locked_ring_count": 327.68,
       "locking_power_mw_per_ring": 1.2,
       "added_lock_power_mw": 393.216,
-      "nominal_power_w_without_lock": 2.4961389460655217,
-      "total_power_w": 2.889354946065522,
+      "nominal_power_w_without_lock": 2.4961389460655212,
+      "total_power_w": 2.889354946065521,
       "latency_us_per_image": 391.40390185546875,
-      "energy_uJ_per_image": 1133.3633808354427,
-      "energy_overhead_percent": 15.71342696048459,
+      "energy_uJ_per_image": 1133.3633808354423,
+      "energy_overhead_percent": 15.713426960484567,
       "recommended_reporting_case": 1,
       "status": "parameterized_literature_anchor_not_hipsa_measurement"
     }

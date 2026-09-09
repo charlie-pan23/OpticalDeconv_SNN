@@ -1,0 +1,13 @@
+{
+  "dataset": "cifar10dvs",
+  "split": "test",
+  "split_file": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\datasets\\CIFAR10DVS\\splits\\cifar10dvs_T10_seed42_split.pth",
+  "split_file_sha256": "624a76f8fc268d4cb80812fc0ea5bd9f3f41495356e484a35605d57f7f0ff09d",
+  "split_order_hash": "edd4b4e11b418fe704d456b0d7126aa5d97fc5395c7a9f37db7ce97081c95610",
+  "num_samples_expected": 1000,
+  "num_samples_replayed": 1000,
+  "full_split_replayed": true,
+  "max_batches": null,
+  "allow_no_split": false,
+  "status": "verified_full_split_replay"
+}

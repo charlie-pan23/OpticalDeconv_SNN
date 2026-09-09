@@ -1,0 +1,25 @@
+{
+  "eval_name": "eval_108",
+  "generated_utc": "2026-09-08T17:02:42.832107+00:00",
+  "python_version": "3.10.20",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "evidence_class": "architecture_level_phase3_system_evidence_summary",
+  "command": "eval/eval_108.py",
+  "source_files": {
+    "phase3_contract": "configs/phase3_experiment_contract.yaml",
+    "hardware": "configs/hardware_hipsa_paper.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "source_sha256": {
+    "phase3_contract": "88c9be6453a088faec0183fed3bf1aa8d3dda9b07b192b8216c93f27eba45f05",
+    "hardware": "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066",
+    "device_params": "fcd2cd58acff908d2773df8b6f51c2ecb6fcd84397a9bbc3ab3cfccc0624b8c5"
+  },
+  "contract_path": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\phase3_experiment_contract.yaml",
+  "datasets": [
+    "cifar10dvs",
+    "dvsgesture"
+  ],
+  "minimum_replay_seeds": 5,
+  "seed_scope": "paired_replay_perturbation_seed"
+}

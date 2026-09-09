@@ -1,0 +1,17 @@
+{
+  "eval_name": "eval_102",
+  "generated_utc": "2026-09-08T14:48:30.344577+00:00",
+  "python_version": "3.12.9",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "evidence_class": "architecture_level_capacity_admission_and_legality",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_102.py --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --hardware D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml --device-params D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\device_params.yaml",
+  "source_files": {
+    "hardware": "configs/hardware_hipsa_paper.yaml",
+    "device_params": "configs/device_params.yaml"
+  },
+  "source_sha256": {
+    "hardware": "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066",
+    "device_params": "fcd2cd58acff908d2773df8b6f51c2ecb6fcd84397a9bbc3ab3cfccc0624b8c5"
+  },
+  "selected_point": "G4/A8"
+}

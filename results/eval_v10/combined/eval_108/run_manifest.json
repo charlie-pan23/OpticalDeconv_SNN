@@ -1,0 +1,34 @@
+{
+  "eval_name": "eval_108",
+  "command": "eval/eval_108.py",
+  "inputs": {
+    "output_root": "results/eval_v10",
+    "contract": "configs/phase3_experiment_contract.yaml",
+    "datasets": [
+      "cifar10dvs",
+      "dvsgesture"
+    ]
+  },
+  "outputs": {
+    "phase3_report": "phase3_report.json",
+    "phase3_validation": "phase3_validation.json",
+    "accuracy_statistics": "accuracy_statistics.csv",
+    "lock_aware_energy_summary": "lock_aware_energy_summary.csv",
+    "configuration_sensitivity_summary": "configuration_sensitivity_summary.csv",
+    "orthogonal_ablation_paper_table": "orthogonal_ablation_paper_table.csv",
+    "phase3_contract_snapshot": "phase3_contract_snapshot.yaml"
+  },
+  "extra": {
+    "checks": {
+      "contract_valid": true,
+      "all_eval101_sensitivity_audits_pass": true,
+      "all_eval104_matched_baseline_audits_pass": true,
+      "lock_rows_present": true,
+      "configuration_rows_present": true,
+      "all_required_orthogonal_variants_present": true,
+      "all_datasets_have_minimum_replay_seeds": true,
+      "replay_statistics_are_not_training_seed_claims": true
+    },
+    "reasons": []
+  }
+}

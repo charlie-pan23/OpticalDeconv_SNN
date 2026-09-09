@@ -1,10 +1,10 @@
 {
   "eval_name": "eval_101",
-  "command": "eval/eval_06_selected_point.py --datasets cifar10dvs dvsgesture --input-root results/eval_v2 --output-root results/eval_v10 --hardware configs/hardware_hipsa_paper.yaml --device-params configs/device_params.yaml",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_101.py --datasets cifar10dvs dvsgesture --input-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v2 --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --hardware D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml --device-params D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\device_params.yaml",
   "inputs": {
-    "eval01_summary": "results\\eval_v2\\cifar10dvs\\eval_01\\summary.json",
-    "hardware": "configs/hardware_hipsa_paper.yaml",
-    "device_params": "configs/device_params.yaml"
+    "eval01_summary": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v2\\cifar10dvs\\eval_01\\summary.json",
+    "hardware": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml",
+    "device_params": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\device_params.yaml"
   },
   "outputs": {
     "selected_operating_point": "selected_operating_point.json",

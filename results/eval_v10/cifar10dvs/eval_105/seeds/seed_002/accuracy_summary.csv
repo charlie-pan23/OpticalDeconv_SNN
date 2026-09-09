@@ -1,0 +1,4 @@
+dataset,condition,seed,split,num_samples,accuracy_percent,loss,paired_accuracy_delta_percent_vs_clean,paired_net_correct_change_vs_clean,weight_bits,adc_bits,membrane_bits,evidence_class
+cifar10dvs,clean,2,test,1000,76.2,0.7491417999267578,0.0,0,,,,software_checkpoint_evaluation
+cifar10dvs,quantized_clean,2,test,1000,70.7,0.9012726287841797,-5.5,-55,6,6,16,hardware_aware_software_proxy_replay
+cifar10dvs,combined,2,test,1000,72.9,0.8236977691650391,-3.299999999999997,-33,6,6,16,hardware_aware_software_proxy_replay

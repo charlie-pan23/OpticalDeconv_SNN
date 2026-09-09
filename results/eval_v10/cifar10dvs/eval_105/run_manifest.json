@@ -15,7 +15,9 @@
     "runtime_provenance": "runtime_provenance.json",
     "replay_scope": "replay_scope.json",
     "adc_calibration": "adc_calibration.json",
-    "config_snapshot": "config_snapshot.yaml"
+    "config_snapshot": "config_snapshot.yaml",
+    "metrics": "metrics.json",
+    "validation": "validation.json"
   },
   "extra": {
     "dataset": "cifar10dvs",

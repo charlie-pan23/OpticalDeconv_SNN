@@ -31,13 +31,19 @@ from hardware.membrane_fixedpoint import quantize_membrane
 from hardware.weight_quant import quantize_symmetric
 from utils.checkpoint_utils import checkpoint_summary
 from utils.config_utils import copy_config_snapshot, dataset_tag, load_eval_config, save_json
-from utils.eval_v10 import canonical_sha256, file_sha256, validate_g4_a8_contract
+from utils.eval_v10 import canonical_sha256, file_sha256, validate_eval105_publication_summary, validate_g4_a8_contract
 from utils.result_io import save_csv_rows, save_run_manifest
 from utils.seed_utils import set_seed
 
 
 def now_utc() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat()
+
+
+def resolve_output_dir(output_root: str | Path, dataset: str, seed: int, seed_indexed: bool) -> Path:
+    """Return the eval_105 output directory without cross-seed overwrites."""
+    base = Path(output_root) / dataset / "eval_105"
+    return base / "seeds" / f"seed_{int(seed):03d}" if seed_indexed else base
 
 
 def configure_publication_runtime(args: argparse.Namespace) -> None:
@@ -81,6 +87,8 @@ def build_runtime_provenance(
         "batch_size_actual": actual_batch_size,
         "num_workers": int(args.num_workers),
         "seed": int(args.seed),
+        "seed_type": "paired_replay_perturbation_seed",
+        "seed_output_mode": "seed_indexed" if bool(args.seed_indexed_output) else "legacy_single_output",
         "cublas_workspace_config": cublas_config,
         "deterministic_algorithms_enabled": bool(torch.are_deterministic_algorithms_enabled()),
         "cudnn_deterministic": bool(torch.backends.cudnn.deterministic),
@@ -607,6 +615,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", default="auto")
     parser.add_argument("--cublas-workspace-config", default=":4096:8", choices=[":4096:8", ":16:8"], help="Deterministic CUDA BLAS workspace policy recorded in provenance.")
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--seed-indexed-output", action="store_true", help="Write this replay to eval_105/seeds/seed_NNN instead of replacing the legacy single-seed directory.")
     parser.add_argument("--max-batches", type=int, default=None)
     parser.add_argument("--allow-no-split", action="store_true")
     parser.add_argument("--non-strict", action="store_true")
@@ -627,7 +636,7 @@ def main() -> int:
     dataset = dataset_tag(raw_config)
     if args.dataset and args.dataset.lower().replace("-", "") != dataset.lower().replace("-", ""):
         raise ValueError(f"--dataset={args.dataset} does not match config dataset {dataset}")
-    output_dir = Path(args.output_root) / dataset / "eval_105"
+    output_dir = resolve_output_dir(args.output_root, dataset, args.seed, args.seed_indexed_output)
     output_dir.mkdir(parents=True, exist_ok=True)
     needs_adc = any(CONDITIONS[name].adc_bits is not None for name in args.conditions)
     adc_full_scales: Dict[str, float] = {}
@@ -727,6 +736,8 @@ def main() -> int:
         "dataset": dataset,
         "split": args.split,
         "seed": args.seed,
+        "seed_type": "paired_replay_perturbation_seed",
+        "seed_output_mode": "seed_indexed" if args.seed_indexed_output else "legacy_single_output",
         "num_samples": len(reference_targets),
         "clean_accuracy_percent": by_name.get("clean", {}).get("accuracy_percent"),
         "quantized_clean_accuracy_percent": by_name.get("quantized_clean", {}).get("accuracy_percent"),
@@ -750,6 +761,8 @@ def main() -> int:
         },
     }
     save_json(summary, output_dir / "summary.json")
+    save_json(summary, output_dir / "metrics.json")
+    save_json(validate_eval105_publication_summary(summary), output_dir / "validation.json")
     save_json(split_manifest, output_dir / "split_manifest.json")
     save_json(runtime_provenance, output_dir / "runtime_provenance.json")
     if replay_scope is not None:
@@ -763,8 +776,8 @@ def main() -> int:
     save_run_manifest(
         output_dir, eval_name="eval_105", command=" ".join(sys.argv),
         inputs={"config": args.config, "checkpoint": args.checkpoint, "hardware": args.hardware, "device_params": args.device_params},
-        outputs={"summary": "summary.json", "accuracy_summary": "accuracy_summary.csv", "predictions": "predictions.csv", "split_manifest": "split_manifest.json", "runtime_provenance": "runtime_provenance.json", "replay_scope": "replay_scope.json" if replay_scope else None, "adc_calibration": "adc_calibration.json" if calibration_manifest else None, "config_snapshot": "config_snapshot.yaml"},
-        extra={"dataset": dataset, "split": args.split, "calibration_split": args.calibration_split, "calibration_batches": args.calibration_batches, "max_batches": args.max_batches, "seed": args.seed, "conditions": args.conditions, "runtime_provenance": runtime_provenance, **hashes},
+        outputs={"summary": "summary.json", "metrics": "metrics.json", "validation": "validation.json", "accuracy_summary": "accuracy_summary.csv", "predictions": "predictions.csv", "split_manifest": "split_manifest.json", "runtime_provenance": "runtime_provenance.json", "replay_scope": "replay_scope.json" if replay_scope else None, "adc_calibration": "adc_calibration.json" if calibration_manifest else None, "config_snapshot": "config_snapshot.yaml"},
+        extra={"dataset": dataset, "split": args.split, "calibration_split": args.calibration_split, "calibration_batches": args.calibration_batches, "max_batches": args.max_batches, "seed": args.seed, "seed_type": "paired_replay_perturbation_seed", "seed_indexed_output": bool(args.seed_indexed_output), "conditions": args.conditions, "runtime_provenance": runtime_provenance, **hashes},
     )
     print(f"[eval_105] paired publication replay saved to {output_dir}")
     for row in accuracy_rows:
@@ -774,6 +787,8 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
 
 
 

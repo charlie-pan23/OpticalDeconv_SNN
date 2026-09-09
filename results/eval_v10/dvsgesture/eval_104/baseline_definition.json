@@ -6,5 +6,16 @@
   "same_precision": "W6/ADC6/Vm16",
   "same_configuration_accounting": true,
   "same_non_mvm_accounting": true,
-  "accuracy_policy": "full HIPSA joins verified eval_105; other variants require dedicated replay"
+  "accuracy_policy": "only dedicated eval_105 replay may provide accuracy; architecture counters never infer variant accuracy",
+  "comparison_scope": "architecture_level_system_accounting",
+  "same_four_photonic_tiles": true,
+  "same_array_shape": "64x64_per_tile",
+  "same_timestep_count": true,
+  "same_input_activity_trace": true,
+  "same_static_power_terms": true,
+  "same_mrr_lock_fraction": 0.01,
+  "same_tile_load_cycles_per_tile": 256,
+  "same_configuration_protocol": "layer_weight_tile_boundary; amortized across timesteps",
+  "external_software_speedup_comparison": false,
+  "evidence_class": "architecture_level_matched_scope_contract"
 }

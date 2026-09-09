@@ -1,0 +1,61 @@
+{
+  "eval_name": "eval_107",
+  "created_utc": "2026-09-08T17:13:31.564065+00:00",
+  "passed": true,
+  "release_status": "GO",
+  "datasets": [
+    {
+      "dataset": "cifar10dvs",
+      "passed": true,
+      "reasons": [],
+      "eval_105_valid": true,
+      "shared_artifacts": {
+        "eval_102": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\architecture\\eval_102",
+        "eval_103": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\semantic_reference\\eval_103",
+        "eval_106": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\representative_models\\eval_106"
+      }
+    },
+    {
+      "dataset": "dvsgesture",
+      "passed": true,
+      "reasons": [],
+      "eval_105_valid": true,
+      "shared_artifacts": {
+        "eval_102": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\architecture\\eval_102",
+        "eval_103": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\semantic_reference\\eval_103",
+        "eval_106": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\representative_models\\eval_106"
+      }
+    }
+  ],
+  "phase3_evidence": {
+    "eval_name": "eval_108",
+    "passed": true,
+    "release_status": "GO",
+    "checks": {
+      "contract_valid": true,
+      "all_eval101_sensitivity_audits_pass": true,
+      "all_eval104_matched_baseline_audits_pass": true,
+      "lock_rows_present": true,
+      "configuration_rows_present": true,
+      "all_required_orthogonal_variants_present": true,
+      "all_datasets_have_minimum_replay_seeds": true,
+      "replay_statistics_are_not_training_seed_claims": true
+    },
+    "reasons": [],
+    "minimum_replay_seeds": 5,
+    "evidence_scope": "architecture_level_system_accounting",
+    "claim_boundary": "architecture-level system accounting plus frozen-checkpoint paired replay perturbation statistics; not silicon measurement, P&R validation, or independent-training statistics"
+  },
+  "reasons": [],
+  "required_evidence": [
+    "G4/A8 contract",
+    "queue/state semantic validation",
+    "lock/configuration sensitivity",
+    "matched baseline",
+    "orthogonal ablation",
+    "full CUDA publication replay",
+    "representative mapping",
+    "Phase 3 system evidence summary"
+  ],
+  "claim_boundary": "release completeness/provenance gate; does not upgrade architecture-level evidence to silicon measurement"
+}

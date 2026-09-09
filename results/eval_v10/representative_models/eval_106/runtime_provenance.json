@@ -1,0 +1,18 @@
+{
+  "eval_name": "eval_106",
+  "generated_utc": "2026-09-08T14:48:29.440685+00:00",
+  "python_version": "3.12.9",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "evidence_class": "representative_mapping_only",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_106.py --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --hardware D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\hardware_hipsa_paper.yaml --spec D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\advanced_snn_workloads.yaml --transformer-spec D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\spiking_transformer_mapping.yaml",
+  "source_files": {
+    "hardware": "configs/hardware_hipsa_paper.yaml",
+    "advanced_spec": "configs/advanced_snn_workloads.yaml",
+    "transformer_spec": "configs/spiking_transformer_mapping.yaml"
+  },
+  "source_sha256": {
+    "hardware": "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066",
+    "advanced_spec": "1cee3910ab1cb1ed52bf48c8eb7bad26e26ec49b5a03c9d2ccb14cb1ed476c03",
+    "transformer_spec": "cc6b6586a55ba21466150319e8392b2212b9d4248f40327caf32fc757fa2e96c"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "dataset": "dvsgesture",
+  "split": "test",
+  "split_file": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\datasets\\DVSGesture\\splits\\dvsgesture_T10_seed42_split.pth",
+  "split_file_sha256": "dce783e269efad48e050ba2da8de9f6ad4e227e51b7d5cad209c057ee492e524",
+  "split_order_hash": "7b485d49121468ef66f21bff0ab877130f1d8a34c341163996de4e3227d2bbb5",
+  "num_samples_expected": 288,
+  "num_samples_replayed": 288,
+  "full_split_replayed": true,
+  "max_batches": null,
+  "allow_no_split": false,
+  "status": "verified_full_split_replay"
+}
