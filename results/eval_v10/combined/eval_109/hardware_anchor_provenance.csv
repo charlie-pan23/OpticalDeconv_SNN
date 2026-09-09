@@ -1,0 +1,5 @@
+anchor_id,source,status,measured_for_hipsa,claim_boundary
+mrr_lock_power,"Zhu et al., Lightening-Transformer, HPCA 2024, Table III",external_literature_anchor,False,parameter anchor only
+adc_or_receiver,device_params.yaml and eval_101 analog audit,architecture_model_parameter,False,architecture-level analog feasibility; no circuit closure
+digital_control_area,NangateOpenCellLibrary 45 nm synthesis anchor,local_synthesis_pre_layout_anchor,False,"pre-layout standard-cell area; excludes P&R, pads, SRAM macros"
+external_hardware_anchor_schema,configs/external_hardware_anchor_schema.yaml,template_only_no_external_measurements_supplied,False,schema/provenance template; no external measurements supplied

@@ -1,0 +1,40 @@
+conditions:
+- case_id: nominal_lower_bound
+  family: mrr_lock_fraction
+  lock_fraction: 0.0
+  include_lock_power: false
+  reporting_role: nominal_lower_bound
+  evidence_class: architecture_level_system_accounting
+  claim_boundary: nominal lower bound or parameterized lock-aware accounting
+- case_id: representative_lock_aware
+  family: mrr_lock_fraction
+  lock_fraction: 0.01
+  include_lock_power: true
+  reporting_role: representative_lock_aware
+  evidence_class: architecture_level_system_accounting
+  claim_boundary: nominal lower bound or parameterized lock-aware accounting
+- case_id: lock_0.05
+  family: mrr_lock_fraction
+  lock_fraction: 0.05
+  include_lock_power: true
+  reporting_role: sensitivity
+  evidence_class: architecture_level_parameterized_sensitivity
+  claim_boundary: literature-anchored parameter sensitivity, not measured lock power
+- case_id: lock_0.1
+  family: mrr_lock_fraction
+  lock_fraction: 0.1
+  include_lock_power: true
+  reporting_role: sensitivity
+  evidence_class: architecture_level_parameterized_sensitivity
+  claim_boundary: literature-anchored parameter sensitivity, not measured lock power
+- case_id: paired_replay
+  family: accuracy
+  seed_type: paired_replay_perturbation_seed
+  reporting_role: accuracy aggregate
+  claim_boundary: software checkpoint replay, not independent training statistics
+- case_id: mapping_only
+  family: representative_workload
+  reporting_role: model coverage
+  evidence_class: mapping_only
+  claim_boundary: no end-to-end hardware latency, energy, throughput, or accuracy
+    claim

@@ -1,0 +1,48 @@
+{
+  "rows": [
+    {
+      "dataset": "cifar10dvs",
+      "routing_thermal_overhead_multiplier": 1.0,
+      "component_footprint_lower_bound_mm2": 4.6150062287999996,
+      "adjusted_area_mm2": 4.6150062287999996,
+      "scope": "component-footprint lower-bound plus parameterized routing/thermal overhead",
+      "included_in_source_sum": true,
+      "evidence_class": "architecture_area_sensitivity",
+      "claim_boundary": "not die area, core area, or layout area; no extracted routing/thermal/SRAM macro layout",
+      "source_file": "results/eval_v10/cifar10dvs/eval_101/area_breakdown.csv"
+    },
+    {
+      "dataset": "cifar10dvs",
+      "routing_thermal_overhead_multiplier": 1.2,
+      "component_footprint_lower_bound_mm2": 4.6150062287999996,
+      "adjusted_area_mm2": 5.53800747456,
+      "scope": "component-footprint lower-bound plus parameterized routing/thermal overhead",
+      "included_in_source_sum": false,
+      "evidence_class": "architecture_area_sensitivity",
+      "claim_boundary": "not die area, core area, or layout area; no extracted routing/thermal/SRAM macro layout",
+      "source_file": "results/eval_v10/cifar10dvs/eval_101/area_breakdown.csv"
+    },
+    {
+      "dataset": "cifar10dvs",
+      "routing_thermal_overhead_multiplier": 1.5,
+      "component_footprint_lower_bound_mm2": 4.6150062287999996,
+      "adjusted_area_mm2": 6.9225093432,
+      "scope": "component-footprint lower-bound plus parameterized routing/thermal overhead",
+      "included_in_source_sum": false,
+      "evidence_class": "architecture_area_sensitivity",
+      "claim_boundary": "not die area, core area, or layout area; no extracted routing/thermal/SRAM macro layout",
+      "source_file": "results/eval_v10/cifar10dvs/eval_101/area_breakdown.csv"
+    },
+    {
+      "dataset": "cifar10dvs",
+      "routing_thermal_overhead_multiplier": 2.0,
+      "component_footprint_lower_bound_mm2": 4.6150062287999996,
+      "adjusted_area_mm2": 9.230012457599999,
+      "scope": "component-footprint lower-bound plus parameterized routing/thermal overhead",
+      "included_in_source_sum": false,
+      "evidence_class": "architecture_area_sensitivity",
+      "claim_boundary": "not die area, core area, or layout area; no extracted routing/thermal/SRAM macro layout",
+      "source_file": "results/eval_v10/cifar10dvs/eval_101/area_breakdown.csv"
+    }
+  ]
+}

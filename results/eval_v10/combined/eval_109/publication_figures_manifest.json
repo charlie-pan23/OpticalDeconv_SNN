@@ -1,0 +1,51 @@
+{
+  "eval_name": "eval_109",
+  "status": "generated",
+  "output_directory": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\plot\\results\\eval_109",
+  "figures": [
+    {
+      "filename": "fig_eval109_ablation.pdf",
+      "format": "pdf",
+      "vector": true,
+      "source": "matplotlib_native_pdf"
+    },
+    {
+      "filename": "fig_eval109_accuracy.pdf",
+      "format": "pdf",
+      "vector": true,
+      "source": "matplotlib_native_pdf"
+    },
+    {
+      "filename": "fig_eval109_area_overhead.pdf",
+      "format": "pdf",
+      "vector": true,
+      "source": "matplotlib_native_pdf"
+    },
+    {
+      "filename": "fig_eval109_capacity.pdf",
+      "format": "pdf",
+      "vector": true,
+      "source": "matplotlib_native_pdf"
+    },
+    {
+      "filename": "fig_eval109_config_sensitivity.pdf",
+      "format": "pdf",
+      "vector": true,
+      "source": "matplotlib_native_pdf"
+    },
+    {
+      "filename": "fig_eval109_lock_energy.pdf",
+      "format": "pdf",
+      "vector": true,
+      "source": "matplotlib_native_pdf"
+    }
+  ],
+  "preview_pngs": [
+    "fig_eval109_ablation.png",
+    "fig_eval109_accuracy.png",
+    "fig_eval109_area_overhead.png",
+    "fig_eval109_capacity.png",
+    "fig_eval109_config_sensitivity.png",
+    "fig_eval109_lock_energy.png"
+  ]
+}

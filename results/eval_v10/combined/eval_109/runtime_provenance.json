@@ -1,0 +1,28 @@
+{
+  "eval_name": "eval_109",
+  "generated_utc": "2026-09-09T02:16:08.514263+00:00",
+  "python_version": "3.10.20",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "evidence_class": "phase4_evidence_closure",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_109.py --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --contract D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\phase4_evidence_contract.yaml",
+  "source_files": {
+    "phase4_contract": "configs/phase4_evidence_contract.yaml",
+    "hardware": "configs/hardware_hipsa_paper.yaml",
+    "device_params": "configs/device_params.yaml",
+    "external_anchor_schema": "configs/external_hardware_anchor_schema.yaml"
+  },
+  "source_sha256": {
+    "phase4_contract": "d3d80ea1a7db35ac2b20a731bbcd90edb7d2d94df20b887dbe3109c97596ca26",
+    "hardware": "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066",
+    "device_params": "fcd2cd58acff908d2773df8b6f51c2ecb6fcd84397a9bbc3ab3cfccc0624b8c5",
+    "external_anchor_schema": "72466630f039a4845aedde9e4cd5f0c13f19aed37238571848227ba4d52a258d"
+  },
+  "source_eval_stages": [
+    "eval_101",
+    "eval_104",
+    "eval_105",
+    "eval_106"
+  ],
+  "source_root": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10",
+  "seed_records": 10
+}

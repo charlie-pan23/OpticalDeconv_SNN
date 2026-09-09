@@ -1,0 +1,4 @@
+workload,family,evidence_level,operator_instances,optical_operator_coverage_percent,unsupported_claims,source_reference,claim_boundary
+SEW-ResNet-18-DVS128,residual_convolutional_snn,mapping_only,29,72.41379310344827,"accuracy,latency,energy,throughput",https://papers.nips.cc/paper/2021/file/afe434653a898da20044041262b3ac74-Paper.pdf,shared-substrate representative mapping; not end-to-end hardware validation
+Spike-driven-Transformer-SDSA-2-256,spike_driven_transformer,mapping_only,16,87.5,"accuracy,latency,energy,throughput",https://openreview.net/forum?id=9FmolyOHi5,shared-substrate representative mapping; not end-to-end hardware validation
+Spikformer-2-256 mapping proxy,spiking_transformer,mapping_only,18,77.77777777777777,"accuracy,latency,energy,throughput",https://papers.nips.cc/paper_files/paper/2023/file/ca0f5358dbadda74b3049711887e9ead-Paper-Conference.pdf,shared-substrate representative mapping; not end-to-end hardware validation

@@ -1,0 +1,34 @@
+{
+  "eval_name": "eval_109",
+  "purpose": "phase4_evidence_closure_and_publication_audit",
+  "created_utc": "2026-09-09T02:16:08.378211+00:00",
+  "datasets": [
+    "cifar10dvs",
+    "dvsgesture"
+  ],
+  "evidence_scope": "architecture_level_model_coverage_and_provenance",
+  "passed": true,
+  "seed_count_by_dataset": {
+    "cifar10dvs": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "dvsgesture": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "accuracy_statistics_label": "paired_replay_perturbation_statistics",
+  "reporting_case_count": 18,
+  "ablation_row_count": 10,
+  "mapping_operator_count": 32,
+  "capacity_row_count": 2,
+  "area_sensitivity_row_count": 4,
+  "output_dir": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10\\combined\\eval_109"
+}

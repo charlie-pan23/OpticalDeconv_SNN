@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "status": "phase4_evidence_contract_passed",
+  "phase": 4,
+  "stage": "A-D",
+  "checks": {
+    "contract_valid": true,
+    "seed_provenance_valid": true,
+    "required_orthogonal_variants_present": true,
+    "reporting_cases_present": true,
+    "condition_definitions_present": true,
+    "configuration_provenance_present": true,
+    "mrr_lock_provenance_present": true,
+    "mapping_audit_present": true,
+    "area_sensitivity_present": true,
+    "hardware_anchor_provenance_present": true,
+    "capacity_evidence_present": true,
+    "accuracy_aggregate_present": true,
+    "mapping_is_mapping_only": true,
+    "non_full_hipsa_accuracy_not_inferred": true
+  },
+  "reasons": [],
+  "contract_validation": {
+    "valid": true,
+    "passed": true,
+    "reasons": []
+  },
+  "seed_validation": {
+    "passed": true,
+    "reasons": [],
+    "datasets": {
+      "cifar10dvs": {
+        "observed_seeds": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "missing_seeds": [],
+        "duplicate_seeds": [],
+        "identity_values": {
+          "split": [
+            "test"
+          ],
+          "split_order_hash": [
+            "edd4b4e11b418fe704d456b0d7126aa5d97fc5395c7a9f37db7ce97081c95610"
+          ],
+          "config_sha256": [
+            "be562ed7b4c4106c89dab41b5f4226e94904d9bcf6ad91ec8e6f9e5b46ec6ce9"
+          ],
+          "checkpoint_sha256": [
+            "7d6a0494f6787ace0075529f3693eb6e3279f511cf02fa4bbff1f2dbfddce471"
+          ],
+          "hardware_config_sha256": [
+            "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066"
+          ],
+          "device_params_sha256": [
+            "fcd2cd58acff908d2773df8b6f51c2ecb6fcd84397a9bbc3ab3cfccc0624b8c5"
+          ]
+        },
+        "inconsistent_identity": {},
+        "replay_ready_failures": []
+      },
+      "dvsgesture": {
+        "observed_seeds": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "missing_seeds": [],
+        "duplicate_seeds": [],
+        "identity_values": {
+          "split": [
+            "test"
+          ],
+          "split_order_hash": [
+            "7b485d49121468ef66f21bff0ab877130f1d8a34c341163996de4e3227d2bbb5"
+          ],
+          "config_sha256": [
+            "89dd389c2a856b2da1813d120151a24e457b1e26fdba297f714eb016e60f294e"
+          ],
+          "checkpoint_sha256": [
+            "b2e6600d341fb5851f0fd047c2621dd4437b604dd83dd015fd6241bbb29369da"
+          ],
+          "hardware_config_sha256": [
+            "1bf0f1c0f8e6c5f11175ca2e6b37d496564dc23e94c319a3f5d170bc57e61066"
+          ],
+          "device_params_sha256": [
+            "fcd2cd58acff908d2773df8b6f51c2ecb6fcd84397a9bbc3ab3cfccc0624b8c5"
+          ]
+        },
+        "inconsistent_identity": {},
+        "replay_ready_failures": []
+      }
+    }
+  },
+  "ablation_validation": {
+    "required": [
+      "adc_pooling_without_hapr",
+      "hapr_with_64_adcs",
+      "lazy_lif_without_hapr",
+      "hapr_a8_without_lazy_lif",
+      "full_hipsa"
+    ],
+    "observed": [
+      "adc_pooling_without_hapr",
+      "full_hipsa",
+      "hapr_a8_without_lazy_lif",
+      "hapr_with_64_adcs",
+      "lazy_lif_without_hapr"
+    ],
+    "missing": [],
+    "passed": true
+  },
+  "claim_boundaries": {
+    "adc": "architecture-level capacity analysis only; no mux settling, aperture, TIA recovery, or circuit timing closure",
+    "accuracy": "paired replay perturbation statistics from frozen checkpoint; not independent training seed statistics",
+    "mapping": "representative mapping only; no end-to-end Transformer/ResNet hardware validation",
+    "area": "component-footprint lower bound with parameterized overhead; not die/core/layout area",
+    "lock_power": "literature-anchored parameterized sensitivity; not HIPSA silicon measurement",
+    "configuration": "cycles/tile is an architecture assumption; stabilization, calibration, and driver energy are not separately modeled"
+  }
+}

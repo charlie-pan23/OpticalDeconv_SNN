@@ -1,0 +1,65 @@
+phase: 4
+name: HIPSA_DATE_PHASE4_EVIDENCE_CLOSURE
+evidence_scope: architecture_level_model_coverage_and_provenance
+claim_boundary: >-
+  Phase 4 aggregates architecture-level accounting, paired software replay,
+  representative mapping, and parameterized sensitivity. It does not establish
+  transistor-level timing closure, post-layout physical closure, or HIPSA silicon measurements.
+datasets:
+  - cifar10dvs
+  - dvsgesture
+hardware:
+  photonic_tiles: 4
+  array_shape: [64, 64]
+  hapr_group: 4
+  post_hapr_lanes: 64
+  adc_macros: 8
+  adc_samples_per_macro_per_cycle: 10
+  architecture_clock_hz: 1000000000
+  temporal_analog_storage: false
+precision:
+  weight_bits: 6
+  adc_bits: 6
+  membrane_bits: 16
+seed_provenance:
+  required_seeds: [0, 1, 2, 3, 4]
+  minimum_seeds: 5
+  seed_type: paired_replay_perturbation_seed
+  statistic_label: paired_replay_perturbation_statistics
+  independent_training_seed_claim_allowed: false
+  seed_zero_rule: root_eval_105_summary_is_legacy_seed0_artifact
+reporting_cases:
+  nominal_lower_bound:
+    lock_fraction: 0.0
+    include_lock_power: false
+  representative_lock_aware:
+    lock_fraction: 0.01
+    include_lock_power: true
+  sensitivity:
+    lock_fractions: [0.05, 0.10]
+configuration:
+  cycles_per_tile_load: [256, 1000, 10000, 100000]
+  nominal_cycles_per_tile_load: 256
+  protocol: layer_weight_tile_boundary
+  amortize_across_timesteps: true
+  mrr_stabilization_time_included: false
+  calibration_time_included: false
+  programming_driver_energy_separately_modeled: false
+orthogonal_ablation:
+  required_variants:
+    - adc_pooling_without_hapr
+    - hapr_with_64_adcs
+    - lazy_lif_without_hapr
+    - hapr_a8_without_lazy_lif
+    - full_hipsa
+  replayed_variants: [full_hipsa]
+representative_mapping:
+  evidence_level: mapping_only
+  unsupported_claims: [accuracy, latency, energy, throughput]
+area:
+  scope: component-footprint lower-bound
+  overhead_multipliers: [1.0, 1.2, 1.5, 2.0]
+  forbidden_labels: [die_area, core_area, layout_area]
+outputs:
+  root: results/eval_v10
+  summary: combined/eval_109

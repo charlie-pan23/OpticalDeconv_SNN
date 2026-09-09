@@ -1,0 +1,3 @@
+dataset,post_hapr_lanes,adc_macros,samples_per_macro_per_cycle,nominal_adc_slots_per_cycle,capacity_margin_slots,capacity_ratio_demand_over_supply,same_window_admission_feasible,evidence_level,circuit_timing_closed,mux_settling_included,adc_aperture_included,tia_recovery_included,claim_boundary,source_file
+cifar10dvs,64.0,8,10.0,80.0,16.0,0.8,True,architecture_level_capacity_analysis,False,False,False,False,64 post-HAPR lanes <= 80 ADC slots/window; no analog timing closure claim,results/eval_v10/cifar10dvs/eval_101/metrics.json
+dvsgesture,64.0,8,10.0,80.0,16.0,0.8,True,architecture_level_capacity_analysis,False,False,False,False,64 post-HAPR lanes <= 80 ADC slots/window; no analog timing closure claim,results/eval_v10/dvsgesture/eval_101/metrics.json

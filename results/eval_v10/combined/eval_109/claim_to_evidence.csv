@@ -1,0 +1,13 @@
+workload,claim,supported,evidence_level,reason
+SEW-ResNet-18-DVS128,accuracy,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+SEW-ResNet-18-DVS128,latency,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+SEW-ResNet-18-DVS128,energy,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+SEW-ResNet-18-DVS128,throughput,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+Spike-driven-Transformer-SDSA-2-256,accuracy,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+Spike-driven-Transformer-SDSA-2-256,latency,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+Spike-driven-Transformer-SDSA-2-256,energy,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+Spike-driven-Transformer-SDSA-2-256,throughput,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+Spikformer-2-256 mapping proxy,accuracy,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+Spikformer-2-256 mapping proxy,latency,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+Spikformer-2-256 mapping proxy,energy,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation
+Spikformer-2-256 mapping proxy,throughput,False,mapping_only,shared-substrate representative mapping; not end-to-end hardware validation

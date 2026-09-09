@@ -1,0 +1,89 @@
+{
+  "statistic_label": "paired_replay_perturbation_statistics",
+  "rows": [
+    {
+      "dataset": "cifar10dvs",
+      "condition": "clean",
+      "statistic_label": "paired_replay_perturbation_statistics",
+      "seed_ids": "0,1,2,3,4",
+      "n": 5,
+      "mean_accuracy_percent": 76.2,
+      "std_sample_percentage_points": 0.0,
+      "ci95_half_width_percentage_points": 0.0,
+      "min_accuracy_percent": 76.2,
+      "max_accuracy_percent": 76.2,
+      "evidence_class": "software_checkpoint_evaluation",
+      "claim_boundary": "paired replay perturbation; not independent training seed statistics"
+    },
+    {
+      "dataset": "cifar10dvs",
+      "condition": "quantized_clean",
+      "statistic_label": "paired_replay_perturbation_statistics",
+      "seed_ids": "0,1,2,3,4",
+      "n": 5,
+      "mean_accuracy_percent": 70.7,
+      "std_sample_percentage_points": 0.0,
+      "ci95_half_width_percentage_points": 0.0,
+      "min_accuracy_percent": 70.7,
+      "max_accuracy_percent": 70.7,
+      "evidence_class": "hardware_aware_software_proxy_replay",
+      "claim_boundary": "paired replay perturbation; not independent training seed statistics"
+    },
+    {
+      "dataset": "cifar10dvs",
+      "condition": "combined",
+      "statistic_label": "paired_replay_perturbation_statistics",
+      "seed_ids": "0,1,2,3,4",
+      "n": 5,
+      "mean_accuracy_percent": 72.66,
+      "std_sample_percentage_points": 0.8848728722251579,
+      "ci95_half_width_percentage_points": 0.7756252703464479,
+      "min_accuracy_percent": 71.5,
+      "max_accuracy_percent": 73.8,
+      "evidence_class": "hardware_aware_software_proxy_replay",
+      "claim_boundary": "paired replay perturbation; not independent training seed statistics"
+    },
+    {
+      "dataset": "dvsgesture",
+      "condition": "clean",
+      "statistic_label": "paired_replay_perturbation_statistics",
+      "seed_ids": "0,1,2,3,4",
+      "n": 5,
+      "mean_accuracy_percent": 88.54166666666667,
+      "std_sample_percentage_points": 0.0,
+      "ci95_half_width_percentage_points": 0.0,
+      "min_accuracy_percent": 88.54166666666667,
+      "max_accuracy_percent": 88.54166666666667,
+      "evidence_class": "software_checkpoint_evaluation",
+      "claim_boundary": "paired replay perturbation; not independent training seed statistics"
+    },
+    {
+      "dataset": "dvsgesture",
+      "condition": "quantized_clean",
+      "statistic_label": "paired_replay_perturbation_statistics",
+      "seed_ids": "0,1,2,3,4",
+      "n": 5,
+      "mean_accuracy_percent": 83.33333333333333,
+      "std_sample_percentage_points": 0.0,
+      "ci95_half_width_percentage_points": 0.0,
+      "min_accuracy_percent": 83.33333333333333,
+      "max_accuracy_percent": 83.33333333333333,
+      "evidence_class": "hardware_aware_software_proxy_replay",
+      "claim_boundary": "paired replay perturbation; not independent training seed statistics"
+    },
+    {
+      "dataset": "dvsgesture",
+      "condition": "combined",
+      "statistic_label": "paired_replay_perturbation_statistics",
+      "seed_ids": "0,1,2,3,4",
+      "n": 5,
+      "mean_accuracy_percent": 80.76388888888889,
+      "std_sample_percentage_points": 0.8362218457494642,
+      "ci95_half_width_percentage_points": 0.732980765415529,
+      "min_accuracy_percent": 79.86111111111111,
+      "max_accuracy_percent": 81.94444444444444,
+      "evidence_class": "hardware_aware_software_proxy_replay",
+      "claim_boundary": "paired replay perturbation; not independent training seed statistics"
+    }
+  ]
+}

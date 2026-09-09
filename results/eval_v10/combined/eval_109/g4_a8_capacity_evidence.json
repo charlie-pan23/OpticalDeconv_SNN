@@ -1,0 +1,38 @@
+{
+  "rows": [
+    {
+      "dataset": "cifar10dvs",
+      "post_hapr_lanes": 64.0,
+      "adc_macros": 8,
+      "samples_per_macro_per_cycle": 10.0,
+      "nominal_adc_slots_per_cycle": 80.0,
+      "capacity_margin_slots": 16.0,
+      "capacity_ratio_demand_over_supply": 0.8,
+      "same_window_admission_feasible": true,
+      "evidence_level": "architecture_level_capacity_analysis",
+      "circuit_timing_closed": false,
+      "mux_settling_included": false,
+      "adc_aperture_included": false,
+      "tia_recovery_included": false,
+      "claim_boundary": "64 post-HAPR lanes <= 80 ADC slots/window; no analog timing closure claim",
+      "source_file": "results/eval_v10/cifar10dvs/eval_101/metrics.json"
+    },
+    {
+      "dataset": "dvsgesture",
+      "post_hapr_lanes": 64.0,
+      "adc_macros": 8,
+      "samples_per_macro_per_cycle": 10.0,
+      "nominal_adc_slots_per_cycle": 80.0,
+      "capacity_margin_slots": 16.0,
+      "capacity_ratio_demand_over_supply": 0.8,
+      "same_window_admission_feasible": true,
+      "evidence_level": "architecture_level_capacity_analysis",
+      "circuit_timing_closed": false,
+      "mux_settling_included": false,
+      "adc_aperture_included": false,
+      "tia_recovery_included": false,
+      "claim_boundary": "64 post-HAPR lanes <= 80 ADC slots/window; no analog timing closure claim",
+      "source_file": "results/eval_v10/dvsgesture/eval_101/metrics.json"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "rows": [
+    {
+      "dataset": "cifar10dvs",
+      "configuration_protocol": "layer_weight_tile_boundary",
+      "cycles_per_tile_load": [
+        256,
+        1000,
+        10000,
+        100000
+      ],
+      "tile_load_events_per_image": 75,
+      "amortize_across_timesteps": true,
+      "cycles_per_tile_source": "architecture assumption from hardware/config model",
+      "configuration_energy_source": "eval_101 source table",
+      "source_table_keeps_configuration_energy_constant_across_cycle_sensitivity": true,
+      "mrr_write_time_included": true,
+      "mrr_stabilization_time_included": false,
+      "calibration_time_included": false,
+      "programming_driver_energy_separately_modeled": false,
+      "status": "configuration_assumption_with_explicit_boundary",
+      "claim_boundary": "sensitivity is not a measured programming protocol or energy model",
+      "source_file": "results/eval_v10/cifar10dvs/eval_101/metrics.json"
+    },
+    {
+      "dataset": "dvsgesture",
+      "configuration_protocol": "layer_weight_tile_boundary",
+      "cycles_per_tile_load": [
+        256,
+        1000,
+        10000,
+        100000
+      ],
+      "tile_load_events_per_image": 39,
+      "amortize_across_timesteps": true,
+      "cycles_per_tile_source": "architecture assumption from hardware/config model",
+      "configuration_energy_source": "eval_101 source table",
+      "source_table_keeps_configuration_energy_constant_across_cycle_sensitivity": true,
+      "mrr_write_time_included": true,
+      "mrr_stabilization_time_included": false,
+      "calibration_time_included": false,
+      "programming_driver_energy_separately_modeled": false,
+      "status": "configuration_assumption_with_explicit_boundary",
+      "claim_boundary": "sensitivity is not a measured programming protocol or energy model",
+      "source_file": "results/eval_v10/dvsgesture/eval_101/metrics.json"
+    }
+  ],
+  "warning": "configuration_energy_constant_across_cycle_sensitivity_is_source_table_behavior"
+}

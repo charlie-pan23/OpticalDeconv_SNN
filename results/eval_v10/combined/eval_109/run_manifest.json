@@ -1,0 +1,20 @@
+{
+  "eval_name": "eval_109",
+  "command": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\eval\\eval_109.py --output-root D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10 --contract D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\phase4_evidence_contract.yaml",
+  "inputs": {
+    "output_root": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\results\\eval_v10",
+    "contract": "D:\\ProgramProject_Hub\\OpticalDeconv_SNN\\configs\\phase4_evidence_contract.yaml",
+    "datasets": [
+      "cifar10dvs",
+      "dvsgesture"
+    ]
+  },
+  "outputs": {
+    "summary": "combined/eval_109",
+    "validation": "phase4a_validation.json"
+  },
+  "extra": {
+    "audit_only": true,
+    "legacy_eval_scripts_unchanged": true
+  }
+}
